@@ -8,7 +8,7 @@ int main()
 
     while (pg == 0)
     {
-        printf("\n\e[1mMenu Principal\e[m");
+        printf("\nmMenu Principal");
         printf("\n1- Saque");
         printf("\n2- Gerente");
         printf("\n3- Finalizar");
