@@ -19,7 +19,9 @@ Processamentos:
 -Calcular o saldo existente com base no número restante de cédulas no caixa e seus respectivos tipos
 -Abastecer
 */
-    int operacao, valorSacado, valorSaldo, cedulasExistentes500, cedulasExistentes150, cedulasExistentes50,cedulasExistentes20, cedulasExistentes10, cedulasExistentes5, cedulasExistentes2, cedulasExistentes1;
+    int operacao, valorSacado, valorSaldo, cedulasExistentes[8], k;
+    
+    
 
     puts("Valor do saque:");
     scanf("%d", &valorSacado);
@@ -57,14 +59,9 @@ Processamentos:
     printf("Um: %d\n", cedulasExistentes1);
     
     //Abastecimento 
-    cedulasExistentes500 = 100;
-    cedulasExistentes150 = 200;
-    cedulasExistentes50 = 400;
-    cedulasExistentes20 = 800;
-    cedulasExistentes10 = 1600;
-    cedulasExistentes5 = 3200;
-    cedulasExistentes2 = 6400;
-    cedulasExistentes1 = 12800;
+    for(k = 0; ){
+
+    }
     puts("O caixa eletronico foi reabastecido!");
 
     return 0;
