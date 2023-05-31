@@ -59,8 +59,8 @@ Processamentos:
     printf("Um: %d\n", cedulasExistentes1);
     
     //Abastecimento 
-    for(k = 0; ){
-
+    for(k = 1; k<=8; k++){
+        cedulasExistentes[k-1] = 200*k;
     }
     puts("O caixa eletronico foi reabastecido!");
 
