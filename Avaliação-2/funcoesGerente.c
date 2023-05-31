@@ -20,7 +20,7 @@ Processamentos:
 -Calcular o saldo existente com base no número restante de cédulas no caixa e seus respectivos tipos
 -Abastecer
 */
-    int operacao, valorSacado, valorSaldo, cedulasExistentes[8], k;
+    int operacao, valorSacado, valorSaldo, cedulasExistentes[8], k, j;
     
     
 
@@ -60,8 +60,10 @@ Processamentos:
     printf("Um: %d\n", cedulasExistentes[7]);
     
     //Abastecimento 
+    j = 1;
     for(k = 0; k<8; k++){
-        cedulasExistentes[k] = 200*pow(2, k);
+        cedulasExistentes[k] = 200*k;
+        j *= 2;
     }
     puts("\nO caixa eletronico foi reabastecido!");
 
