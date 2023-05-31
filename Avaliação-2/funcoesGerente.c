@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 int main()
 {
@@ -43,26 +44,26 @@ Processamentos:
     puts("Cedulas de 1:");
     scanf("%d", &cedulasExistentes1);
 
-    valorSaldo = 1*cedulasExistentes1 + 2*cedulasExistentes2 + 5*cedulasExistentes5 + 10*cedulasExistentes10 + 20*cedulasExistentes20 + 50*cedulasExistentes50 + 150*cedulasExistentes150 + 500*cedulasExistentes500; 
+    valorSaldo; 
     scanf("%d", &operacao);
     //Saidas
     printf("O valor sacado foi: %d\n", valorSacado);
     printf("O valor do saldo restante no caixa eletronico e: %d\n", valorSaldo);
     printf("As cedulas restantes na maquina são:\n");
-    printf("Quinhentos: %d\n", cedulasExistentes500);
-    printf("Cento e cinquenta: %d\n", cedulasExistentes150);
-    printf("Cinquenta: %d\n", cedulasExistentes50);
-    printf("Vinte: %d\n", cedulasExistentes20);
-    printf("Dez: %d\n", cedulasExistentes10);
-    printf("Cinco: %d\n", cedulasExistentes5);
-    printf("Dois: %d\n", cedulasExistentes2);
-    printf("Um: %d\n", cedulasExistentes1);
+    printf("Quinhentos: %d\n", cedulasExistentes[0]);
+    printf("Cento e cinquenta: %d\n", cedulasExistentes[1]);
+    printf("Cinquenta: %d\n", cedulasExistentes[2]);
+    printf("Vinte: %d\n", cedulasExistentes[3]);
+    printf("Dez: %d\n", cedulasExistentes[4]);
+    printf("Cinco: %d\n", cedulasExistentes[5]);
+    printf("Dois: %d\n", cedulasExistentes[6]);
+    printf("Um: %d\n", cedulasExistentes[7]);
     
     //Abastecimento 
-    for(k = 1; k<=8; k++){
-        cedulasExistentes[k-1] = 200*k;
+    for(k = 0; k<8; k++){
+        cedulasExistentes[k] = 200*pow(2, k);
     }
-    puts("O caixa eletronico foi reabastecido!");
+    puts("\nO caixa eletronico foi reabastecido!");
 
     return 0;
 }
