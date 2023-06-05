@@ -3,13 +3,13 @@ int main()
 {
 
     int num, j, algarismos[6];
-    const char *unidades[] = {
+    const char unidades[10][12] = {
         "", "Um ", "Dois ", "Tres ", "Quatro ", "Cinco ", "Seis ", "Sete ", "Oito ", "Nove "};
-    const char *dezenasEspeciais[] = {
-        "Dez ", "Onze ", "Doze ", "Treze ", "Quatroze ", "Quinze ", "Dezesseis ", "Dezessete ", "Dezoito ", "Dezenove "};
-    const char *dezenas[] = {
+    const char dezenasEspeciais[10][12] = {
+        "Dez ", "Onze ", "Doze ", "Treze ", "Quatorze ", "Quinze ", "Dezesseis ", "Dezessete ", "Dezoito ", "Dezenove "};
+    const char dezenas[10][12] = {
         "", "", "Vinte ", "Trinta ", "Quarenta ", "Cinquenta ", "Sessenta ", "Setenta ", "Oitenta ", "Noventa "};
-    const char *centenas[] = {
+    const char centenas[10][12] = {
         "", "", "Duzentos ", "Trezentos ", "Quatrocentos ", "Quinhentos ", "Seiscentos ", "Setescentos ", "Oitocentos ", "Novecentos "};
 
     puts("Escreva um numero: ");
