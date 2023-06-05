@@ -1,208 +1,106 @@
-//Uni√£o de todas as fun√ß√µes
 #include <stdio.h>
-
-int main ()
+#include <stdlib.h>
+#include <math.h>
+int main()
 {
-  //Declara√ß√£o de variaveis
-  
-  
-  //Menu
-    int menu=0, pg=0, pg1=0, mg=0;
-
-    while (pg == 0)
-    {
-        printf("\nMenu Principal");
-        printf("\n1- Saque");
-        printf("\n2- Gerente");
-        printf("\n3- Finalizar");
-        printf("\nDigite uma opcao: ");
-        scanf("%d", &pg);
-
-        switch (pg)
-        {
-            case 1:
-            {
-                printf("\n1");
-                pg = 0;
-                break;
-            }
-            case 2:
-            {
-                while (pg == 2)
-                {
-                    printf("\nMenu Gerente");
-                    printf("\n1- Valor total sacado");
-                    printf("\n2- Valor do saldo existente");
-                    printf("\n3- Quantidade de cedulas existentes");
-                    printf("\n4- Abastecer o caixa eletronico");
-                    printf("\n5- Voltar ao menu principal");
-                    printf("\nDigite uma opcao: ");
-                    scanf("%d", &pg);
-
-                    switch (pg)
-                    {
-                        case 1:
-                        {
-                            printf("\n1");
-                            pg = 2;
-                            break;
-                        }
-                        case 2:
-                        {
-                            printf("\n2");
-                            pg = 2;
-                            break;
-                        }
-                        case 3:
-                        {
-                            printf("\n3");
-                            pg = 2;
-                            break;
-                        }
-                        case 4:
-                        {
-                            #include <stdio.h>
- 
-     int quantidade, totalCedulas[8], l, tipo;
-
-    totalCedulas[0] = 100;
-     for(l = 1; l<8; l++)
-     {
-         totalCedulas[l] = totalCedulas[l-1] * 2; 
-     } 
-
-
-    printf("Menu Abastecer o Caixa Eletronico\n500-Cedulas de 500\n150-Cedulas de 150\n50-Cedulas de 50\n20-Cedulas de 20\n10-Cedulas de 10\n5-Cedulas de 5\n2-Cedulas de 2\n1-Cedulas de 1\n0-Voltar ao Menu Gerente");
-    puts("\nInforme qual tipo de cedula deve ser reabastecida: ");
-    scanf("%d", &tipo);
-     switch (tipo){
-         case 500: 
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[0] > 100) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[0] += quantidade;
-            }
-            break;
-         case 150:
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[1] > 200) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[1] += quantidade;
-            }
-            break;
-         case 50:            
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[2] > 400) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[2] += quantidade;
-            break;
-         case 20:
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[3] > 800) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[3] += quantidade;
-            }
-            break;
-         case 10:
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[4] > 1600) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[4] += quantidade;
-            }
-            break;
-         case 5:
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[5] > 3200) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[5] += quantidade;
-            }
-            break;
-         case 2: 
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[6] > 6400) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[6] += quantidade;
-            }
-            break;
-         case 1:
-            printf("Informe a quantidade de cedulas que serao colocadas: ");
-            scanf("%d", &quantidade);
-            if((quantidade + totalCedulas[7] > 12800) ||(quantidade <= 0)){
-                printf("Quantidade invalida!");
-            }
-            else{
-                totalCedulas[7] += quantidade;
-            }
-            break;
-            case 0:
-                printf("Retornando ao Menu do Gerente...");
-                break;
-        default:
-            puts("Opcao invalida!");
-            break;
-            }
-     }
-                            pg = 2;
-                            break;
-                        }
-                        case 5:
-                        {
-                            printf("\nVoltando para o menu principal");
-                            pg = 0;
-                            break;
-                        }
-                        default:
-                        {
-                            printf("\nValor Invalido");
-                            pg = 2;
-                            break;
-                        }
-                    }
-                }
-                break;
-            }
-            case 3:
-            {
-                printf("\nFim da execucao.");
-                return 0;
-                break;
-            }
-            default:
-            {
-                printf("\nValor invalido");
-                pg = 0;
-                break;
-            }
+    int calculocpf=0;
+    int verifica1=0;
+    int verifica2;
+    int teste=0;
+    int valicont=9;
+    int pot=0;
+    long int pote10=10;
+    int cont=10;
+    int cpf1;
+    int cpf2;
+    int i = 0;
+    int vetor[11];
+    //pede para o usuario fornecer o cpf, primeiro os 9 primeors digiros depois os dois ultimos
+    printf("ForneÁa o cpf, digite os 9 primeiros digitos");
+    scanf("%d",&cpf1);
+    printf("ForneÁa o cpf, digite os 2 ultimos digitos");
+    scanf("%d",&cpf2);
+    //coloca os valores inseridos anteriormente dentro de um vetor
+    for(i=0;i<9; i++){
+        //variavel que sera a potencia, comeÁa no 9 e vai diminuindo
+        valicont=valicont-1;
+        //resultado da potencia de 10
+        pot= pow(pote10,valicont);
+        //if para garantir que o vvalor da potencia vai estar certo, pois por algum motivo aluns estavam vindo com valor -1
+        if(pot%2==1){
+            pot=pot+1;
+        }
+        //if para garantir a potencia certa
+        if(pot==2){
+            pot=pot-1;
         }
     }
-    //Valida√ß√£o do CPF
-  
-      //C√©dulas Fornecidas no Saque
-    
-    //Fun√ß√µes do Gerente
-  
-  //Saidas
-  
-  return 0;
+    //inserindo os dois ultimos digitos no vetor
+    vetor[9]=cpf2/10%10;
+    vetor[10]=cpf2%10;
+    //for para fazer a valicaÁ„o do primeiro numero verificador do cpf
+    for(i=0;i<9; i++){
+            //insere na variavel teste o valor respectivo do vetor
+        teste= vetor[i];
+        //faz o calculo
+        calculocpf= calculocpf+(teste*cont);
+        cont=cont-1;
+    }
+    //pega o valor total to calculo e mega o resto da divis„o por 11
+    verifica1=calculocpf%11;
+    //verifica se o resto È maior ou igual a 0, para poder subtrair 11
+    if(verifica1>=2){
+        verifica1=11-verifica1;
+    }
+    //caso n„o seja o valor verificador È 0
+    else{
+        verifica1=0;
+    }
+    //for para fazer a valicaÁ„o do segundo numero verificador do cpf
+    cont=11;
+    calculocpf=0;
+    for(i=0;i<10; i++){
+        teste = vetor[i];
+        //if para fazer o calculo com o valor verificador descoberto anteriormente, so entra aqui na ultima repetiÁ„o
+        if(i==9 && vetor[9]!= verifica1){
+           calculocpf = calculocpf+(verifica1*cont);
+        }
+        //calculo normal de verificaÁ„o
+        else{
+          calculocpf=calculocpf+(teste*cont);
+        }
+        cont=cont-1;
+    }
+    //pega o valor total to calculo e mega o resto da divis„o por 11
+    verifica2= calculocpf%11;
+    //verifica se o resto È maior ou igual a 0, para poder subtrair 11
+    if(verifica2>=2){
+        verifica2=11-verifica2;
+    }
+    //caso n„o seja o valor verificador È 0
+    else{
+        verifica2=0;
+    }
+    //verifica se os numeros de validaÁ„o s„o iguais aos descobertos pelo calculo
+    if(verifica1==vetor[9] && verifica2==vetor[10]){
+        //if para ter o 0 do cpf no printf
+        if(vetor[0]==0){
+            printf("o cpf 0%d%d eh valido",cpf1,cpf2);
+        }
+        //caso n„o precise do 0, aqui È o print normal
+        else{
+            printf("o cpf %d%d eh valido",cpf1,cpf2);
+        }
+    }
+    else{
+            //if para ter o 0 do cpf no printf
+        if(vetor[0]==0){
+            printf("o cpf 0%d%d n„o eh valido",cpf1,cpf2);
+        }
+    //caso n„o precise do 0, aqui È o print normal
+        else{
+            printf("o cpf %d%d n„o eh valido",cpf1,cpf2);
+        }
+
+    }
 }
