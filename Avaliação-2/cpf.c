@@ -16,13 +16,13 @@ int main()
     int i = 0;
     int vetor[11];
     //pede para o usuario fornecer o cpf, primeiro os 9 primeors digiros depois os dois ultimos
-    printf("ForneÁa o cpf, digite os 9 primeiros digitos");
+    printf("Forne√ßa o cpf, digite os 9 primeiros digitos");
     scanf("%d",&cpf1);
-    printf("ForneÁa o cpf, digite os 2 ultimos digitos");
+    printf("Forne√ßa o cpf, digite os 2 ultimos digitos");
     scanf("%d",&cpf2);
     //coloca os valores inseridos anteriormente dentro de um vetor
     for(i=0;i<9; i++){
-        //variavel que sera a potencia, comeÁa no 9 e vai diminuindo
+        //variavel que sera a potencia, come√ßa no 9 e vai diminuindo
         valicont=valicont-1;
         //resultado da potencia de 10
         pot= pow(pote10,valicont);
@@ -38,7 +38,7 @@ int main()
     //inserindo os dois ultimos digitos no vetor
     vetor[9]=cpf2/10%10;
     vetor[10]=cpf2%10;
-    //for para fazer a valicaÁ„o do primeiro numero verificador do cpf
+    //for para fazer a valica√ß√£o do primeiro numero verificador do cpf
     for(i=0;i<9; i++){
             //insere na variavel teste o valor respectivo do vetor
         teste= vetor[i];
@@ -46,48 +46,48 @@ int main()
         calculocpf= calculocpf+(teste*cont);
         cont=cont-1;
     }
-    //pega o valor total to calculo e mega o resto da divis„o por 11
+    //pega o valor total to calculo e mega o resto da divis√£o por 11
     verifica1=calculocpf%11;
-    //verifica se o resto È maior ou igual a 0, para poder subtrair 11
+    //verifica se o resto √© maior ou igual a 0, para poder subtrair 11
     if(verifica1>=2){
         verifica1=11-verifica1;
     }
-    //caso n„o seja o valor verificador È 0
+    //caso n√£o seja o valor verificador √© 0
     else{
         verifica1=0;
     }
-    //for para fazer a valicaÁ„o do segundo numero verificador do cpf
+    //for para fazer a valica√ß√£o do segundo numero verificador do cpf
     cont=11;
     calculocpf=0;
     for(i=0;i<10; i++){
         teste = vetor[i];
-        //if para fazer o calculo com o valor verificador descoberto anteriormente, so entra aqui na ultima repetiÁ„o
+        //if para fazer o calculo com o valor verificador descoberto anteriormente, so entra aqui na ultima repeti√ß√£o
         if(i==9 && vetor[9]!= verifica1){
            calculocpf = calculocpf+(verifica1*cont);
         }
-        //calculo normal de verificaÁ„o
+        //calculo normal de verifica√ß√£o
         else{
           calculocpf=calculocpf+(teste*cont);
         }
         cont=cont-1;
     }
-    //pega o valor total to calculo e mega o resto da divis„o por 11
+    //pega o valor total to calculo e mega o resto da divis√£o por 11
     verifica2= calculocpf%11;
-    //verifica se o resto È maior ou igual a 0, para poder subtrair 11
+    //verifica se o resto √© maior ou igual a 0, para poder subtrair 11
     if(verifica2>=2){
         verifica2=11-verifica2;
     }
-    //caso n„o seja o valor verificador È 0
+    //caso n√£o seja o valor verificador √© 0
     else{
         verifica2=0;
     }
-    //verifica se os numeros de validaÁ„o s„o iguais aos descobertos pelo calculo
+    //verifica se os numeros de valida√ß√£o s√£o iguais aos descobertos pelo calculo
     if(verifica1==vetor[9] && verifica2==vetor[10]){
         //if para ter o 0 do cpf no printf
         if(vetor[0]==0){
             printf("o cpf 0%d%d eh valido",cpf1,cpf2);
         }
-        //caso n„o precise do 0, aqui È o print normal
+        //caso n√£o precise do 0, aqui √© o print normal
         else{
             printf("o cpf %d%d eh valido",cpf1,cpf2);
         }
@@ -95,11 +95,11 @@ int main()
     else{
             //if para ter o 0 do cpf no printf
         if(vetor[0]==0){
-            printf("o cpf 0%d%d n„o eh valido",cpf1,cpf2);
+            printf("o cpf 0%d%d n√£o eh valido",cpf1,cpf2);
         }
-    //caso n„o precise do 0, aqui È o print normal
+    //caso n√£o precise do 0, aqui √© o print normal
         else{
-            printf("o cpf %d%d n„o eh valido",cpf1,cpf2);
+            printf("o cpf %d%d n√£o eh valido",cpf1,cpf2);
         }
 
     }
