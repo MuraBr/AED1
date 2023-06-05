@@ -4,7 +4,7 @@
 
 int main()
 {
-    int menu=0, pg=0;
+    int menu=0, pg=0, pg1=0, mg=0;
 
     while (pg == 0)
     {
@@ -13,41 +13,82 @@ int main()
         printf("\n2- Gerente");
         printf("\n3- Finalizar");
         printf("\nDigite uma opcao: ");
-        scanf("%d", &menu);
+        scanf("%d", &pg);
 
-        if ((menu<0) || (menu > 3))
+        switch (pg)
         {
-            printf("\nValor Invalido");
-            pg = 0;
-        }
-        if ((menu > 0) || (menu <= 3))
-        {
-            switch (menu)
+            case 1:
             {
-                case 0:
+                printf("\n1");
+                pg = 0;
+                break;
+            }
+            case 2:
+            {
+                while (pg == 2)
                 {
-                    printf("Voltando para o menu");
-                    pg = 0;
-                    break;
+                    printf("\nMenu Gerente");
+                    printf("\n1- Valor total sacado");
+                    printf("\n2- Valor do saldo existente");
+                    printf("\n3- Quantidade de cedulas existentes");
+                    printf("\n4- Abastecer o caixa eletronico");
+                    printf("\n5- Voltar ao menu principal");
+                    printf("\nDigite uma opcao: ");
+                    scanf("%d", &pg);
+
+                    switch (pg)
+                    {
+                        case 1:
+                        {
+                            printf("\n1");
+                            pg = 2;
+                            break;
+                        }
+                        case 2:
+                        {
+                            printf("\n2");
+                            pg = 2;
+                            break;
+                        }
+                        case 3:
+                        {
+                            printf("\n3");
+                            pg = 2;
+                            break;
+                        }
+                        case 4:
+                        {
+                            printf("\n4");
+                            pg = 2;
+                            break;
+                        }
+                        case 5:
+                        {
+                            printf("\nVoltando para o menu principal");
+                            pg = 0;
+                            break;
+                        }
+                        default:
+                        {
+                            printf("\nValor Invalido");
+                            pg = 2;
+                            break;
+                        }
+                    }
                 }
-                case 1:
-                {
-                    printf("1");
-                    pg = 0;
-                    break;
-                }
-                case 2:
-                {
-                    printf("2");
-                    pg = 0;
-                    break;
-                }
-                case 3:
-                {
-                    printf("3, fim da execucao.");
-                    return 0;
-                    break;
-                }
+                break;
+            }
+            case 3:
+            {
+                printf("\nFim da execucao.");
+                return 0;
+                break;
+            }
+            default:
+            {
+                printf("\nValor invalido");
+                pg = 0;
+                break;
             }
         }
     }
