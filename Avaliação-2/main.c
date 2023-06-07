@@ -4,9 +4,7 @@
 int main()
 {
     // Declaração de variaveis
-    int menu = 0, pg = 0, saque, saldoExistente, valorTotalSacado, k;
-    int quantidade, totalCedulas[8], l, tipo;
-    int num, j, algarismos[6];
+    int menu, pg, saque, saldoExistente, valorTotalSacado, k, quantidade, totalCedulas[8], l, tipo, num, j, algarismos[6];
     // Inicializações
     const int tipoDaCedula[8] = {
         500, 150, 50, 20, 10, 5, 2, 1};
@@ -19,6 +17,8 @@ int main()
     const char centenas[10][14] = {
         "", "", "Duzentos ", "Trezentos ", "Quatrocentos ", "Quinhentos ", "Seiscentos ", "Setescentos ", "Oitocentos ", "Novecentos "};
     valorTotalSacado = 0;
+    menu = 0;
+    pg = 0;
 
     totalCedulas[0] = 100;
     for (l = 1; l < 8; l++)
