@@ -10,7 +10,7 @@ int main()
     // validação do CPF
 
     // Saque e Total sacado na máquina
-    int valorSaque, valorSacado, valorTotalSacado, quantidadeCedulasUsadas[8];
+    int valorSaque, valorSacado, valorTotalSacado, quantidadeCedulasUsadas[8], quantidadeCedulasPre[8];
     // Abastecimento
     int quantidade, tipo;
 
@@ -23,15 +23,18 @@ int main()
     // Inicializações
     const int tipoDaCedula[8] = {
         500, 150, 50, 20, 10, 5, 2, 1};
-    const char unidades[10][12] = {
+  const char unidades[10][12] = {
         "", "Um ", "Dois ", "Tres ", "Quatro ", "Cinco ", "Seis ", "Sete ", "Oito ", "Nove "};
     const char dezenasEspeciais[10][12] = {
         "Dez ", "Onze ", "Doze ", "Treze ", "Quatorze ", "Quinze ", "Dezesseis ", "Dezessete ", "Dezoito ", "Dezenove "};
     const char dezenas[10][12] = {
         "", "", "Vinte ", "Trinta ", "Quarenta ", "Cinquenta ", "Sessenta ", "Setenta ", "Oitenta ", "Noventa "};
     const char centenas[10][14] = {
-        "", "", "Duzentos ", "Trezentos ", "Quatrocentos ", "Quinhentos ", "Seiscentos ", "Setescentos ", "Oitocentos ", "Novecentos "};
-    valorTotalSacado = 0;
+        "", "", "Duzentos ", "Trezentos ", "Quatrocentos ", "Quinhentos ", "Seiscentos ", "Setescentos ", "Oitocentos ", "Novecentos "};  
+    const char unidadesCedula[10][12] = {
+        "", "Uma ", "Duas ", "Tres ", "Quatro ", "Cinco ", "Seis ", "Sete ", "Oito ", "Nove "};
+    const char centenasCedulas[10][14] = {
+        "", "", "Duzentas ", "Trezentas ", "Quatrocentas ", "Quinhentas ", "Seiscentas ", "Setescentas ", "Oitocentas ", "Novecentas "};
     menu = 0;
     pg = 0;
     totalCedulas[0] = 100;
@@ -76,28 +79,37 @@ int main()
             }
             else
             {
+                for (i = 0; i < 8; i++)
+                {
+                    quantidadeCedulasPre[i] = totalCedulas[i];
+                }
                 i = 0;
+
                 // definicao da quantidade de cedulas
                 while (valorSaque > valorSacado)
                 {
-                    while (valorSaque >= valorSacado)
+                    while ((valorSaque >= valorSacado) && (totalCedulas[i] > 0))
                     {
-                        if (totalCedulas[i] > 0)
+                        valorSacado += tipoDaCedula[i];
+                        quantidadeCedulasUsadas[i]++;
+                        totalCedulas[i]--;
+                    }
+                    if (((totalCedulas[i] != 0)) || ((totalCedulas[i] == 0) && (valorSacado > valorSaque)))
+                    {
+                        valorSacado -= tipoDaCedula[i];
+                        quantidadeCedulasUsadas[i]--;
+                        totalCedulas[i]++;
+                    }
+                    i++;
+                    if ((i == 8) && (valorSacado < valorSaque))
+                    {
+                        valorSacado = valorSaque + 1;
+                        printf("\nNao foi possivel realizar o saque com as cedulas disponiveis!");
+                        for (i = 0; i < 8; i++)
                         {
-                            valorSacado += tipoDaCedula[i];
-                            quantidadeCedulasUsadas[i]++;
-                            totalCedulas[i]--;
-                        }
-                        else
-                        {
-                            i++;
+                            totalCedulas[i] = quantidadeCedulasPre[i];
                         }
                     }
-                    valorSacado -= tipoDaCedula[i];
-                    quantidadeCedulasUsadas[i]--;
-                    totalCedulas[i]++;
-                    printf("tip: %d qtd: %d it: %d", tipoDaCedula[i], totalCedulas[i], i);
-                    i++;
                 }
                 // demonstracao
                 if (valorSacado == valorSaque)
@@ -144,9 +156,9 @@ int main()
                             break;
 
                         case 2:
-                            printf(unidades[algarismos[j]]);
+                            if (algarismos[j] != 1)
+                                printf(unidades[algarismos[j]]);
                             break;
-
                         case 3:
                             if (algarismos[j] == 1)
                             {
@@ -240,7 +252,6 @@ int main()
                     valorTotalSacado += valorSacado;
                 }
             }
-            system("pause");
             pg = 0;
             break;
         case 2:
@@ -301,7 +312,8 @@ int main()
                             break;
 
                         case 2:
-                            printf(unidades[algarismos[j]]);
+                            if (algarismos[j] != 1)
+                                printf(unidades[algarismos[j]]);
                             break;
 
                         case 3:
@@ -423,7 +435,8 @@ int main()
                             break;
 
                         case 2:
-                            printf(unidades[algarismos[j]]);
+                            if (algarismos[j] != 1)
+                                printf(unidades[algarismos[j]]);
                             break;
 
                         case 3:
@@ -529,7 +542,7 @@ int main()
                                 }
                                 else
                                 {
-                                    printf(centenas[algarismos[j]]);
+                                    printf(centenasCedulas[algarismos[j]]);
                                 }
                                 break;
 
@@ -546,7 +559,8 @@ int main()
                                 break;
 
                             case 2:
-                                printf(unidades[algarismos[j]]);
+                                if (algarismos[j] != 1)
+                                    printf(unidadesCedula[algarismos[j]]);
                                 break;
 
                             case 3:
@@ -563,7 +577,7 @@ int main()
                                 }
                                 else
                                 {
-                                    printf(centenas[algarismos[j]]);
+                                    printf(centenasCedulas[algarismos[j]]);
                                 }
                                 break;
 
@@ -580,7 +594,7 @@ int main()
                                 break;
 
                             case 5:
-                                printf(unidades[algarismos[j]]);
+                                printf(unidadesCedula[algarismos[j]]);
                                 break;
 
                             default:
