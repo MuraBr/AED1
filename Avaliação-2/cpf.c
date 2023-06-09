@@ -16,9 +16,9 @@ int main()
     int i = 0;
     int vetor[11];
     //pede para o usuario fornecer o cpf, primeiro os 9 primeors digiros depois os dois ultimos
-    printf("Forneça o cpf, digite os 9 primeiros digitos");
+    printf("Forneca o cpf, digite os 9 primeiros digitos");
     scanf("%d",&cpf1);
-    printf("Forneça o cpf, digite os 2 ultimos digitos");
+    printf("Forneca o cpf, digite os 2 ultimos digitos");
     scanf("%d",&cpf2);
     //coloca os valores inseridos anteriormente dentro de um vetor
     for(i=0;i<9; i++){
@@ -34,9 +34,10 @@ int main()
         if(pot==2){
             pot=pot-1;
         }
+        vetor[i]=(cpf1/pot)%10;
     }
     //inserindo os dois ultimos digitos no vetor
-    vetor[9]=cpf2/10%10;
+    vetor[9]=(cpf2/10)%10;
     vetor[10]=cpf2%10;
     //for para fazer a valicação do primeiro numero verificador do cpf
     for(i=0;i<9; i++){
