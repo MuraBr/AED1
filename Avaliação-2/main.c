@@ -1,10 +1,25 @@
 // União de todas as funções
 #include <stdio.h>
+#include <stdlib.h>
 
 int main()
 {
     // Declaração de variaveis
-    int menu, pg, saque, saldoExistente, valorTotalSacado, k, quantidade, totalCedulas[8], l, tipo, num, j, algarismos[6];
+    // Navegação nos menus
+    int menu, pg;
+    // validação do CPF
+
+    // Saque e Total sacado na máquina
+    int valorSaque, valorSacado, valorTotalSacado, quantidadeCedulasUsadas[8];
+    // Abastecimento
+    int quantidade, tipo;
+
+    // saldo existente e número de cédulas na máquina
+    int saldoExistente, totalCedulas[8];
+    // Escrever por extenso
+    int num, algarismos[6];
+    // Variaveis de iteração
+    int i, k, j, l;
     // Inicializações
     const int tipoDaCedula[8] = {
         500, 150, 50, 20, 10, 5, 2, 1};
@@ -19,10 +34,10 @@ int main()
     valorTotalSacado = 0;
     menu = 0;
     pg = 0;
-
     totalCedulas[0] = 100;
     for (l = 1; l < 8; l++)
         totalCedulas[l] = totalCedulas[l - 1] * 2;
+    saldoExistente = 500 * totalCedulas[0] + 150 * totalCedulas[1] + 50 * totalCedulas[2] + 20 * totalCedulas[3] + 10 * totalCedulas[4] + 5 * totalCedulas[5] + 2 * totalCedulas[6] + 1 * totalCedulas[7];
 
     // Menu
     while (pg == 0)
@@ -37,8 +52,195 @@ int main()
         switch (pg)
         {
         case 1:
-            printf("----Saque-----");
+            printf("\n----Saque-----");
+            // definicao das variaveis
+            valorSacado = 0;
 
+            for (i = 0; i < 8; i++)
+                quantidadeCedulasUsadas[i] = 0;
+            // leitura do "valorSaque"
+            printf("\nDigite o valor a ser sacado: ");
+            scanf("%d", &valorSaque);
+
+            // teste do "valorSaque"
+            while (valorSaque <= 0)
+            {
+                printf("\nO valor digitado esta incorreto. Digite novamente: ");
+                scanf("%d", &valorSaque);
+            }
+            // atualia o valor do saldo existente
+            saldoExistente = 500 * totalCedulas[0] + 150 * totalCedulas[1] + 50 * totalCedulas[2] + 20 * totalCedulas[3] + 10 * totalCedulas[4] + 5 * totalCedulas[5] + 2 * totalCedulas[6] + 1 * totalCedulas[7];
+            if (valorSaque > saldoExistente)
+            {
+                printf("Nao existe saldo suficiente no caixa eletronico para conceder o quantia exigida!\n");
+            }
+            else
+            {
+                i = 0;
+                // definicao da quantidade de cedulas
+                while (valorSaque > valorSacado)
+                {
+                    while (valorSaque >= valorSacado)
+                    {
+                        if (totalCedulas[i] > 0)
+                        {
+                            valorSacado += tipoDaCedula[i];
+                            quantidadeCedulasUsadas[i]++;
+                            totalCedulas[i]--;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                    }
+                    valorSacado -= tipoDaCedula[i];
+                    quantidadeCedulasUsadas[i]--;
+                    totalCedulas[i]++;
+                    printf("tip: %d qtd: %d it: %d", tipoDaCedula[i], totalCedulas[i], i);
+                    i++;
+                }
+                // demonstracao
+                if (valorSacado == valorSaque)
+                {
+                    num = valorSaque;
+                    for (j = 5; j >= 0; j--)
+                    {
+                        algarismos[j] = num % 10;
+                        num /= 10;
+                    }
+                    printf("\nO saque de ");
+                    for (j = 0; j < 6; j++)
+                    {
+                        switch (j)
+                        {
+                        case 0:
+                            if (algarismos[j] == 1)
+                            {
+                                if ((algarismos[j + 1] == 0) && (algarismos[j + 2] == 0))
+                                {
+                                    printf("Cem ");
+                                }
+                                else
+                                {
+                                    printf("Cento ");
+                                }
+                            }
+                            else
+                            {
+                                printf(centenas[algarismos[j]]);
+                            }
+                            break;
+
+                        case 1:
+                            if (algarismos[j] == 1)
+                            {
+                                j++;
+                                printf(dezenasEspeciais[algarismos[j]]);
+                            }
+                            else
+                            {
+                                printf(dezenas[algarismos[j]]);
+                            }
+                            break;
+
+                        case 2:
+                            printf(unidades[algarismos[j]]);
+                            break;
+
+                        case 3:
+                            if (algarismos[j] == 1)
+                            {
+                                if ((algarismos[j + 1] == 0) && (algarismos[j + 2] == 0))
+                                {
+                                    printf("Cem ");
+                                }
+                                else
+                                {
+                                    printf("Cento ");
+                                }
+                            }
+                            else
+                            {
+                                printf(centenas[algarismos[j]]);
+                            }
+                            break;
+
+                        case 4:
+                            if (algarismos[j] == 1)
+                            {
+                                j++;
+                                printf(dezenasEspeciais[algarismos[j]]);
+                            }
+                            else
+                            {
+                                printf(dezenas[algarismos[j]]);
+                            }
+                            break;
+
+                        case 5:
+                            printf(unidades[algarismos[j]]);
+                            break;
+
+                        default:
+                            break;
+                        }
+                        if ((j == 2) && ((algarismos[0] != 0) || (algarismos[1] != 0) || (algarismos[2] != 0)))
+                        {
+                            if (((algarismos[3] == 0) && (algarismos[4] == 0) && (algarismos[5] == 0)) || ((algarismos[3] != 0) && ((algarismos[4] != 0) || (algarismos[5] != 0))))
+                            {
+                                printf("Mil ");
+                            }
+                            else
+                            {
+                                printf("Mil e ");
+                            }
+                        }
+
+                        if ((j != 5) && (algarismos[j] != 0))
+                        {
+                            if (((j != 0) && (j != 3)) || ((algarismos[j + 1] != 0) || (algarismos[j + 2] != 0)))
+                            {
+                                if (((j != 1) && (j != 4)) || ((algarismos[j + 1] != 0) && (algarismos[j] != 1)))
+                                {
+                                    if (j != 2)
+                                    {
+                                        printf("e ");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    printf("(%d) ", valorSaque);
+                    if (valorSaque == 1)
+                    {
+                        printf("real ");
+                    }
+                    else
+                    {
+                        printf("reais ");
+                    }
+                    printf("foi realizado com sucesso!\nO dinheiro sera distribuido em:\n");
+
+                    for (i = 0; i < 8; i++)
+                    {
+                        if (quantidadeCedulasUsadas[i] != 0)
+                        {
+                            printf("%d ", quantidadeCedulasUsadas[i]);
+                            if (quantidadeCedulasUsadas[i] == 1)
+                            {
+                                printf("cedula ");
+                            }
+                            else
+                            {
+                                printf("cedulas ");
+                            }
+                            printf("de %d\n", tipoDaCedula[i]);
+                        }
+                    }
+                    valorTotalSacado += valorSacado;
+                }
+            }
+            system("pause");
             pg = 0;
             break;
         case 2:
@@ -165,8 +367,8 @@ int main()
                             }
                         }
                     }
-                    printf("(%d) ", saldoExistente);
-                    if (saldoExistente == 1)
+                    printf("(%d) ", valorTotalSacado);
+                    if (valorTotalSacado == 1)
                     {
                         printf("real\n\n");
                     }
@@ -441,6 +643,7 @@ int main()
                             else
                             {
                                 totalCedulas[0] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 150:
@@ -453,6 +656,7 @@ int main()
                             else
                             {
                                 totalCedulas[1] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 50:
@@ -465,6 +669,7 @@ int main()
                             else
                             {
                                 totalCedulas[2] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 20:
@@ -477,6 +682,7 @@ int main()
                             else
                             {
                                 totalCedulas[3] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 10:
@@ -489,6 +695,7 @@ int main()
                             else
                             {
                                 totalCedulas[4] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 5:
@@ -501,6 +708,7 @@ int main()
                             else
                             {
                                 totalCedulas[5] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 2:
@@ -513,6 +721,7 @@ int main()
                             else
                             {
                                 totalCedulas[6] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 1:
@@ -525,6 +734,7 @@ int main()
                             else
                             {
                                 totalCedulas[7] += quantidade;
+                                printf("Caixa eletronico abastecido com sucesso!");
                             }
                             break;
                         case 0:
@@ -536,13 +746,14 @@ int main()
                         }
                     } while (tipo != 0);
                     pg = 2;
+
                     break;
                 case 5:
-                    printf("\nVoltando para o menu principal");
+                    printf("\nVoltando para o menu principal...");
                     pg = 0;
                     break;
                 default:
-                    printf("\nValor Invalido");
+                    printf("\nOpcao Invalida!");
                     pg = 2;
                     break;
                 }
@@ -553,13 +764,9 @@ int main()
             return 0;
             break;
         default:
-            printf("\nValor invalido");
+            printf("\nOpcao invalida!");
             pg = 0;
             break;
         }
     }
-
-    // Funções do Gerente
-
-    // Saidas
 }
