@@ -16,7 +16,7 @@ int main()
     int quantidade, tipo;
 
     // saldo existente e número de cédulas na máquina
-    int saldoExistente, totalCedulas[8];
+    int saldoExistente, totalCedulas[8], totalNaMaquina;
     // Escrever por extenso
     int num, algarismos[6];
     // Variaveis de iteração
@@ -56,6 +56,7 @@ int main()
         switch (pg)
         {
         case 1:
+            printf("\n----Validar CPF-----");
             int calculocpf = 0;
             int verifica1 = 0;
             int verifica2;
@@ -69,9 +70,9 @@ int main()
             int i = 0;
             int vetor[11];
             // pede para o usuario fornecer o cpf, primeiro os 9 primeors digiros depois os dois ultimos
-            printf("Forneca o cpf, digite os 9 primeiros digitos");
+            printf("\nForneca o cpf, digite os 9 primeiros digitos: ");
             scanf("%d", &cpf1);
-            printf("Forneca o cpf, digite os 2 ultimos digitos");
+            printf("\nForneca o cpf, digite os 2 ultimos digitos: ");
             scanf("%d", &cpf2);
             // coloca os valores inseridos anteriormente dentro de um vetor
             for (i = 0; i < 9; i++)
@@ -152,12 +153,12 @@ int main()
                 // if para ter o 0 do cpf no printf
                 if (vetor[0] == 0)
                 {
-                    printf("o cpf 0%d%d não eh valido", cpf1, cpf2);
+                    printf("\nO cpf 0%d%d nao eh valido", cpf1, cpf2);
                 }
                 // caso não precise do 0, aqui é o print normal
                 else
                 {
-                    printf("o cpf %d%d não eh valido", cpf1, cpf2);
+                    printf("\nO cpf %d%d nao eh valido", cpf1, cpf2);
                 }
             }
             else
@@ -165,12 +166,12 @@ int main()
                 // if para ter o 0 do cpf no printf
                 if (vetor[0] == 0)
                 {
-                    printf("o cpf 0%d%d eh valido", cpf1, cpf2);
+                    printf("\nO cpf 0%d%d eh valido", cpf1, cpf2);
                 }
                 // caso não precise do 0, aqui é o print normal
                 else
                 {
-                    printf("o cpf %d%d eh valido", cpf1, cpf2);
+                    printf("\nO cpf %d%d eh valido", cpf1, cpf2);
                 }
                 printf("\n----Saque-----");
                 // definicao das variaveis
@@ -273,7 +274,7 @@ int main()
                                 break;
 
                             case 2:
-                                if (algarismos[j] != 1)
+                                if ((algarismos[j] != 1) || ((algarismos[j - 1] != 0) || (algarismos[j - 2] != 0)))
                                     printf(unidades[algarismos[j]]);
                                 break;
                             case 3:
@@ -430,7 +431,7 @@ int main()
                             break;
 
                         case 2:
-                            if (algarismos[j] != 1)
+                            if ((algarismos[j] != 1) || ((algarismos[j - 1] != 0) || (algarismos[j - 2] != 0)))
                                 printf(unidades[algarismos[j]]);
                             break;
 
@@ -553,7 +554,7 @@ int main()
                             break;
 
                         case 2:
-                            if (algarismos[j] != 1)
+                            if ((algarismos[j] != 1) || ((algarismos[j - 1] != 0) || (algarismos[j - 2] != 0)))
                                 printf(unidades[algarismos[j]]);
                             break;
 
@@ -633,10 +634,20 @@ int main()
                     break;
                 case 3:
                     printf("\n-----Quantidade de cedulas existentes-----");
-                    for (k = 0; k < 8; k++)
+                    totalNaMaquina = 0;
+                    for (k = 0; k < 9; k++)
                     {
-                        printf("\n%d: restam ", tipoDaCedula[k]);
-                        num = totalCedulas[k];
+                        if (k != 8)
+                        {
+                            totalNaMaquina += totalCedulas[k];
+                            printf("\n%d: restam ", tipoDaCedula[k]);
+                            num = totalCedulas[k];
+                        }
+                        else
+                        {
+                            num = totalNaMaquina;
+                            printf("\n\nTotal de cedulas na maquina: ");
+                        }
                         for (j = 5; j >= 0; j--)
                         {
                             algarismos[j] = num % 10;
@@ -646,24 +657,6 @@ int main()
                         {
                             switch (j)
                             {
-                            case 0:
-                                if (algarismos[j] == 1)
-                                {
-                                    if ((algarismos[j + 1] == 0) && (algarismos[j + 2] == 0))
-                                    {
-                                        printf("Cem ");
-                                    }
-                                    else
-                                    {
-                                        printf("Cento ");
-                                    }
-                                }
-                                else
-                                {
-                                    printf(centenasCedulas[algarismos[j]]);
-                                }
-                                break;
-
                             case 1:
                                 if (algarismos[j] == 1)
                                 {
@@ -677,8 +670,8 @@ int main()
                                 break;
 
                             case 2:
-                                if (algarismos[j] != 1)
-                                    printf(unidadesCedula[algarismos[j]]);
+                                if ((algarismos[j] != 1) || ((algarismos[j - 1] != 0) || (algarismos[j - 2] != 0)))
+                                    printf(unidades[algarismos[j]]);
                                 break;
 
                             case 3:
@@ -744,16 +737,31 @@ int main()
                                 }
                             }
                         }
-                        printf("(%d) ", totalCedulas[k]);
-                        if (totalCedulas[k] == 1)
+                        if (k != 8)
                         {
-                            printf("cedula ");
+                            printf("(%d) ", totalCedulas[k]);
+                            if (totalCedulas[k] == 1)
+                            {
+                                printf("cedula ");
+                            }
+                            else
+                            {
+                                printf("cedulas ");
+                            }
+                            printf("de %d", tipoDaCedula[k]);
                         }
                         else
                         {
-                            printf("cedulas ");
+                            printf("(%d) ", totalNaMaquina);
+                            if (totalNaMaquina == 1)
+                            {
+                                printf("cedula ");
+                            }
+                            else
+                            {
+                                printf("cedulas ");
+                            }
                         }
-                        printf("de %d", tipoDaCedula[k]);
                     }
                     pg = 2;
                     break;
