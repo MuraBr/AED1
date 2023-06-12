@@ -38,6 +38,7 @@ int main()
         "", "", "Duzentas ", "Trezentas ", "Quatrocentas ", "Quinhentas ", "Seiscentas ", "Setescentas ", "Oitocentas ", "Novecentas "};
     menu = 0;
     pg = 0;
+    valorTotalSacado = 0;
     totalCedulas[0] = 100;
     for (l = 1; l < 8; l++)
         totalCedulas[l] = totalCedulas[l - 1] * 2;
