@@ -12,7 +12,7 @@ int main()
     int pot=0;
     long int pote10=10;
     int cont=10;
-    char vetor[11];
+    char vetor[12];
     int i = 0;
     //pede para o usuario fornecer o cpf
     printf("Forneca o cpf: ");
