@@ -70,7 +70,7 @@ int main()
             char vetor[12];
             int i = 0;
             // pede para o usuario fornecer o cpf
-            printf("Forneca o cpf: ");
+            printf("\nForneca o cpf: ");
             scanf("%s", &vetor);
             // for para fazer a valicação do primeiro numero verificador do cpf
             for (i = 0; i < 9; i++)
