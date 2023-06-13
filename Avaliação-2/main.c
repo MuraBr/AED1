@@ -40,6 +40,7 @@ int main()
     menu = 0;
     pg = 0;
     totalCedulas[0] = 100;
+    valorTotalSacado = 0;
     for (l = 1; l < 8; l++)
         totalCedulas[l] = totalCedulas[l - 1] * 2;
     saldoExistente = 500 * totalCedulas[0] + 150 * totalCedulas[1] + 50 * totalCedulas[2] + 20 * totalCedulas[3] + 10 * totalCedulas[4] + 5 * totalCedulas[5] + 2 * totalCedulas[6] + 1 * totalCedulas[7];
