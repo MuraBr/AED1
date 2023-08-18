@@ -44,6 +44,27 @@ int verifica_cpf_valido(char cpf[]) {
 void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[]) {
 
    //implemente aqui
+   int teste=0;
+   int cont = 0;
+   for (int i = 0; i < 14; i++)
+   {  
+      if (i==3 || i==7)
+      {
+         cpf_destino[i]='.';
+      }
+      else if (i==11)
+      {
+         cpf_destino[i]='-';
+      }
+      else
+      {
+        teste= cpf_origem[cont];
+         cpf_destino[i]=teste;
+         cont++;
+      }
+      
+   }
+   return(cpf_destino);
 
 }
 //objetivo:calcula o primeiro digito verificador de um cpf no formato 999999999
