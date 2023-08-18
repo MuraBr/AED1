@@ -1,22 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-const char unidades[10][12] = {
-    "", "Um ", "Dois ", "Tres ", "Quatro ", "Cinco ", "Seis ", "Sete ", "Oito ", "Nove "};
-const char dezenasEspeciais[10][12] = {
-    "Dez ", "Onze ", "Doze ", "Treze ", "Quatorze ", "Quinze ", "Dezesseis ", "Dezessete ", "Dezoito ", "Dezenove "};
-const char dezenas[10][12] = {
-    "", "", "Vinte ", "Trinta ", "Quarenta ", "Cinquenta ", "Sessenta ", "Setenta ", "Oitenta ", "Noventa "};
-const char centenas[10][14] = {
-    "", "", "Duzentos ", "Trezentos ", "Quatrocentos ", "Quinhentos ", "Seiscentos ", "Setescentos ", "Oitocentos ", "Novecentos "};
-const char unidadesCedula[10][12] = {
-    "", "Uma ", "Duas ", "Tres ", "Quatro ", "Cinco ", "Seis ", "Sete ", "Oito ", "Nove "};
-const char centenasCedulas[10][14] = {
-    "", "", "Duzentas ", "Trezentas ", "Quatrocentas ", "Quinhentas ", "Seiscentas ", "Setescentas ", "Oitocentas ", "Novecentas "};
-int algarismos[6], num;
-
-void escreveCent(int a, int b, int c)
+//Objetivo: escreve por extenso as casas de centena 
+//Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero, além da formatação desejada
+//Onde 0 é a formatação padrão e 1 a formatação para cedulas
+//Retorno: nenhum
+void escreveCent(int a, int b, int c, int tipo)
 {
     if (a == 1)
     {
@@ -33,31 +20,64 @@ void escreveCent(int a, int b, int c)
     else
     {
         // Utiliza o próprio algarismo para identificar a saída por extenso no vetor das centenas
-        printf(centenas[a]);
+        if (tipo != 1)
+        {
+            printf(centenas[a]);
+        }
+        else
+        {
+            printf(centenasCedulas[a]);
+        }
     }
 }
 
-void escreveUni(int i, int c, int b, int a)
+//Objetivo: escreve por extenso as casas de unidade de um numero
+//Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero, a formatação desejada
+//Onde 0 é a formatação padrão e 1 a formatação para cedulas
+//Além da coordenada i do vetor de algarismos
+//Retorno: nenhum
+void escreveUni(int i, int c, int b, int a, int tipo)
 {
     if (i != 2)
     {
-        printf(unidades[c]);
+        if (tipo != 1)
+        {
+            printf(unidades[c]);
+        }
+        else
+        {
+            printf(unidadesCedula[c]);
+        }
     }
     else
     {
         if ((c != 1) || ((b != 0) || (a != 0)))
-            printf(unidades[c]);
+        {
+            if (tipo != 1)
+            {
+                printf(unidades[c]);
+            }
+            else
+            {
+                printf(unidadesCedula[c]);
+            }
+        }
         // Utiliza o próprio algarismo para identificar a saída por extenso no vetor das unidades
     }
 }
+
+
+//Objetivo: escreve por extenso as casas de dezena de um numero
+//Parametros: recebe o algarismo da dezena(b) e unidade(c) de um numero
+//Retorno: retorna 1 se o modulo utilizou as dezenas especiais e 0 se usou as dezenas normais 
 int escreveDez(int b, int c)
 {
     if (b == 1)
     {
-        // Caso o algarismo na dezena for 1, avança em um casa e avalia a unidade
+        //Se o numero é 1, então está entre 10 e 19, por isso utiliza as dezenas especiais
         printf(dezenasEspeciais[c]);
         return 1;
-        // Utiliza o próprio algarismo para identificar a saída por extenso no vetor das dezenas especiais
+        // Utiliza o próprio algarismo para identificar a saída por extenso no vetor 
     }
     else
     {
@@ -67,6 +87,9 @@ int escreveDez(int b, int c)
     }
 }
 
+//Objetivo: testa e escreve mil nos lugares corretos 
+//Parametros: recebe todas as casas do numero com os algarismos armazenados no vetor [a, b, c, d, e, f]
+//Retorno: nenhum
 void escreveMil(int a, int b, int c, int d, int e, int f)
 {
     // Escreve mil quando pelo menos um algarismo antes da casa da centena não for nulo
@@ -84,11 +107,15 @@ void escreveMil(int a, int b, int c, int d, int e, int f)
     }
 }
 
+//Objetivo: testa e escreve "e" nos momentos adequados
+//Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero
+//Além da coordenada i do vetor que está sendo analisada
+//Retorno: nenhum
 void escreveE(int i, int a, int b, int c)
 {
     // Avalia quando escrever "e'"
     // Escreve apenas se o algarismo analisado não for nulo ou da casa da unidade
-    // Se o algarismo faz parte da centena de milhar ou centena e os próximos algarismos não são nulos
+    // Se o algarismo faz parte da centena de milhar ou centena e os próximos num não são nulos
     // Se o algarismo faz parte da dezena de milhar ou dezena e o próximo algarismo não é nulo
     // Se o algarismo não fazer parte da unidade de milhar (já é escrito quando o mil é avaliado)
     if ((i < 5) && (a != 0))
@@ -106,39 +133,34 @@ void escreveE(int i, int a, int b, int c)
     }
 }
 
-void escrevePorExtenso(int algarismos[])
+//Objetivo: reune todas as funções para escrever um numero por extenso e avalia todos as coordenadas do vetor de algarismos
+//Parametros: recebe um vetor com os algarismos de um numero, além do tipo de formatação desejada
+//Onde 0 é a formatação padrão e 1 a formatação para cedulas 
+//Retorno: nenhum
+void escrevePorExtenso(int num[], int tipo)
 {
     int j;
     for (j = 0; j < 6; j++)
     {
         if ((j == 0) || (j == 3))
         {
-            escreveCent(algarismos[j], algarismos[j + 1], algarismos[j + 2]);
+            escreveCent(num[j], num[j + 1], num[j + 2], tipo);
         }
         else if ((j == 2) || (j == 5))
         {
-            escreveUni(j, algarismos[j], algarismos[j - 1], algarismos[j - 2]);
+            escreveUni(j, num[j], num[j - 1], num[j - 2], tipo);
             if (j == 2)
-                escreveMil(algarismos[0], algarismos[1], algarismos[2], algarismos[3], algarismos[4], algarismos[5]);
+                escreveMil(num[0], num[1], num[2], num[3], num[4], num[5]);
         }
         else if ((j == 1) || (j == 4))
         {
-            if (escreveDez(algarismos[j], algarismos[j + 1]) == 1)
+            if (escreveDez(num[j], num[j + 1]) == 1)
             {
                 j++;
             }
             if (j == 2)
-                escreveMil(algarismos[0], algarismos[1], algarismos[2], algarismos[3], algarismos[4], algarismos[5]);
+                escreveMil(num[0], num[1], num[2], num[3], num[4], num[5]);
         }
-        escreveE(j, algarismos[j], algarismos[j + 1], algarismos[j + 2]);
+        escreveE(j, num[j], num[j + 1], num[j + 2]);
     }
-}
-
-int main()
-{
-    int i;
-
-    escrevePorExtenso(algarismos);
-
-    return 0;
 }
