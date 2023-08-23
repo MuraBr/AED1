@@ -26,7 +26,14 @@ char geraNumero() {
 void geraContaCorrente(char c[]) {
 
    //implemente aqui
+    int i;
+    char contaCorrente[7];
 
+    for (i = 0; i < 6; i++)
+    {
+        contaCorrente[i] = geraNumero();
+    }
+    contaCorrente[6] = geraAlfabeto();
 }
 //objetivo:verifica se um cpf no formato 999.999.999-99 e valido
 //parametros: cpf a ser verificado
