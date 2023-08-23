@@ -204,6 +204,17 @@ void escrevePorExtenso(int num[], int tipo)
         }
         escreveE(j, num[j], num[j + 1], num[j + 2]);
     }
+    if (tipo == 0)
+    {
+        if ((num[5] > 1) || (num[4] > 0) || (num[3] > 0) || (num[2] > 0) || (num[1] > 0) || (num[0] > 0))
+        {
+            printf("reais");
+        }
+        else
+        {
+            printf("real");
+        }
+    }
 }
 
 //Objetivo: exibe o relatório sobre os saques realizados no caixa eletronico por cada cliente
