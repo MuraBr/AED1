@@ -404,40 +404,56 @@ int main()
             while (pg == 1)
             {
                 printf("\nMenu Cliente\n1-Incluir\n2-Mostrar\n3-Alterar\n4-Excluir\n5-Voltar\nDigite uma opcao: ");
-                scanf("%d", &pg);
-                switch (pg)
-                {
-                case 5:
-                    printf("\nVoltando para o menu principal...\n");
-                    pg = 0;
-                    break;
-                default:
-                    printf("\nValor Invalido!\n");
-                    pg = 1;
-                    break;
-                }
+                    scanf("%d", &pg);
+                    switch (pg)
+                    {
+                        case 1:
+
+                            break;
+                        case 2:
+
+                            break;
+                        case 3:
+
+                            break;
+                        case 4:
+
+                            break;
+                        case 5:
+                            printf("\nVoltando para o menu principal\n");
+                            pg = 0;
+                            break;
+                        default:
+                            printf("\nValor Invalido!\n");
+                            pg = 1;
+                            break;    
+                    }
             }
             break;
         case 2:
             while (pg == 2)
             {
-                printf("\nSaque\nDigite uma opcao: ");
+                printf("\nSaque\n");
+                valorASerSacado = realizaSaque();
+                if (checaSaldo(valorASerSacado) == 1)
+                {
+                    if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
+                    {
+                        escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
+                    }
+                }
+                printf("Escolha uma opcao:\n1-Fazer outro saque\n2-Voltar ao Menu\n");            
                 scanf("%d", &pg);
 
                 switch (pg)
                 {
                 case 1:
-                    printf("Saque realizado\n");
-
                     pg = 2;
                     break;
-
                 case 2:
-
                     printf("\nVoltando para o menu principal...\n");
                     pg = 0;
                     break;
-
                 default:
                     printf("\nValor Invalido!\n");
                     pg = 2;
@@ -453,19 +469,19 @@ int main()
                 switch (pg)
                 {
                 case 1:
-                    relatorioSaques(100);
+                    relatorioSaques();
 
                     pg = 3;
                     break;
                 case 2:
                     // Recebe o saldo total na máquina
-                    relatorioSaldo(saldoExistente);
+                    relatorioSaldo();
 
                     pg = 3;
                     break;
                 case 3:
                     // Recebe o vetor que armazena a quantidade de cada cedula
-                    relatorioCedulas(quantidadeDeCedulas);
+                    relatorioCedulas();
 
                     pg = 3;
                     break;
