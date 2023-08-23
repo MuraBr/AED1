@@ -165,7 +165,7 @@ void escrevePorExtenso(int num[], int tipo)
     }
     if (tipo == 0)
     {
-        if (num[5] > 1)
+        if ((num[5] > 1) || (num[4] > 0) || (num[3] > 0) || (num[2] > 0) || (num[1] > 0) || (num[0] > 0))
         {
             printf("reais");
         }
