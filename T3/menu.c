@@ -1,10 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
 
 int main()
 {
-    int menu=0, pg=0, pg1=0, mg=0;
+    int pg = 0;
 
     while (pg == 0)
     {
@@ -20,6 +18,18 @@ int main()
                     scanf("%d", &pg);
                     switch (pg)
                     {
+                        case 1:
+
+                            break;
+                        case 2:
+
+                            break;
+                        case 3:
+
+                            break;
+                        case 4:
+
+                            break;
                         case 5:
                             printf("\nVoltando para o menu principal\n");
                             pg = 0;
@@ -32,49 +42,7 @@ int main()
                 }
                 break;
             case 2:
-                while (pg == 2)
-                {
-                    printf("\nSaque\nDigite uma opcao: ");
-                    scanf("%d", &pg);
-
-                    switch (pg)
-                    {                    
-                        case 1:
-                        
-                            printf("\n1\n");
-                            pg = 2;
-                            break;
-                        
-                        case 2:
-                        
-                            printf("\n2\n");
-                            pg = 2;
-                            break;
-                        
-                        case 3:
-                        
-                            printf("\n3\n");
-                            pg = 2;
-                            break;
-                        
-                        case 4:
-                        
-                            printf("\n4\n");
-                            pg = 2;
-                            break;
-                        
-                        case 5:
-                        
-                            printf("\nVoltando para o menu principal\n");
-                            pg = 0;
-                            break;
-                        
-                        default:
-                            printf("\nValor Invalido!\n");
-                            pg = 2;
-                            break;
-                    }
-                }
+                
                 break;
             case 3:
                 while (pg == 3)
@@ -84,23 +52,23 @@ int main()
                     switch (pg)
                     {
                         case 1:
-                            printf("\n1\n");
+                            
                             pg = 3;
                             break;
                         case 2:
-                            printf("\n2\n");
+                            
                             pg = 3;
                             break;
                         case 3:
-                            printf("\n3\n");
+                            
                             pg = 3;
                             break;
                         case 4:
-                            printf("\n4\n");
+                            
                             pg = 0;
                             break;
                         default:
-                            printf("\nValor Invalido!\n");
+                            
                             pg = 3;
                             break;
                     }
