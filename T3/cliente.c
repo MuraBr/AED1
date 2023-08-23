@@ -31,7 +31,7 @@ int existeCadastro(char cpfAnalise[], char cpfClientes[], char contaAnalise[], c
     int i, validade;
     validade = 0;
     for(i = 0; i <numClientes; i++){
-        if(strcmp(cpfAnalise, cpfClientes[i]) != 0){
+        if((strcmp(cpfAnalise, cpfClientes[i]) == 0) || (strcmp(contaAnalise, correnteClientes[i]) == 0){
             validade = 1;
         }
     }
