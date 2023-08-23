@@ -1,6 +1,6 @@
 //Variáveis
 char cpfs[50][15], contasCorrentes[50][10];
-int saques[50][20];
+int saques[50][20], numClientes = 0;
 
 //Objetivo: gera um cpf e uma conta correte
 //verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
@@ -8,14 +8,34 @@ int saques[50][20];
 //Parametros: vetor onde será armazenado o cpf, a conta corrente
 //Retorno: nenhum
 void incluirCliente(char cpfClientes[], char correnteClientes[]){
+    char cpfTeste[15], contaTeste[10];
+
+    gera_cpf_valido(cpfTeste);
+    geraContaCorrente(contaTeste);
+
+    if(existeCadastro(cpfTeste, cpfClientes, contaTeste, correnteClientes) == 0){
+        strcpy(cpfClientes[numClientes], cpfTeste);
+        strcpy(correnteClientes[numClientes], contaTeste);
+        numClientes++;
+    }
+    else{
+        printf("\nNao foi possivel incluir o cliente!\n");
+    }
 
 }
 
 //Objetivo: verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
-//Parametros: vetores onde os cpfs e as contas estão armazenados
+//Parametros: vetores onde os cpfs e as contas estão armazenados, além do numero de cpf e conta que será comparado
 //Retorno: 1 se existe e 0 em caso contrário
-int existeCadastro(char cpfClientes[], char correnteClientes[]){
-
+int existeCadastro(char cpfAnalise[], char cpfClientes[], char contaAnalise[], char correnteClientes[]){
+    int i, validade;
+    validade = 0;
+    for(i = 0; i <numClientes; i++){
+        if(strcmp(cpfAnalise, cpfClientes[i]) != 0){
+            validade = 1;
+        }
+    }
+    return validade;
 }
 
 //Objetivo: exibe os dados de cada cliente
