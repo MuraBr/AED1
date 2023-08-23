@@ -1,38 +1,49 @@
-//Variáveis
-char cpfs[50][15], contasCorrentes[50][10];
+// Variáveis
+char cpfClientes[50][15], correnteClientes[50][10];
 int saques[50][20], numClientes = 0;
 
-//Objetivo: gera um cpf e uma conta correte
-//verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
-//inclui o cliente no sistema
-//Parametros: vetor onde será armazenado o cpf, a conta corrente
-//Retorno: nenhum
-void incluirCliente(char cpfClientes[], char correnteClientes[]){
+// Objetivo: gera um cpf e uma conta correte
+// verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
+// inclui o cliente no sistema
+// Parametros: vetor onde será armazenado o cpf, a conta corrente
+// Retorno: nenhum
+void incluirCliente()
+{
     char cpfTeste[15], contaTeste[10];
-
-    gera_cpf_valido(cpfTeste);
     geraContaCorrente(contaTeste);
+    gera_cpf_valido(cpfTeste);
 
-    if(existeCadastro(cpfTeste, cpfClientes, contaTeste, correnteClientes) == 0){
+    if (existeCadastro(cpfTeste, contaTeste) == 0)
+    {
         strcpy(cpfClientes[numClientes], cpfTeste);
         strcpy(correnteClientes[numClientes], contaTeste);
         numClientes++;
     }
-    else{
+    else
+    {
         printf("\nNao foi possivel incluir o cliente!\n");
     }
-
 }
 
-//Objetivo: verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
-//Parametros: vetores onde os cpfs e as contas estão armazenados, além do numero de cpf e conta que será comparado
-//Retorno: 1 se existe e 0 em caso contrário
-int existeCadastro(char cpfAnalise[], char cpfClientes[], char contaAnalise[], char correnteClientes[]){
+// Objetivo: verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
+// Parametros: vetores onde os cpfs e as contas estão armazenados, além do numero de cpf e conta que será comparado
+// Retorno: 2 se existe, 1 se existe o cpf ou conta corrente, e 0 em caso contrário
+int existeCadastro(char cpfAnalise[], char contaAnalise[])
+{
     int i, validade;
     validade = 0;
-    for(i = 0; i <numClientes; i++){
-        if((strcmp(cpfAnalise, cpfClientes[i]) == 0) || (strcmp(contaAnalise, correnteClientes[i]) == 0){
-            validade = 1;
+    for (i = 0; i < numClientes; i++)
+    {
+        if ((strcmp(cpfAnalise, cpfClientes[i]) == 0) || (strcmp(contaAnalise, correnteClientes[i]) == 0))
+        {
+            if ((strcmp(cpfAnalise, cpfClientes[i]) == 0) && (strcmp(contaAnalise, correnteClientes[i]) == 0))
+            {
+                validade = 2;
+            }
+            else
+            {
+                validade = 1;
+            }
         }
     }
     return validade;
