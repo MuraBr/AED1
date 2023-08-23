@@ -163,4 +163,15 @@ void escrevePorExtenso(int num[], int tipo)
         }
         escreveE(j, num[j], num[j + 1], num[j + 2]);
     }
+    if (tipo == 0)
+    {
+        if (num[5] > 1)
+        {
+            printf("reais");
+        }
+        else
+        {
+            printf("real");
+        }
+    }
 }
