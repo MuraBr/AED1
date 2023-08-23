@@ -90,7 +90,17 @@ int obtem_segundo_digito_verificador(char cpf[]) {
 //parametros: cpf onde sera armazenado o cpf valido
 //retorno: nenhum
 void gera_cpf_valido(char cpf[]) {
-
    //implemente aqui
+    int i;
+    char cpf_processo[11];
 
+    do{
+        for(i = 0; i < 9; i++){
+            cpf_processo[i] = geraNumero();
+        }
+        cpf_processo[9] = obtem_primeiro_digito_verificador() + '0';
+        cpf_processo[10] = obtem_segundo_digito_verificador() + '0';
+
+        insere_pontuacao_cpf(cpf_processo, cpf);
+    }while(verifica_cpf_valido(cpf) != 1);
 }
