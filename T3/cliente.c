@@ -84,7 +84,7 @@ int existeSaque(int saquesCliente[]){
 
 }
 
-//Objetivo: exclui cliente se não existe saques em sua conta
+//Objetivo: exclui cliente se não existe saques em sua conta, atualiza o número de clientes e reordena os vetores
 //Parametros: vetor conta e cpf
 //Retorno: nenhum
 void excluirCliente(char cpfClientes[], char correnteClientes[]){
