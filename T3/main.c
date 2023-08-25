@@ -1,4 +1,4 @@
-//Código real oficial 2.0
+// Código real oficial 2.0
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +9,9 @@ const int tipoDaCedula[8] = {
     500, 150, 50, 20, 10, 5, 2, 1};
 int quantidadeDeCedulas[8] = {
     100, 200, 400, 800, 1600, 3200, 6400, 12800};
+
+// Variáveis para manutenção de clientes
+int numClientes = 0;
 
 // Variavel global para calculos variados
 int algarismos[6];
@@ -27,9 +30,9 @@ const char unidadesCedula[10][12] = {
 const char centenasCedulas[10][14] = {
     "", "", "Duzentas ", "Trezentas ", "Quatrocentas ", "Quinhentas ", "Seiscentas ", "Setescentas ", "Oitocentas ", "Novecentas "};
 
-//Objetivo: separa os algorismos de um número e armazena em um vetor [a, b, c, d, e, f]
-//Parametros: recebe um valor e o vetor onde serão guardados os algarismos
-//Retorno: os algarismos do valor
+// Objetivo: separa os algorismos de um número e armazena em um vetor [a, b, c, d, e, f]
+// Parametros: recebe um valor e o vetor onde serão guardados os algarismos
+// Retorno: os algarismos do valor
 void separanum(int valor, int num[])
 {
     int i;
@@ -40,10 +43,10 @@ void separanum(int valor, int num[])
     }
 }
 
-//Objetivo: escreve por extenso as casas de centena 
-//Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero, além da formatação desejada
-//Onde 0 é a formatação padrão e 1 a formatação para cedulas
-//Retorno: nenhum
+// Objetivo: escreve por extenso as casas de centena
+// Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero, além da formatação desejada
+// Onde 0 é a formatação padrão e 1 a formatação para cedulas
+// Retorno: nenhum
 void escreveCent(int a, int b, int c, int tipo)
 {
     if (a == 1)
@@ -72,11 +75,11 @@ void escreveCent(int a, int b, int c, int tipo)
     }
 }
 
-//Objetivo: escreve por extenso as casas de unidade de um numero
-//Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero, a formatação desejada
-//Onde 0 é a formatação padrão e 1 a formatação para cedulas
-//Além da coordenada i do vetor de algarismos
-//Retorno: nenhum
+// Objetivo: escreve por extenso as casas de unidade de um numero
+// Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero, a formatação desejada
+// Onde 0 é a formatação padrão e 1 a formatação para cedulas
+// Além da coordenada i do vetor de algarismos
+// Retorno: nenhum
 void escreveUni(int i, int c, int b, int a, int tipo)
 {
     if (i != 2)
@@ -107,18 +110,17 @@ void escreveUni(int i, int c, int b, int a, int tipo)
     }
 }
 
-
-//Objetivo: escreve por extenso as casas de dezena de um numero
-//Parametros: recebe o algarismo da dezena(b) e unidade(c) de um numero
-//Retorno: retorna 1 se o modulo utilizou as dezenas especiais e 0 se usou as dezenas normais 
+// Objetivo: escreve por extenso as casas de dezena de um numero
+// Parametros: recebe o algarismo da dezena(b) e unidade(c) de um numero
+// Retorno: retorna 1 se o modulo utilizou as dezenas especiais e 0 se usou as dezenas normais
 int escreveDez(int b, int c)
 {
     if (b == 1)
     {
-        //Se o numero é 1, então está entre 10 e 19, por isso utiliza as dezenas especiais
+        // Se o numero é 1, então está entre 10 e 19, por isso utiliza as dezenas especiais
         printf(dezenasEspeciais[c]);
         return 1;
-        // Utiliza o próprio algarismo para identificar a saída por extenso no vetor 
+        // Utiliza o próprio algarismo para identificar a saída por extenso no vetor
     }
     else
     {
@@ -128,9 +130,9 @@ int escreveDez(int b, int c)
     }
 }
 
-//Objetivo: testa e escreve mil nos lugares corretos 
-//Parametros: recebe todas as casas do numero com os algarismos armazenados no vetor [a, b, c, d, e, f]
-//Retorno: nenhum
+// Objetivo: testa e escreve mil nos lugares corretos
+// Parametros: recebe todas as casas do numero com os algarismos armazenados no vetor [a, b, c, d, e, f]
+// Retorno: nenhum
 void escreveMil(int a, int b, int c, int d, int e, int f)
 {
     // Escreve mil quando pelo menos um algarismo antes da casa da centena não for nulo
@@ -148,10 +150,10 @@ void escreveMil(int a, int b, int c, int d, int e, int f)
     }
 }
 
-//Objetivo: testa e escreve "e" nos momentos adequados
-//Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero
-//Além da coordenada i do vetor que está sendo analisada
-//Retorno: nenhum
+// Objetivo: testa e escreve "e" nos momentos adequados
+// Parametros: recebe o algarismo da centena(a), dezena(b) e unidade(c) de um numero
+// Além da coordenada i do vetor que está sendo analisada
+// Retorno: nenhum
 void escreveE(int i, int a, int b, int c)
 {
     // Avalia quando escrever "e'"
@@ -174,10 +176,10 @@ void escreveE(int i, int a, int b, int c)
     }
 }
 
-//Objetivo: reune todas as funções para escrever um numero por extenso e avalia todos as coordenadas do vetor de algarismos
-//Parametros: recebe um vetor com os algarismos de um numero, além do tipo de formatação desejada
-//Onde 0 é a formatação padrão e 1 a formatação para cedulas 
-//Retorno: nenhum
+// Objetivo: reune todas as funções para escrever um numero por extenso e avalia todos as coordenadas do vetor de algarismos
+// Parametros: recebe um vetor com os algarismos de um numero, além do tipo de formatação desejada
+// Onde 0 é a formatação padrão e 1 a formatação para cedulas
+// Retorno: nenhum
 void escrevePorExtenso(int num[], int tipo)
 {
     int j;
@@ -216,18 +218,18 @@ void escrevePorExtenso(int num[], int tipo)
         }
     }
 }
-//Objetivo: calcula o saldo restante na maquina 
-//Parametros: nenhum
-//Retorno: saldo na máquina
+// Objetivo: calcula o saldo restante na maquina
+// Parametros: nenhum
+// Retorno: saldo na máquina
 int calculaSaldo()
 {
     int saldo;
     saldo = 500 * quantidadeDeCedulas[0] + 150 * quantidadeDeCedulas[1] + 50 * quantidadeDeCedulas[2] + 20 * quantidadeDeCedulas[3] + 10 * quantidadeDeCedulas[4] + 5 * quantidadeDeCedulas[5] + 2 * quantidadeDeCedulas[6] + 1 * quantidadeDeCedulas[7];
     return saldo;
 }
-//Objetivo: lê um valor até que ele seja adequado para um saque
-//Parametros: nenhum
-//retorno: valor do saque
+// Objetivo: lê um valor até que ele seja adequado para um saque
+// Parametros: nenhum
+// retorno: valor do saque
 int realizaSaque()
 {
     int saque;
@@ -242,9 +244,9 @@ int realizaSaque()
     }
     return saque;
 }
-//Objetivo: verifica se é possível realizar o saque desejado com o saldo disponível
-//Parametros: o valor do saque
-//Retorno: 1 caso exista saldo suficiente e 0 em caso negativo
+// Objetivo: verifica se é possível realizar o saque desejado com o saldo disponível
+// Parametros: o valor do saque
+// Retorno: 1 caso exista saldo suficiente e 0 em caso negativo
 int checaSaldo(int valorSaque)
 {
     int validade = 1;
@@ -256,9 +258,9 @@ int checaSaldo(int valorSaque)
     }
     return validade;
 }
-//Objetivo: calcular o número mínimo de cédulas de cada tipo que precisam ser usadas para distribuir uma quantia de dinheiro
-//Parametros: o valor do saque e um vetor onde deverá ser armazenado a quantidade minima de cada cédula
-//Retorno: 1 se é possível distribuir o dinheiro e 0 caso contrário
+// Objetivo: calcular o número mínimo de cédulas de cada tipo que precisam ser usadas para distribuir uma quantia de dinheiro
+// Parametros: o valor do saque e um vetor onde deverá ser armazenado a quantidade minima de cada cédula
+// Retorno: 1 se é possível distribuir o dinheiro e 0 caso contrário
 int calculaMinimo(int valorSaque, int quantidadeCedulasUsadas[])
 {
     int i, j, valorSacado = 0, quantidadeCedulasPre[8];
@@ -302,9 +304,9 @@ int calculaMinimo(int valorSaque, int quantidadeCedulasUsadas[])
     }
     return 1;
 }
-//Objetivo: escreve o resultado final do saque mostando como o dinheiro será distribuído
-//Parametros: o valor do saque e o vetor onde foram armazenadas a quantia de cada cédula que será usada
-//Retorno: nenhum
+// Objetivo: escreve o resultado final do saque mostando como o dinheiro será distribuído
+// Parametros: o valor do saque e o vetor onde foram armazenadas a quantia de cada cédula que será usada
+// Retorno: nenhum
 void escreveResultadoSaque(int valorSaque, int quantidadeCedulasUsadas[])
 {
     int i;
@@ -330,12 +332,13 @@ void escreveResultadoSaque(int valorSaque, int quantidadeCedulasUsadas[])
         }
     }
 }
-//Objetivo: exibe o relatório sobre os saques realizados no caixa eletronico por cada cliente
-//Parametros: 
-//Retorno: 
-void relatorioSaques(int totalSacadoNaMaquina)
+// Objetivo: exibe o relatório sobre os saques realizados no caixa eletronico por cada cliente
+// Parametros:
+// Retorno:
+void relatorioSaques()
 {
-    int i, j;
+    int i, j, totalSacadoNaMaquina;
+    totalSacadoNaMaquina = 173600 - calculaSaldo();
     printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Valores sacados' \n----------------------------------------------------------------------------------------------------------------------------");
 
     printf("---------------------------------------------------------------------------------------------------------------------------- \nR$ %d (", totalSacadoNaMaquina);
@@ -383,6 +386,319 @@ void relatorioCedulas()
     }
 }
 
+// includes...
+
+// objetivo:escolhe dentre as letras do alfabeto ('a'..'z') uma letra aleatoriamente
+// parametros: nenhum
+// retorno:a letra do alfabeto
+char geraAlfabeto()
+{
+    int i;
+    char letras[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+
+    i = rand() % 26;
+    return (letras[i] - 32);
+}
+// objetivo:escolhe dentre os numeros ('0'..'9') uma numero aleatoriamente
+// parametros: nenhum
+// retorno:o numero
+char geraNumero()
+{
+    int i;
+    char numeros[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+    i = rand() % 9;
+    return (numeros[i]);
+}
+// objetivo:gera aleatoriamente um numero de conta corrente no formato 999.999-X
+// parametros: c onde armazera a conta gerada
+// retorno:nenhum
+void geraContaCorrente(char c[])
+{
+    // implemente aqui
+    int i;
+    memset(c, 0, strlen(c));
+    for (i = 0; i < 8; i++)
+    {
+        if (i == 3)
+        {
+            c[i] = '.';
+        }
+        else if (i == 7)
+        {
+            c[i] = '-';
+        }
+        else
+        {
+            c[i] = geraNumero();
+        }
+    }
+    c[8] = geraAlfabeto();
+}
+
+// objetivo:verifica se um cpf no formato 999.999.999-99 e valido
+// parametros: cpf a ser verificado
+// retorno: 1 se cpf e valido ou 0 se cpf nao e valido
+int verifica_cpf_valido(char cpf[])
+{
+    return 1;
+}
+
+int verifica_conta_valida(char conta[])
+{
+    return 1;
+}
+// objetivo:insere pontuacoes '.' e '- ' em um cpf
+// parametros: cpf_origem o cpf recebido no format 99999999999
+//             cpf_destino o cpf com as pontuacoes inseridas no formato 999.999.999-99
+void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[])
+{
+    // implemente aqui
+    char teste;
+    int cont = 0, i;
+    for (i = 0; i < 14; i++)
+    {
+        if (i == 3 || i == 7)
+        {
+            cpf_destino[i] = '.';
+        }
+        else if (i == 11)
+        {
+            cpf_destino[i] = '-';
+        }
+        else
+        {
+            teste = cpf_origem[cont];
+            cpf_destino[i] = teste;
+            cont++;
+        }
+    }
+}
+// objetivo:calcula o primeiro digito verificador de um cpf no formato 999999999
+// parametros: cpf o cpf sem os digitos verificadores
+// retorno: o calculo do primeiro digito verificador
+int obtem_primeiro_digito_verificador(char cpf[])
+{
+    // implemente aqui
+    int digito, intcpf, calccpf, cont = 10, i; // declaracao de variaveis
+    for (i = 0; i < 9; i++)
+    { // converte digitos do cpf de char para int e faz o calculo necessario
+        intcpf = cpf[i] - '0';
+        calccpf += intcpf * cont;
+        cont--;
+    }
+    if ((calccpf % 11 == 0) || (calccpf % 11 == 1))
+    {
+        digito = 0;
+    }
+    else
+    {
+        digito = 11 - (calccpf % 11);
+    }
+
+    return (digito);
+}
+// objetivo:calcula o segundo digito verificador de um cpf no formato 999999999
+// parametros: cpf sem os digitos verificadores
+// retorno: o calculo do segundo digito verificador
+int obtem_segundo_digito_verificador(char cpf[])
+{
+    // implemente aqui
+    int digito, intcpf, cont = 10, calccpf, i; // declaracao de variaveis
+    for (i = 1; i < 9; i++)
+    { // converte digitos do cpf de char para int e faz o calculo necessario
+        intcpf = cpf[i] - '0';
+        calccpf += intcpf * cont;
+        cont--;
+    }
+    calccpf += obtem_primeiro_digito_verificador(cpf) * cont;
+    if ((calccpf % 11 == 0) || (calccpf % 11 == 1))
+    {
+        digito = 0;
+    }
+    else
+    {
+        digito = 11 - (calccpf % 11);
+    }
+    return (digito);
+}
+
+// objetivo:gera aleatoriamente um cpf valido no formato 999.999.999-99
+// parametros: cpf onde sera armazenado o cpf valido
+// retorno: nenhum
+void gera_cpf_valido(char cpf[])
+{
+
+    // implemente aqui
+    int i;
+    char cpf_processo[11];
+
+    do
+    {
+        for (i = 0; i < 9; i++)
+        {
+            cpf_processo[i] = geraNumero();
+        }
+        cpf_processo[9] = obtem_primeiro_digito_verificador(cpf_processo) + '0';
+        cpf_processo[10] = obtem_segundo_digito_verificador(cpf_processo) + '0';
+
+        insere_pontuacao_cpf(cpf_processo, cpf);
+    } while (verifica_cpf_valido(cpf) != 1);
+}
+
+// Objetivo: gera um cpf e uma conta correte
+// verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
+// inclui o cliente no sistema
+// Parametros: vetor onde será armazenado o cpf, a conta corrente
+// Retorno: nenhum
+void incluirCliente(char cpfClientes[50][15], char correnteClientes[50][10])
+{
+    char cpfTeste[15];
+    char contaTeste[10];
+    int i;
+    gera_cpf_valido(cpfTeste);
+    geraContaCorrente(contaTeste);
+
+    if (existeCadastro(cpfTeste, cpfClientes, contaTeste, correnteClientes) == 0)
+    {
+        strcpy(cpfClientes[numClientes], cpfTeste);
+        strcpy(correnteClientes[numClientes], contaTeste);
+        numClientes++;
+    }
+    else
+    {
+        printf("\nNao foi possivel incluir o cliente!\n");
+    }
+}
+
+// Objetivo: verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
+// Parametros: vetores onde os cpfs e as contas estão armazenados, além do numero de cpf e conta que será comparado
+// Retorno: 2 se existe, 1 se existe o cpf ou conta corrente, e 0 em caso contrário
+int existeCadastro(char cpfAnalise[15], char cpfClientes[50][15], char contaAnalise[10], char correnteClientes[50][10])
+{
+    int i, validade;
+    validade = 0;
+    for (i = 0; i < numClientes; i++)
+    {
+        if ((strcmp(cpfAnalise, cpfClientes[i]) == 0) || (strcmp(contaAnalise, correnteClientes[i]) == 0))
+        {
+            if ((strcmp(cpfAnalise, cpfClientes[i]) == 0) && (strcmp(contaAnalise, correnteClientes[i]) == 0))
+            {
+                validade = 2;
+            }
+            else
+            {
+                validade = 1;
+            }
+        }
+    }
+    return validade;
+}
+
+// Objetivo: exibe os dados de cada cliente
+// Parametros: vetores onde os cpfs e as contas estão armazenados
+// Retorno: nenhum
+void mostraDadosClientes(char cpfClientes[50][15], char correnteClientes[50][10])
+{
+    int i;
+    for (i = 0; i < numClientes; i++)
+    {
+        printf("Cliente %d: CPF: %s Conta Corrente: %s\n", i + 1, cpfClientes[i], correnteClientes[i]);
+    }
+}
+
+// Objetivo: altera o cpf de um cliente, mantendo formatação
+// Parametros: vetor onde o cpf está armazenado e deve ser modificado
+// Retorno:nenhum
+void alterarCpf(char cpfClientes[50][15], int numDoCliente)
+{
+    char novoCPF[15];
+    scanf("%s", novoCPF);
+    if (verifica_cpf_valido(novoCPF) == 1)
+    {
+        strcpy(cpfClientes[numDoCliente], novoCPF);
+    }
+    else
+    {
+        printf("Cpf novo inserido invalido!\n");
+    }
+}
+
+// Objetivo: altera a conta corrente do cliente, mantendo formatação
+// Parametros: vetor onde a conta está armazenada e deve ser modificada
+// Retorno: nenhum
+void alterarContaCorrente(char correnteClientes[50][10], int numDoCliente)
+{
+    char novaConta[15];
+    scanf("%s", novaConta);
+    if (verifica_conta_valida(novaConta) == 1)
+    {
+        strcpy(correnteClientes[numDoCliente], novaConta);
+    }
+    else
+    {
+        printf("Cpf novo inserido invalido!\n");
+    }
+}
+
+// Objetivo: se não existir saque na conta do cliente, permite alterar o cpf ou a conta corrente, preservando a formatação
+// Parametros: vetores onde os cpfs e as contas estão armazenados
+// Retorno:nenhum
+void alterarDadosCliente(char cpfClientes[50][15], char correnteClientes[50][10], int saquesCliente[50][15])
+{
+    int numDoCliente, escolha;
+    printf("Escolha o numero do cliente que deseja fazer alterações:\n");
+    scanf("%d", &numDoCliente);
+
+    if (numDoCliente > numClientes)
+    {
+        printf("Cliente inexistente!\n");
+    }
+    else
+    {
+        if (existeSaque(saquesCliente, numDoCliente) != 0)
+        {
+            printf("Nao e possivel fazer alteracoes nos dados do cliente selecionado!\n");
+        }
+        else
+        {
+            printf("Escolha o dado que deve ser alterado:\n1-CPF\n2-Conta Corrente\n");
+            scanf("%d", &escolha);
+            switch (escolha)
+            {
+            case 1:
+                alterarCpf(cpfClientes, numDoCliente);
+                break;
+            case 2:
+                alterarContaCorrente(correnteClientes, numDoCliente);
+                break;
+            default:
+                printf("Opcao invalida!\n");
+                break;
+            }
+        }
+    }
+}
+
+// Objetivo:verifica se existe saques na conta do cliente
+// Parametros: vetor onde os saques dos clientes estão armazenados
+// Retorno: 1 se existe 0 em caso contrário
+int existeSaque(int saquesCliente[50][15], int numDoCliente)
+{
+    int validade = 0;
+    if (saquesCliente[numDoCliente][0] != 0)
+    {
+        validade = 1;
+    }
+    return validade;
+}
+
+// Objetivo: exclui cliente se não existe saques em sua conta
+// Parametros: vetor conta e cpf
+// Retorno: nenhum
+void excluirCliente(char cpfClientes[], char correnteClientes[])
+{
+}
 
 int main()
 {
@@ -390,8 +706,10 @@ int main()
     int saldoExistente = 500 * quantidadeDeCedulas[0] + 150 * quantidadeDeCedulas[1] + 50 * quantidadeDeCedulas[2] + 20 * quantidadeDeCedulas[3] + 10 * quantidadeDeCedulas[4] + 5 * quantidadeDeCedulas[5] + 2 * quantidadeDeCedulas[6] + 1 * quantidadeDeCedulas[7];
 
     // Variaveis de funcionamento do menu
-    int menu = 0, pg = 0, pg1 = 0, mg = 0;
-    int i, j, k;
+    int pg = 0;
+    int i, j, k, valorASerSacado, cedulasUsadasNoSaque[8];
+    char cpfs[50][15], contasCorrente[50][10];
+    int saques[50][15];
 
     while (pg == 0)
     {
@@ -404,30 +722,30 @@ int main()
             while (pg == 1)
             {
                 printf("\nMenu Cliente\n1-Incluir\n2-Mostrar\n3-Alterar\n4-Excluir\n5-Voltar\nDigite uma opcao: ");
-                    scanf("%d", &pg);
-                    switch (pg)
-                    {
-                        case 1:
+                scanf("%d", &pg);
+                switch (pg)
+                {
+                case 1:
+                    incluirCliente(cpfs, contasCorrente);
+                    break;
+                case 2:
+                    mostraDadosClientes(cpfs, contasCorrente);
+                    break;
+                case 3:
+                    alterarDadosCliente(cpfs, contasCorrente, saques);
+                    break;
+                case 4:
 
-                            break;
-                        case 2:
-
-                            break;
-                        case 3:
-
-                            break;
-                        case 4:
-
-                            break;
-                        case 5:
-                            printf("\nVoltando para o menu principal\n");
-                            pg = 0;
-                            break;
-                        default:
-                            printf("\nValor Invalido!\n");
-                            pg = 1;
-                            break;    
-                    }
+                    break;
+                case 5:
+                    printf("\nVoltando para o menu principal\n");
+                    pg = 0;
+                    break;
+                default:
+                    printf("\nValor Invalido!\n");
+                    pg = 1;
+                    break;
+                }
             }
             break;
         case 2:
@@ -442,7 +760,7 @@ int main()
                         escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
                     }
                 }
-                printf("Escolha uma opcao:\n1-Fazer outro saque\n2-Voltar ao Menu\n");            
+                printf("Escolha uma opcao:\n1-Fazer outro saque\n2-Voltar ao Menu\n");
                 scanf("%d", &pg);
 
                 switch (pg)
