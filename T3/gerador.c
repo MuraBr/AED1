@@ -20,21 +20,32 @@ char geraNumero() {
     i=rand()%9;
     return(numeros[i]);
 }
-//objetivo:gera aleatoriamente um numero de conta corrente no formato 999.999-X
-//parametros: c onde armazera a conta gerada
-//retorno:nenhum
-void geraContaCorrente(char c[]) {
-
-   //implemente aqui
+// objetivo:gera aleatoriamente um numero de conta corrente no formato 999.999-X
+// parametros: c onde armazera a conta gerada
+// retorno:nenhum
+void geraContaCorrente(char c[])
+{
+    // implemente aqui
     int i;
-    char contaCorrente[7];
-
-    for (i = 0; i < 6; i++)
+    memset(c, 0, strlen(c));
+    for (i = 0; i < 8; i++)
     {
-        contaCorrente[i] = geraNumero();
+        if (i == 3)
+        {
+            c[i] = '.';
+        }
+        else if (i == 7)
+        {
+            c[i] = '-';
+        }
+        else
+        {
+            c[i] = geraNumero();
+        }
     }
-    contaCorrente[6] = geraAlfabeto();
+    c[8] = geraAlfabeto();
 }
+
 //objetivo:verifica se um cpf no formato 999.999.999-99 e valido
 //parametros: cpf a ser verificado
 //retorno: 1 se cpf e valido ou 0 se cpf nao e valido
