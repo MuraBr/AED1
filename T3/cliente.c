@@ -16,10 +16,11 @@ int numClientes = 0;
 // Retorno: nenhum
 void incluirCliente(char cpfClientes[50][15], char correnteClientes[50][10])
 {
-    char cpfTeste[15], contaTeste[10];
+    char cpfTeste[15];
+    char contaTeste[10];
     int i;
-
-    printf("cpf %s\nconta corrente %s\n", cpfTeste, contaTeste);
+    gera_cpf_valido(cpfTeste);
+    geraContaCorrente(contaTeste);
 
     if (existeCadastro(cpfTeste, cpfClientes, contaTeste, correnteClientes) == 0)
     {
@@ -160,5 +161,4 @@ int existeSaque(int saquesCliente[50][15], int numDoCliente)
 // Retorno: nenhum
 void excluirCliente(char cpfClientes[], char correnteClientes[])
 {
-    
 }
