@@ -804,7 +804,7 @@ void excluirCliente(char cpfClientes[50][15], char correnteClientes[50][10], int
     //declaração de variaveis
     int numDoCliente, i, j, existe;
     char cpfClientesCopy[50][15], correnteClientesCopy[50][10], contaCliente[10];
-    printf("Digite o numero de conta do cliente que deseja exluir:\n");
+    printf("Digite o numero de conta do cliente que deseja excluir:\n");
     //escaneamento de
     scanf("%s", contaCliente);
     existe = existeContaCorrente(contaCliente, correnteClientes);
@@ -817,7 +817,7 @@ void excluirCliente(char cpfClientes[50][15], char correnteClientes[50][10], int
     {
         if (existeSaque(saquesClientes, numDoCliente) != 0)
         {
-            printf("Nao e possivel exluir os dados do cliente selecionado!\n");
+            printf("Nao e possivel exlcuir os dados do cliente selecionado!\n");
         }
         else
         {
@@ -971,6 +971,8 @@ int main()
                     pg = 1;
                     break;
                 case 4:
+                    excluirCliente(cpfs, contasCorrente, saques);
+                    system("pause");
                     pg = 1;
                     break;
                 case 5:
