@@ -210,11 +210,11 @@ void escrevePorExtenso(int num[], int tipo)
     {
         if ((num[5] > 1) || (num[4] > 0) || (num[3] > 0) || (num[2] > 0) || (num[1] > 0) || (num[0] > 0))
         {
-            printf("reais");
+            printf("reais ");
         }
         else
         {
-            printf("real");
+            printf("real ");
         }
     }
 }
@@ -332,62 +332,6 @@ void escreveResultadoSaque(int valorSaque, int quantidadeCedulasUsadas[])
         }
     }
 }
-// Objetivo: exibe o relatório sobre os saques realizados no caixa eletronico por cada cliente
-// Parametros:
-// Retorno:
-void relatorioSaques()
-{
-    int i, j, totalSacadoNaMaquina;
-    totalSacadoNaMaquina = 173600 - calculaSaldo();
-    printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Valores sacados' \n----------------------------------------------------------------------------------------------------------------------------");
-
-    printf("---------------------------------------------------------------------------------------------------------------------------- \nR$ %d (", totalSacadoNaMaquina);
-    separanum(totalSacadoNaMaquina, algarismos);
-    escrevePorExtenso(algarismos, 0);
-    printf(")\n----------------------------------------------------------------------------------------------------------------------------");
-}
-
-// Objetivo: exibe o relatorio sobre o saldo no caixa
-// Parametros: nenhum
-// Retorno: nenhum
-void relatorioSaldo()
-{
-    printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Valor do saldo existente ' \n---------------------------------------------------------------------------------------------------------------------------- \nR$ ");
-    separanum(calculaSaldo(), algarismos);
-    escrevePorExtenso(algarismos, 0);
-    printf(")\n----------------------------------------------------------------------------------------------------------------------------\n");
-}
-
-// Objetivo: exibe o relatorio sobre a quantidade de cedulas de cada tipo no caixa
-// Parametros: nenhum
-// Retorno: nenhum
-void relatorioCedulas()
-{
-    int k;
-
-    printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Quantidade de cedulas existentes ' \n----------------------------------------------------------------------------------------------------------------------------\n");
-    for (k = 0; k < 8; k++)
-    {
-        // Enquanto o vetor ainda está sendo analisado escreve a quantidade de cedulas de cada tipo
-        // Quando todas já foram escritas, atualiza o total de cedulas contadas
-        // Escreve tudo por extenso com a mesma lógica anterior
-        printf("Cedula %d %d (", tipoDaCedula[k], quantidadeDeCedulas[k]);
-        separanum(quantidadeDeCedulas[k], algarismos);
-        escrevePorExtenso(algarismos, 1);
-        if (quantidadeDeCedulas[k] > 1)
-        {
-            printf("cedulas");
-        }
-        else
-        {
-            printf("cedula");
-        }
-        printf(")\n--------------------------------------------------------------------------------------------------------------------------\n");
-    }
-}
-
-// includes...
-
 // objetivo:escolhe dentre as letras do alfabeto ('a'..'z') uma letra aleatoriamente
 // parametros: nenhum
 // retorno:a letra do alfabeto
@@ -417,35 +361,62 @@ void geraContaCorrente(char c[])
 {
     // implemente aqui
     int i;
-    memset(c, 0, strlen(c));
+    char conta_processo[10];
+    memset(conta_processo, 0, strlen(conta_processo));
     for (i = 0; i < 8; i++)
     {
         if (i == 3)
         {
-            c[i] = '.';
+            conta_processo[i] = '.';
         }
         else if (i == 7)
         {
-            c[i] = '-';
+            conta_processo[i] = '-';
         }
         else
         {
-            c[i] = geraNumero();
+            conta_processo[i] = geraNumero();
         }
     }
-    c[8] = geraAlfabeto();
+    conta_processo[8] = geraAlfabeto();
+    strcpy(c, conta_processo);
 }
 
-// objetivo:verifica se um cpf no formato 999.999.999-99 e valido
-// parametros: cpf a ser verificado
-// retorno: 1 se cpf e valido ou 0 se cpf nao e valido
-int verifica_cpf_valido(char cpf[])
-{
-    return 1;
-}
-
+// Objetivo: verifica se a conta corrente digitada está formatada corretamente
+// Paramentros: o vetor contendo a conta corrente que deve ser analisada
+// Return: 1 se a conta foi digitada corretamente e 0 em caso contrário
 int verifica_conta_valida(char conta[])
 {
+    int i;
+
+    for (i = 0; i < 8; i++)
+    {
+        if (i == 3)
+        {
+            if (conta[i] + 0 != 46)
+            {
+                return 0;
+            }
+        }
+        else if (i == 7)
+        {
+            if (conta[i] + 0 != 45)
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            if ((conta[i] + 0 < 48) || (conta[i] > 57))
+            {
+                return 0;
+            }
+        }
+    }
+    if ((conta[8] + 0 > 90) || (conta[8] + 0 < 65))
+    {
+        return 0;
+    }
     return 1;
 }
 // objetivo:insere pontuacoes '.' e '- ' em um cpf
@@ -479,23 +450,21 @@ void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[])
 // retorno: o calculo do primeiro digito verificador
 int obtem_primeiro_digito_verificador(char cpf[])
 {
-    // implemente aqui
-    int digito, intcpf, calccpf, cont = 10, i; // declaracao de variaveis
-    for (i = 0; i < 9; i++)
+    int digito = 0, intcpf, cont = 10, calccpf; // declaracao de variaveis
+    for (int i = 0; i < 9; i++)
     { // converte digitos do cpf de char para int e faz o calculo necessario
         intcpf = cpf[i] - '0';
-        calccpf += intcpf * cont;
-        cont--;
+        digito += intcpf * cont;
+        cont -= 1;
     }
-    if ((calccpf % 11 == 0) || (calccpf % 11 == 1))
+    if (digito * 10 % 11 == 10)
     {
         digito = 0;
     }
     else
     {
-        digito = 11 - (calccpf % 11);
+        digito = digito * 10 % 11;
     }
-
     return (digito);
 }
 // objetivo:calcula o segundo digito verificador de um cpf no formato 999999999
@@ -503,24 +472,66 @@ int obtem_primeiro_digito_verificador(char cpf[])
 // retorno: o calculo do segundo digito verificador
 int obtem_segundo_digito_verificador(char cpf[])
 {
-    // implemente aqui
-    int digito, intcpf, cont = 10, calccpf, i; // declaracao de variaveis
-    for (i = 1; i < 9; i++)
+    int digito = 0, intcpf, cont = 11, calccpf, i; // declaracao de variaveis
+    for (int i = 0; i < 10; i++)
     { // converte digitos do cpf de char para int e faz o calculo necessario
-        intcpf = cpf[i] - '0';
-        calccpf += intcpf * cont;
-        cont--;
+        if (i <= 8)
+        {
+            intcpf = cpf[i] - '0';
+        }
+        else
+        {
+            intcpf = obtem_primeiro_digito_verificador(cpf);
+        }
+        digito += intcpf * cont;
+        cont -= 1;
     }
-    calccpf += obtem_primeiro_digito_verificador(cpf) * cont;
-    if ((calccpf % 11 == 0) || (calccpf % 11 == 1))
+    if (digito * 10 % 11 == 10)
     {
         digito = 0;
     }
     else
     {
-        digito = 11 - (calccpf % 11);
+        digito = digito * 10 % 11;
     }
     return (digito);
+}
+
+// objetivo:verifica se um cpf no formato 999.999.999-99 e valido
+// parametros: cpf a ser verificado
+// retorno: 1 se cpf e valido ou 0 se cpf nao e valido
+int verifica_cpf_valido(char cpf[])
+{
+    int d1cpf = cpf[12] - '0', d2cpf = cpf[13] - '0', valido = 1, count = 0, d1, d2, c = 0; // declaracao de variaveis
+    char cpf2[12];
+
+    for (int i = 0; i < 14; i++)
+    {
+        if ((cpf[i] == '.') || (cpf[i] == '-'))
+        {
+            ++i;
+        }
+        if (d1cpf == (cpf[i] + 0))
+        {
+            count++;
+        }
+        if (c <= 11)
+        {
+            cpf2[c] = cpf[i];
+        }
+        c++;
+    }
+    d1 = obtem_primeiro_digito_verificador(cpf2);
+    d2 = obtem_segundo_digito_verificador(cpf2);
+    if ((d1cpf == d1) && (d2cpf == d2) && (count < 11))
+    { // verificação do cpf
+        valido = 1;
+    }
+    else
+    {
+        valido = 0;
+    }
+    return (valido);
 }
 
 // objetivo:gera aleatoriamente um cpf valido no formato 999.999.999-99
@@ -528,11 +539,10 @@ int obtem_segundo_digito_verificador(char cpf[])
 // retorno: nenhum
 void gera_cpf_valido(char cpf[])
 {
-
     // implemente aqui
     int i;
     char cpf_processo[11];
-
+    memset(cpf_processo, 0, strlen(cpf_processo));
     do
     {
         for (i = 0; i < 9; i++)
@@ -545,7 +555,71 @@ void gera_cpf_valido(char cpf[])
         insere_pontuacao_cpf(cpf_processo, cpf);
     } while (verifica_cpf_valido(cpf) != 1);
 }
+// Objetivo:verifica se existe saques na conta do cliente
+// Parametros: vetor onde os saques dos clientes estão armazenados
+// Retorno: 1 se existe 0 em caso contrário
+int existeSaque(int saquesCliente[50][15], int numDoCliente)
+{
+    int validade = 0;
+    if (saquesCliente[numDoCliente][0] != 0)
+    {
+        validade = 1;
+    }
+    return validade;
+}
+// Objetivo: verifica se o cpf em analise esta no sistema do caixa
+// Parametros: vetor onde os cpfs estão armazenados e o cpf em analise
+// retorno: 1 se o cpf existe no sistema e 0 caso contrário
+int existeCPF(char cpfAnalise[15], char cpfClientes[50][15])
+{
+    int i;
+    for (i = 0; i < numClientes; i++)
+    {
+        if ((strcmp(cpfAnalise, cpfClientes[i]) == 0))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
 
+// Objetivo: verifica se a conta corrente em analise esta no sistema do caixa
+// Parametros: vetor onde as contas estão armazenados e a conta em analise
+// retorno: 1 se a conta existe no sistema e 0 caso contrário
+int existeContaCorrente(char contaAnalise[10], char correnteClientes[50][10])
+{
+    int i;
+    for (i = 0; i < numClientes; i++)
+    {
+        if (strcmp(contaAnalise, correnteClientes[i]) == 0)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+// Objetivo: verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
+// Parametros: vetores onde os cpfs e as contas estão armazenados, além do numero de cpf e conta que será comparado
+// Retorno: 2 se existe, 1 se existe o cpf ou conta corrente, e 0 em caso contrário
+int existeCadastro(char cpfAnalise[15], char cpfClientes[50][15], char contaAnalise[10], char correnteClientes[50][10])
+{
+    int i;
+    for (i = 0; i < numClientes; i++)
+    {
+        if ((existeCPF(cpfAnalise, cpfClientes) == 1) || (existeContaCorrente(contaAnalise, correnteClientes) == 1))
+        {
+            if ((existeCPF(cpfAnalise, cpfClientes) == 1) && (existeContaCorrente(contaAnalise, correnteClientes) == 1))
+            {
+                return 2;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 // Objetivo: gera um cpf e uma conta correte
 // verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
 // inclui o cliente no sistema
@@ -553,46 +627,23 @@ void gera_cpf_valido(char cpf[])
 // Retorno: nenhum
 void incluirCliente(char cpfClientes[50][15], char correnteClientes[50][10])
 {
-    char cpfTeste[15];
-    char contaTeste[10];
+    char cpfTeste[15], contaTeste[10];
     int i;
+
     gera_cpf_valido(cpfTeste);
     geraContaCorrente(contaTeste);
 
-    if (existeCadastro(cpfTeste, cpfClientes, contaTeste, correnteClientes) == 0)
+    if ((existeCadastro(cpfTeste, cpfClientes, contaTeste, correnteClientes) == 0) && (numClientes < 50))
     {
         strcpy(cpfClientes[numClientes], cpfTeste);
         strcpy(correnteClientes[numClientes], contaTeste);
         numClientes++;
+        printf("\nO cliente foi incluido com sucesso!\n");
     }
     else
     {
         printf("\nNao foi possivel incluir o cliente!\n");
     }
-}
-
-// Objetivo: verifica se não existe nenhum cpf ou conta corrente iguais já cadastrados
-// Parametros: vetores onde os cpfs e as contas estão armazenados, além do numero de cpf e conta que será comparado
-// Retorno: 2 se existe, 1 se existe o cpf ou conta corrente, e 0 em caso contrário
-int existeCadastro(char cpfAnalise[15], char cpfClientes[50][15], char contaAnalise[10], char correnteClientes[50][10])
-{
-    int i, validade;
-    validade = 0;
-    for (i = 0; i < numClientes; i++)
-    {
-        if ((strcmp(cpfAnalise, cpfClientes[i]) == 0) || (strcmp(contaAnalise, correnteClientes[i]) == 0))
-        {
-            if ((strcmp(cpfAnalise, cpfClientes[i]) == 0) && (strcmp(contaAnalise, correnteClientes[i]) == 0))
-            {
-                validade = 2;
-            }
-            else
-            {
-                validade = 1;
-            }
-        }
-    }
-    return validade;
 }
 
 // Objetivo: exibe os dados de cada cliente
@@ -606,116 +657,196 @@ void mostraDadosClientes(char cpfClientes[50][15], char correnteClientes[50][10]
         printf("Cliente %d: CPF: %s Conta Corrente: %s\n", i + 1, cpfClientes[i], correnteClientes[i]);
     }
 }
-
 // Objetivo: altera o cpf de um cliente, mantendo formatação
 // Parametros: vetor onde o cpf está armazenado e deve ser modificado
 // Retorno:nenhum
 void alterarCpf(char cpfClientes[50][15], int numDoCliente)
 {
     char novoCPF[15];
+    printf("Digite o novo CPF do cliente:\n");
     scanf("%s", novoCPF);
     if (verifica_cpf_valido(novoCPF) == 1)
     {
-        strcpy(cpfClientes[numDoCliente], novoCPF);
+        if (existeCPF(novoCPF, cpfClientes) == 0)
+        {
+            strcpy(cpfClientes[numDoCliente], novoCPF);
+            printf("Cpf alterado com sucesso!\n");
+        }
+        else
+        {
+            printf("O Cpf nao pode ser inserido no sistema!\n");
+        }
     }
     else
     {
-        printf("Cpf novo inserido invalido!\n");
+        printf("O Cpf inserido eh invalido!\n");
     }
 }
-
 // Objetivo: altera a conta corrente do cliente, mantendo formatação
 // Parametros: vetor onde a conta está armazenada e deve ser modificada
 // Retorno: nenhum
 void alterarContaCorrente(char correnteClientes[50][10], int numDoCliente)
 {
     char novaConta[15];
+    printf("Digite o novo numero da conta corrente do cliente:\n");
     scanf("%s", novaConta);
     if (verifica_conta_valida(novaConta) == 1)
     {
-        strcpy(correnteClientes[numDoCliente], novaConta);
+        if (existeContaCorrente(novaConta, correnteClientes) == 0)
+        {
+            strcpy(correnteClientes[numDoCliente], novaConta);
+            printf("Conta corrente alterada com sucesso!\n");
+        }
+        else
+        {
+            printf("A conta corrente nao pode ser inserida no sistema!\n");
+        }
     }
     else
     {
-        printf("Cpf novo inserido invalido!\n");
+        printf("A conta corrente inserida eh invalida!\n");
     }
 }
-
 // Objetivo: se não existir saque na conta do cliente, permite alterar o cpf ou a conta corrente, preservando a formatação
 // Parametros: vetores onde os cpfs e as contas estão armazenados
 // Retorno:nenhum
 void alterarDadosCliente(char cpfClientes[50][15], char correnteClientes[50][10], int saquesCliente[50][15])
 {
     int numDoCliente, escolha;
-    printf("Escolha o numero do cliente que deseja fazer alterações:\n");
+    printf("Escolha o numero do cliente que deseja alterar os dados:\n");
     scanf("%d", &numDoCliente);
 
-    if (numDoCliente > numClientes)
+    if ((numDoCliente > numClientes) || (numDoCliente < 1))
     {
         printf("Cliente inexistente!\n");
     }
     else
     {
-        if (existeSaque(saquesCliente, numDoCliente) != 0)
+        if (existeSaque(saquesCliente, numDoCliente - 1) != 0)
         {
             printf("Nao e possivel fazer alteracoes nos dados do cliente selecionado!\n");
         }
         else
         {
-            printf("Escolha o dado que deve ser alterado:\n1-CPF\n2-Conta Corrente\n");
+            printf("Escolha o dado que deve ser alterado:\n1-CPF\n2-Conta Corrente\n3-Cancelar\n");
             scanf("%d", &escolha);
+            system("cls");
             switch (escolha)
             {
             case 1:
-                alterarCpf(cpfClientes, numDoCliente);
+                alterarCpf(cpfClientes, numDoCliente - 1);
                 break;
             case 2:
-                alterarContaCorrente(correnteClientes, numDoCliente);
+                alterarContaCorrente(correnteClientes, numDoCliente - 1);
+                break;
+            case 3:
+                printf("Cancelando operacao de alterar...\n");
                 break;
             default:
                 printf("Opcao invalida!\n");
+                system("pause");
                 break;
             }
         }
     }
 }
-
-// Objetivo:verifica se existe saques na conta do cliente
-// Parametros: vetor onde os saques dos clientes estão armazenados
-// Retorno: 1 se existe 0 em caso contrário
-int existeSaque(int saquesCliente[50][15], int numDoCliente)
-{
-    int validade = 0;
-    if (saquesCliente[numDoCliente][0] != 0)
-    {
-        validade = 1;
-    }
-    return validade;
-}
-
 // Objetivo: exclui cliente se não existe saques em sua conta
 // Parametros: vetor conta e cpf
 // Retorno: nenhum
-void excluirCliente(char cpfClientes[], char correnteClientes[])
+void excluirCliente(char cpfClientes[50][15], char correnteClientes[50][10])
 {
 }
+// Objetivo: exibe o relatório sobre os saques realizados no caixa eletronico por cada cliente
+// Parametros:
+// Retorno:
+void relatorioSaques(char cpfClientes[50][15], char correnteClientes[50][10], int saquesClientes[50][15])
+{
+    int i, j, totalSacadoNaMaquina, saqueTotalNaConta;
+    totalSacadoNaMaquina = 173600 - calculaSaldo();
+    printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Valores sacados' \n----------------------------------------------------------------------------------------------------------------------------\n");
+    for (i = 0; i < numClientes; i++)
+    {
+        printf("%s   %s\t", correnteClientes[i], cpfClientes[i]);
+        j = 0;
+        saqueTotalNaConta = 0;
+        while ((saquesClientes[i][j] != 0) && (j != 15))
+        {
+            printf("R$ %d\n", saquesClientes[i][j]);
+            saqueTotalNaConta += saquesClientes[i][j];
+            j++;
+            if (j != 0)
+            {
+                printf("\t\t\t\t");
+            }
+        }
+        printf("\t\tR$ %d\n\n", saqueTotalNaConta);
+    }
+    printf("---------------------------------------------------------------------------------------------------------------------------- \nR$ %d (", totalSacadoNaMaquina);
+    separanum(totalSacadoNaMaquina, algarismos);
+    escrevePorExtenso(algarismos, 0);
+    printf(")\n----------------------------------------------------------------------------------------------------------------------------");
+}
 
+// Objetivo: exibe o relatorio sobre o saldo no caixa
+// Parametros: nenhum
+// Retorno: nenhum
+void relatorioSaldo()
+{
+    int saldo = calculaSaldo();
+    printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Valor do saldo existente ' \n---------------------------------------------------------------------------------------------------------------------------- \nR$ %d ( ", saldo);
+    separanum(saldo, algarismos);
+    escrevePorExtenso(algarismos, 0);
+    printf(")\n----------------------------------------------------------------------------------------------------------------------------\n");
+}
+
+// Objetivo: exibe o relatorio sobre a quantidade de cedulas de cada tipo no caixa
+// Parametros: nenhum
+// Retorno: nenhum
+void relatorioCedulas()
+{
+    int k;
+
+    printf("---------------------------------------------------------------------------------------------------------------------------- \nRelatorio 'Quantidade de cedulas existentes ' \n----------------------------------------------------------------------------------------------------------------------------\n");
+    for (k = 0; k < 8; k++)
+    {
+        // Enquanto o vetor ainda está sendo analisado escreve a quantidade de cedulas de cada tipo
+        // Quando todas já foram escritas, atualiza o total de cedulas contadas
+        // Escreve tudo por extenso com a mesma lógica anterior
+        printf("Cedula %d %d ( ", tipoDaCedula[k], quantidadeDeCedulas[k]);
+        separanum(quantidadeDeCedulas[k], algarismos);
+        escrevePorExtenso(algarismos, 1);
+        if (quantidadeDeCedulas[k] > 1)
+        {
+            printf("cedulas ");
+        }
+        else
+        {
+            printf("cedula ");
+        }
+        printf(")\n--------------------------------------------------------------------------------------------------------------------------\n");
+    }
+}
 int main()
 {
     // Saldo
     int saldoExistente = 500 * quantidadeDeCedulas[0] + 150 * quantidadeDeCedulas[1] + 50 * quantidadeDeCedulas[2] + 20 * quantidadeDeCedulas[3] + 10 * quantidadeDeCedulas[4] + 5 * quantidadeDeCedulas[5] + 2 * quantidadeDeCedulas[6] + 1 * quantidadeDeCedulas[7];
-
     // Variaveis de funcionamento do menu
     int pg = 0;
-    int i, j, k, valorASerSacado, cedulasUsadasNoSaque[8];
-    char cpfs[50][15], contasCorrente[50][10];
+    int i, j, k, l, m, valorASerSacado, cedulasUsadasNoSaque[8];
+    char cpfs[50][15], contasCorrente[50][10], cpfParaSaque[15], contaParaSaque[10];
     int saques[50][15];
-
+    for (m = 0; m < 50; m++)
+    {
+        for (l = 0; l < 15; l++)
+        {
+            saques[m][l] = 0;
+        }
+    }
     while (pg == 0)
     {
         printf("\nMenu Principal\n1-Cliente\n2-Saque\n3-Relatorios\n4-Finalizar\nDigite uma opcao: ");
         scanf("%d", &pg);
-
+        system("cls");
         switch (pg)
         {
         case 1:
@@ -723,22 +854,26 @@ int main()
             {
                 printf("\nMenu Cliente\n1-Incluir\n2-Mostrar\n3-Alterar\n4-Excluir\n5-Voltar\nDigite uma opcao: ");
                 scanf("%d", &pg);
+                system("cls");
                 switch (pg)
                 {
                 case 1:
                     incluirCliente(cpfs, contasCorrente);
+                    system("pause");
                     pg = 1;
                     break;
                 case 2:
                     mostraDadosClientes(cpfs, contasCorrente);
-                    pg = 1; 
+                    system("pause");
+                    pg = 1;
                     break;
                 case 3:
                     alterarDadosCliente(cpfs, contasCorrente, saques);
+                    system("pause");
                     pg = 1;
                     break;
                 case 4:
-                    pg = 1; 
+                    pg = 1;
                     break;
                 case 5:
                     printf("\nVoltando para o menu principal\n");
@@ -754,18 +889,56 @@ int main()
         case 2:
             while (pg == 2)
             {
-                printf("\nSaque\n");
-                valorASerSacado = realizaSaque();
-                if (checaSaldo(valorASerSacado) == 1)
+                printf("Digite um numero de CPF e da Conta corrente para realizar um saque: ");
+                memset(cpfParaSaque, 0, strlen(cpfParaSaque));
+                memset(contaParaSaque, 0, strlen(contaParaSaque));
+                scanf("%s ", cpfParaSaque);
+                scanf("%s", contaParaSaque);
+                if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) != 2)
                 {
-                    if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
+                    if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) != 2)
                     {
-                        escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
+                        printf("O cpf ou o numero da conta corrente foram digitados incorretamente!\n");
+                    }
+                    else
+                    {
+                        printf("Cliente nao existe no cadastro!\n");
                     }
                 }
+                else
+                {
+                    valorASerSacado = realizaSaque();
+                    if (checaSaldo(valorASerSacado) == 1)
+                    {
+                        if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
+                        {
+                            escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
+                            k = 0;
+                            for (j = 0; j < numClientes; j++)
+                            {
+                                if (strcmp(cpfParaSaque, cpfs[j]) == 0)
+                                {
+                                    while ((saques[j][k] != 0) && (k != 15))
+                                    {
+                                        printf("%d \n", saques[j][k]);
+                                        printf("%d j %d k\n", j, k);
+                                        k++;
+                                        if (k == 15)
+                                        {
+                                            printf("Nao e possivel realizar mais saques nessa conta!\n");
+                                        }
+                                    }
+                                    saques[j][k] = valorASerSacado;
+                                }
+                            }
+                        }
+                    }
+                }
+                system("pause");
+                system("cls");
                 printf("Escolha uma opcao:\n1-Fazer outro saque\n2-Voltar ao Menu\n");
                 scanf("%d", &pg);
-
+                system("cls");
                 switch (pg)
                 {
                 case 1:
@@ -787,28 +960,25 @@ int main()
             {
                 printf("\nMenu Relatorios\n1-Valores sacados\n2-Valor do saldo existente\n3-Quantidade de cedulas existentes\n4-Voltar ao menu principal\nDigite uma opcao: ");
                 scanf("%d", &pg);
+                system("cls");
                 switch (pg)
                 {
                 case 1:
-                    relatorioSaques();
-
+                    relatorioSaques(cpfs, contasCorrente, saques);
                     pg = 3;
                     break;
                 case 2:
                     // Recebe o saldo total na máquina
                     relatorioSaldo();
-
                     pg = 3;
                     break;
                 case 3:
                     // Recebe o vetor que armazena a quantidade de cada cedula
                     relatorioCedulas();
-
                     pg = 3;
                     break;
                 case 4:
                     printf("\nVoltando ao Menu Principal...\n");
-
                     pg = 0;
                     break;
                 default:
