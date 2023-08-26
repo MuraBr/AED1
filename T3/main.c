@@ -961,59 +961,57 @@ int main()
                 scanf("%s", contaParaSaque);
                 printf("\n");
                 // Verifica se os dados existem no cadastro ou se algum foi digitado incorretamente
-                if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) != 2)
+                if ((existeContaCorrente(contaParaSaque, contasCorrente) == 0) || (existeCPF(cpfParaSaque, cpfs) == 0))
                 {
-                    if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) == 1)
+                    if ((existeContaCorrente(contaParaSaque, contasCorrente) == 0) && (existeCPF(cpfParaSaque, cpfs) == 0))
                     {
-                        printf("O cpf ou o numero da conta corrente foram digitados incorretamente!\n");
+                        printf("Os dados informados nao foram enocntrados no sistema!\n");
                     }
                     else
                     {
-                        printf("Nenhum dado existe no cadastro!\n");
+                        printf("O cpf ou o numero da conta corrente foram digitados incorretamente!\n");
                     }
                 }
                 else
                 {
-                    // Em caso de sucesso no saque, armazena o valor sacado na conta do cliente
-                    k = 0;
-                    for (j = 0; j < numClientes; j++)
+                    // Realiza a operação de saque, verificando saldo, quantidade de cedulas e etc
+                    cliente = obtemNumeroDoCliente(contaParaSaque, contasCorrente);
+                    if (strcmp(cpfParaSaque, cpfs[cliente]) != 0)
                     {
-                        // Identifica o cliente que realizou o saque para decidir onde armazenar o saque
-                        if ((strcmp(cpfParaSaque, cpfs[j]) == 0) && (strcmp(contaParaSaque, contasCorrente[j]) == 0))
+                        printf("Dados informados incorretos!\n");
+                    }
+                    else
+                    {
+                        printf("%d\n", cliente);
+                        system("pause");
+                        valorASerSacado = realizaSaque();
+                        if (checaSaldo(valorASerSacado) == 1)
                         {
-
-                            // Realiza a operação de saque, verificando saldo, quantidade de cedulas e etc
-                            valorASerSacado = realizaSaque();
-                            if (checaSaldo(valorASerSacado) == 1)
+                            if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
                             {
-                                if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
-                                {
-                                    escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
+                                escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
 
-                                    // Encontra o primeiro espaço vazio no espaço da matriz que os saques deste cliente estão armazenados
-                                    // Ou cancela a operação se não é possível fazer mais saques na conta
-                                    while ((saques[j][k] != 0) && (k != 15))
+                                // Encontra o primeiro espaço vazio no espaço da matriz que os saques deste cliente estão armazenados
+                                // Ou cancela a operação se não é possível fazer mais saques na conta
+                                k = 0;
+                                while ((saques[cliente][k] != 0) && (k != 15))
+                                {
+                                    k++;
+                                    if (k == 15)
                                     {
-                                        k++;
-                                        if (k == 15)
-                                        {
-                                            printf("Nao e possivel realizar mais saques nessa conta!\n");
-                                        }
+                                        printf("Nao e possivel realizar mais saques nessa conta!\n");
                                     }
-                                    // Se houver espaço atribui o valor sacado na conta
-                                    if (k < 15)
-                                    {
-                                        saques[j][k] = valorASerSacado;
-                                    }
+                                }
+                                // Se houver espaço atribui o valor sacado na conta
+                                if (k < 15)
+                                {
+                                    saques[cliente][k] = valorASerSacado;
                                 }
                             }
                         }
-                        else if (j == 49)
-                        {
-                            printf("O cliente nao existe!\n");
-                        }
                     }
                 }
+
                 system("pause");
                 system("cls");
                 printf("Escolha uma opcao:\n1-Fazer outro saque\n2-Voltar ao Menu\n");
