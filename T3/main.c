@@ -835,6 +835,8 @@ int main()
     int i, j, k, l, m, valorASerSacado, cedulasUsadasNoSaque[8];
     char cpfs[50][15], contasCorrente[50][10], cpfParaSaque[15], contaParaSaque[10];
     int saques[50][15];
+
+    //Loop para zerar a matriz com os saques
     for (m = 0; m < 50; m++)
     {
         for (l = 0; l < 15; l++)
@@ -842,6 +844,7 @@ int main()
             saques[m][l] = 0;
         }
     }
+    //Inicio do caixa
     while (pg == 0)
     {
         printf("\nMenu Principal\n1-Cliente\n2-Saque\n3-Relatorios\n4-Finalizar\nDigite uma opcao: ");
