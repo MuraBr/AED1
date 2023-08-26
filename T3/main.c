@@ -727,15 +727,18 @@ int main()
                 {
                 case 1:
                     incluirCliente(cpfs, contasCorrente);
+                    pg = 1;
                     break;
                 case 2:
                     mostraDadosClientes(cpfs, contasCorrente);
+                    pg = 1; 
                     break;
                 case 3:
                     alterarDadosCliente(cpfs, contasCorrente, saques);
+                    pg = 1;
                     break;
                 case 4:
-
+                    pg = 1; 
                     break;
                 case 5:
                     printf("\nVoltando para o menu principal\n");
