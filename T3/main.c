@@ -899,7 +899,7 @@ int main()
                 scanf("%s", contaParaSaque);
                 if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) != 2)
                 {
-                    if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) != 2)
+                    if (existeCadastro(cpfParaSaque, cpfs, contaParaSaque, contasCorrente) == 1)
                     {
                         printf("O cpf ou o numero da conta corrente foram digitados incorretamente!\n");
                     }
