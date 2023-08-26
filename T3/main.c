@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 // Variaveis para funções que envolvam cedulas
 const int tipoDaCedula[8] = {
     500, 150, 50, 20, 10, 5, 2, 1};
