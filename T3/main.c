@@ -892,13 +892,8 @@ int main()
     char cpfParaSaque[15], contaParaSaque[10];
 
     // Loop para zerar a matriz com os saques
-    for (m = 0; m < 50; m++)
-    {
-        for (l = 0; l < 15; l++)
-        {
-            saques[m][l] = 0;
-        }
-    }
+    memset(saques, 0, sizeof(saques));
+    
     // Inicio do caixa
     while (pg == 0)
     {
@@ -982,8 +977,6 @@ int main()
                     }
                     else
                     {
-                        printf("%d\n", cliente);
-                        system("pause");
                         valorASerSacado = realizaSaque();
                         if (checaSaldo(valorASerSacado) == 1)
                         {
