@@ -833,7 +833,7 @@ void excluirCliente(char cpfClientes[50][15], char correnteClientes[50][10], int
                 {
                     strcpy(correnteClientes[numDoCliente+i],correnteClientes[numDoCliente+1+i]);
                     strcpy(cpfClientes[numDoCliente+i],cpfClientes[numDoCliente+1+i]);
-                    //saquesClientes[numDoCliente+i] = saquesClientes[numDoCliente+1+i];
+                    memcpy(saquesClientes[numDoCliente+i],saquesClientes[numDoCliente+1+i],15);
                     i++;
                 }
                 memset(correnteClientes[numDoCliente+i],0,10);
