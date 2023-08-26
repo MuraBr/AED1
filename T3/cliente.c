@@ -1,3 +1,5 @@
+//Faltando a função de excluir clientes...
+
 //Variaveis Globais
 int numClientes = 0; 
 
