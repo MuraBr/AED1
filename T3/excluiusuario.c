@@ -3,36 +3,47 @@
 // Retorno: nenhum
 void excluirCliente(char cpfClientes[50][15], char correnteClientes[50][10], int saquesClientes[50][15])
 {
-    int numDoCliente, i, j;
-    char cpfClientesCopy[50][15];
-    printf("Escolha o numero do cliente que deseja exluir:\n");
-    scanf("%d", &numDoCliente);
-    if ((numDoCliente > numClientes) || (numDoCliente < 1))
+    //declaração de variaveis
+    int numDoCliente, i, j, existe;
+    char cpfClientesCopy[50][15], correnteClientesCopy[50][10], contaCliente[10];
+    printf("Digite o numero de conta do cliente que deseja exluir:\n");
+    //escaneamento de
+    scanf("%s", contaCliente);
+    existe = existeContaCorrente(contaCliente, correnteClientes);
+    numDoCliente = obtemNumeroDoCliente(contaCliente, correnteClientes);
+    if (existe==0)
     {
         printf("Cliente inexistente!\n");
     }
     else
     {
-        if (existeSaque(saquesClientes, numDoCliente - 1) != 0)
+        if (existeSaque(saquesClientes, numDoCliente) != 0)
         {
             printf("Nao e possivel exluir os dados do cliente selecionado!\n");
         }
         else
         {
-            j=0;
-            for(i = 0; i < numClientes; i++)
+            if(numDoCliente==numClientes-1)
             {
-                if(i!=numDoCliente-1)
+                memset(correnteClientes[numDoCliente],0,10);
+                memset(saquesClientes[numDoCliente],0,15);
+                memset(cpfClientes[numDoCliente],0,15);
+            }
+            else
+            {
+                i=0;
+                while((strcmp(correnteClientes[numDoCliente+1+i],"")!=0)&&(i<50-numClientes+numDoCliente+1))
                 {
-                   strcpy(cpfClientesCopy[j],cpfClientes[i]);
-                   j++;
+                    strcpy(correnteClientes[numDoCliente+i],correnteClientes[numDoCliente+1+i]);
+                    strcpy(cpfClientes[numDoCliente+i],cpfClientes[numDoCliente+1+i]);
+                    //saquesClientes[numDoCliente+i] = saquesClientes[numDoCliente+1+i];
+                    i++;
                 }
+                memset(correnteClientes[numDoCliente+i],0,10);
+                memset(saquesClientes[numDoCliente+i],0,15);
+                memset(cpfClientes[numDoCliente+i],0,15);
             }
-            numClientes-=1;
-            for(i = 0; i < numClientes; i++)
-            {
-                strcpy(cpfClientes[i],cpfClientesCopy[i]);
-            }
+            numClientes--;
         }
     }
 }
