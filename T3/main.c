@@ -830,7 +830,7 @@ void excluirCliente(char cpfClientes[50][15], char correnteClientes[50][10], int
             else
             {
                 i = 0;
-                while ((strcmp(correnteClientes[numDoCliente + 1 + i], "") != 0) && (i < 50 - numClientes + numDoCliente + 1))
+                while ((strcmp(correnteClientes[numDoCliente + 1 + i], "") != 0) && (i < 50 - numDoCliente - 1))
                 {
                     strcpy(correnteClientes[numDoCliente + i], correnteClientes[numDoCliente + 1 + i]);
                     strcpy(cpfClientes[numDoCliente + i], cpfClientes[numDoCliente + 1 + i]);
