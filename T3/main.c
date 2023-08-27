@@ -1022,27 +1022,26 @@ int main()
                     }
                     else
                     {
-                        valorASerSacado = realizaSaque();
-                        if (checaSaldo(valorASerSacado) == 1)
+                        // Encontra o primeiro espaço vazio no espaço da matriz que os saques deste cliente estão armazenados
+                        //  Ou cancela a operação se não é possível fazer mais saques na conta
+                        k = 0;
+                        while ((saques[cliente][k] != 0) && (k != 15))
                         {
-                            if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
+                            k++;
+                            if (k == 15)
                             {
-                                escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
-
-                                // Encontra o primeiro espaço vazio no espaço da matriz que os saques deste cliente estão armazenados
-                                // Ou cancela a operação se não é possível fazer mais saques na conta
-                                k = 0;
-                                while ((saques[cliente][k] != 0) && (k != 15))
+                                printf("Nao e possivel realizar mais saques nessa conta!\n");
+                            }
+                        }
+                        // Se houver espaço atribui calcula o saldo e atribui no vetor
+                        if (k < 15)
+                        {
+                            valorASerSacado = realizaSaque();
+                            if (checaSaldo(valorASerSacado) == 1)
+                            {
+                                if ((calculaMinimo(valorASerSacado, cedulasUsadasNoSaque)) == 1)
                                 {
-                                    k++;
-                                    if (k == 15)
-                                    {
-                                        printf("Nao e possivel realizar mais saques nessa conta!\n");
-                                    }
-                                }
-                                // Se houver espaço atribui o valor sacado na conta
-                                if (k < 15)
-                                {
+                                    escreveResultadoSaque(valorASerSacado, cedulasUsadasNoSaque);
                                     saques[cliente][k] = valorASerSacado;
                                 }
                             }
