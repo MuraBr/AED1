@@ -871,6 +871,9 @@ void relatorioSaques(char cpfClientes[50][15], char correnteClientes[50][10], in
                 printf("\t\t\t\t");
             }
         }
+        if(j == 0){
+            printf("\n\t\t\t\t");
+        }
         printf("\t\tR$ %d\n\n", saqueTotalNaConta);
     }
     printf("---------------------------------------------------------------------------------------------------------------------------- \nR$ %d (", totalSacadoNaMaquina);
