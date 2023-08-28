@@ -1,7 +1,7 @@
-/*  Resolva T4 usando modularização. Os dados de execução deverão ser
+/*  Resolva T4 usando modularizaÃ§Ã£o. Os dados de execuÃ§Ã£o deverÃ£o ser
     recebidos via argumento do programa na linha de comando.
 
-    Exemplos de execuções
+    Exemplos de execuÃ§Ãµes
 
     app 3 GCTTTCGACGAT GATCGAGCTTCGAA GGTCTAGCTAAT TCGA
 
@@ -64,7 +64,7 @@ int main (int argc, char *argv[]){
     strcpy(VIRUS,argv[argc-1]);
     printf(SAIDA_4,VIRUS);
 
-    //implemente a partir daqui sua solução
+    //implemente a partir daqui sua soluÃ§Ã£o
 
     return 0;
 }
