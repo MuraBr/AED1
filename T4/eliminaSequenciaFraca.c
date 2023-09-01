@@ -6,7 +6,7 @@
 // Retorno: nehnum
 void eliminaSequenciaFraca(char bacteriaSaudavel[], char virusInfectador[])
 {
-    int tamanhoVirus, tamanhoBacteria;
+    int tamanhoVirus, tamanhoBacteria, distSequenciaFracaAteFinal;
     char *sequenciaFraca, *resto, copia[1000];
     tamanhoVirus = strlen(virusInfectador);
 
@@ -14,16 +14,16 @@ void eliminaSequenciaFraca(char bacteriaSaudavel[], char virusInfectador[])
     {
         tamanhoBacteria = strlen(bacteriaSaudavel);
         sequenciaFraca = strstr(bacteriaSaudavel, virusInfectador);
-        
-        if(strlen(sequenciaFraca) != 1){
+        distSequenciaFracaAteFinal = strlen(sequenciaFraca);
+        if(tamanhoBacteria - tamanhoVirus != tamanhoBacteria - distSequenciaFracaAteFinal){
             resto = sequenciaFraca + tamanhoVirus;
             strcpy(copia, resto);
-            memset(sequenciaFraca, 0, strlen(sequenciaFraca));
+            memset(sequenciaFraca, 0, distSequenciaFracaAteFinal);
             strcpy(sequenciaFraca, copia);
             memset(copia, 0, strlen(copia));
         }
         else{
-            memset(sequenciaFraca, 0, 1);            
+            memset(sequenciaFraca, 0, distSequenciaFracaAteFinal);            
         }
     }
 }
