@@ -111,6 +111,7 @@ int main(int argc, char *argv[])
     //Encontra a maior sequencia gentética comum a todas as bacterias
     k = 0;
     tamMaiorsequencia = 0;
+    numCaracteresSequencia = 0;
     while ((k < tamMenorBacteria) && (tamMaiorsequencia < tamMenorBacteria - k))
     {
 
