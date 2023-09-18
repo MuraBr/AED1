@@ -14,6 +14,7 @@
 //2 CAACAAAACCAAAACCCACCCCCACACCACCCACAAAAACCACAACCACCCAACACCCACCAACCACCAACAAAACCCCAAAACCCACACACCCAACAAAACAACACCCACACACACCCCAACCCCAACAACCAAAACCAACACCCCAACCCCAAAAAACACCCCCAAACAAAACCCCCCACACCCCCCCCAAACACCACCAACACCCAAAACCCCAAACACCACCAAAAACAACACACAAAAACACCACAACACACCCCACCACACAAAAAACACCCACCCAACCAAACCAAACCAAAAAACCCCAACCAAAAACCACCAAAACCACCAACACAAACACAACAACCCAACAACACAACCACACACCAACAAACAACCACCCCCACCAAACACCCCAACAACAACAAACACACAACCCCCCAAAACCAAACAACACAACCCAAAAAACCCCAACAAACAACCACCAACCCAACAACAACCAACACCACAAAAAACCCAAACAACCAACCCCCCACAACAACAACAAACAACCCCAAACCCAAAACCACAACCAACCACAAAACCCACCCAACCACACACCAACCAAAACAACAAAAACCCAAACAACAAACAAACCACCAA CAAAAACACCACAACCACCAAAACCCCACCAACAAAAAACCACAAACCACCACCCAAAACCCACCACAACCACAACCCACACCCCACCCACACCCACAAACAAAAAACCAAAACCCACACCCCAACAACCACCACCACCCACCACCCCACACCCCCACCAACCCCACCAACACAAACCCCACACCCCCCACCAACCCACCAACCACAAACCACAAACCCACCACCCCACACCAAAACAACAAACAACCCAAACAACCCCACCCCCCCCAAAAAACAAACCACAACACACAAACCCCCAACAACACAACAACACCACCCCAAAACCCAACACACAAAACCACACACCCACCACCAAACCCCCACACCACAAACACAAACACACACCCACACACCCAAAAACAAACCACCACCAACAAAACACCAAAACAACCCCAAAACCAAACCACCACACACCACCCCCACACCACCCCAACCCCAAACACCCACACCCACACCCCACCCCCCA AAA
 //Resposta: CACCCCAACCCCCACCC OU CCACCCCCACACCACCC
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -79,18 +80,69 @@ int verificaExistenciaSequencia(char bacteriasInfectadas[][COMPR_BACTERIAS], cha
     return 1;
 }
 
+char *encontraMenor(char listaBacterias[][COMPR_BACTERIAS], int *tamMBacteria, int numBacterias){
+    int i, tamBacteria;
+    char *menor;
+
+    for(i = 0; i < numBacterias; i++){
+        tamBacteria = strlen(listaBacterias[i]);
+        if(tamBacteria < *tamMBacteria){
+            *tamMBacteria = tamBacteria;
+            menor = listaBacterias[i];
+        }
+    }
+    return menor;
+}
+
+void maiorSequenciaComum(char listaBacterias[][COMPR_BACTERIAS], char *menor, int tamMenor, char *maior, int numBacterias){
+    char sequenciaComparacao[COMPR_BACTERIAS];
+    int numCaracteresSequencia = 0, posInicioSequenciaComparacao = 0, tamMaiorsequencia = 0;
+
+    // Encontra a maior sequencia gentética comum a todas as bacterias
+    //Enquanto a posição onde começamos a construir a sequencia de comparação não ultrapassar o vetor da menor bactéria rodamos o código
+    //Além disso, se a maior sequência encontrada até então superar o tamanho de qualquer outra que pudermos encontrar, encerramos o código mais cedo
+    for(posInicioSequenciaComparacao = 0; posInicioSequenciaComparacao + tamMaiorsequencia <= tamMenor; posInicioSequenciaComparacao++)
+    {
+        //Começamos uma nova sequência de comparação
+        sequenciaComparacao[0] = menor[posInicioSequenciaComparacao];
+        sequenciaComparacao[1] = '\0';
+        //Enquanto o tamanho da sequencia atual mais a posição de onde começamos a análise não ultapassa o vetor
+        //E a sequência é comum para todas as bactérias, contabilizamos o número de caracteres da sequência
+        while((numCaracteresSequencia + posInicioSequenciaComparacao < tamMenor) && (verificaExistenciaSequencia(listaBacterias, sequenciaComparacao, numBacterias) == 1))
+        {
+            numCaracteresSequencia++;
+            //Se for possível adicionar mais caracteres para sequência de comparação, adicionamos o próximo caracter 
+            //existente na menor bactéria e fazemos os mesmos testes de novo
+            if (numCaracteresSequencia + posInicioSequenciaComparacao < tamMenor)
+            {
+                sequenciaComparacao[numCaracteresSequencia] = menor[posInicioSequenciaComparacao + numCaracteresSequencia];
+                sequenciaComparacao[numCaracteresSequencia + 1] = '\0';
+            }
+        }
+        //Se a atual sequencia de comparação for maior que todas as outras, trocamos a maior sequencia
+        if (tamMaiorsequencia < numCaracteresSequencia)
+        {
+            tamMaiorsequencia = numCaracteresSequencia;
+            //Devemos garantir que copiamos o numero certo de caracteres, para os casos em que adicionamos mais caracteres
+            //Mas a nova sequencia não era comum a todas as bactérias
+            strncpy(maior, sequenciaComparacao, numCaracteresSequencia);
+        }
+        //Resetamos a sequencia de comparação e o tamanho dela
+        numCaracteresSequencia = 0;
+        memset(sequenciaComparacao, 0, strlen(sequenciaComparacao));
+    }
+}
+
+
 int main(int argc, char *argv[])
 {
-    int nBacterias, tamMenorBacteria, tamMaiorsequencia, numCaracteresSequencia, i, posInicioSequenciaComparacao;
+    int nBacterias, tamMenorBacteria, i;
     char BACTERIAS[LIMITE_BACTERIAS][COMPR_BACTERIAS];
     char VIRUS[COMPR_VIRUS];
-    char *menorBacteria, maiorSequencia[COMPR_BACTERIAS], sequenciaComparacao[COMPR_BACTERIAS];
+    char *menorBacteria, maiorSequencia[COMPR_BACTERIAS];
 
     //Inicialização de variáveis
-    numCaracteresSequencia = 0;
-    posInicioSequenciaComparacao = 0;
     tamMenorBacteria = COMPR_BACTERIAS;
-    tamMaiorsequencia = 0;
 
     nBacterias = atoi(argv[1]);
     printf(SAIDA_2, nBacterias);
@@ -111,50 +163,16 @@ int main(int argc, char *argv[])
     }
     
     // Encontra a menor bacteria após a infecção do vírus
+    menorBacteria = encontraMenor(BACTERIAS, &tamMenorBacteria, nBacterias);
+
+    //Mostra as bacterias infectadas
     for (i = 0; i < nBacterias; i++)
     {
-        if (strlen(BACTERIAS[i]) < tamMenorBacteria)
-        {
-            tamMenorBacteria = strlen(BACTERIAS[i]);
-            menorBacteria = BACTERIAS[i];
-            //Quando encontra a menor bactéria dentro da matriz com as bactérias, o ponteiro da menor bactéria passa a apontar para o espaço onde ela está armazenada
-        }
         printf(SAIDA_5, BACTERIAS[i]);
     }
     
-    // Encontra a maior sequencia gentética comum a todas as bacterias
-    //Enquanto a posição onde começamos a construir a sequencia de comparação não ultrapassar o vetor da menor bactéria rodamos o código
-    //Além disso, se a maior sequência encontrada até então superar o tamanho de qualquer outra que pudermos encontrar, encerramos o código mais cedo
-    for(posInicioSequenciaComparacao = 0; posInicioSequenciaComparacao + tamMaiorsequencia <= tamMenorBacteria; posInicioSequenciaComparacao++)
-    {
-        //Começamos uma nova sequência de comparação
-        sequenciaComparacao[0] = menorBacteria[posInicioSequenciaComparacao];
-        sequenciaComparacao[1] = '\0';
-        //Enquanto o tamanho da sequencia atual mais a posição de onde começamos a análise não ultapassa o vetor
-        //E a sequência é comum para todas as bactérias, contabilizamos o número de caracteres da sequência
-        while((numCaracteresSequencia + posInicioSequenciaComparacao < tamMenorBacteria) && (verificaExistenciaSequencia(BACTERIAS, sequenciaComparacao, nBacterias) == 1))
-        {
-            numCaracteresSequencia++;
-            //Se for possível adicionar mais caracteres para sequência de comparação, adicionamos o próximo caracter 
-            //existente na menor bactéria e fazemos os mesmos testes de novo
-            if (numCaracteresSequencia + posInicioSequenciaComparacao < tamMenorBacteria)
-            {
-                sequenciaComparacao[numCaracteresSequencia] = menorBacteria[posInicioSequenciaComparacao + numCaracteresSequencia];
-                sequenciaComparacao[numCaracteresSequencia + 1] = '\0';
-            }
-        }
-        //Se a atual sequencia de comparação for maior que todas as outras, trocamos a maior sequencia
-        if (tamMaiorsequencia < numCaracteresSequencia)
-        {
-            tamMaiorsequencia = numCaracteresSequencia;
-            //Devemos garantir que copiamos o numero certo de caracteres, para os casos em que adicionamos mais caracteres
-            //Mas a nova sequencia não era comum a todas as bactérias
-            strncpy(maiorSequencia, sequenciaComparacao, numCaracteresSequencia);
-        }
-        //Resetamos a sequencia de comparação e o tamanho dela
-        numCaracteresSequencia = 0;
-        memset(sequenciaComparacao, 0, strlen(sequenciaComparacao));
-    }
+    maiorSequenciaComum(BACTERIAS, menorBacteria, tamMenorBacteria, maiorSequencia, nBacterias);
+
     printf(SAIDA_6, maiorSequencia);
     return 0;
 }
