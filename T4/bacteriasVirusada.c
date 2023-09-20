@@ -13,8 +13,6 @@
 //Resposta:CTA
 //2 CAACAAAACCAAAACCCACCCCCACACCACCCACAAAAACCACAACCACCCAACACCCACCAACCACCAACAAAACCCCAAAACCCACACACCCAACAAAACAACACCCACACACACCCCAACCCCAACAACCAAAACCAACACCCCAACCCCAAAAAACACCCCCAAACAAAACCCCCCACACCCCCCCCAAACACCACCAACACCCAAAACCCCAAACACCACCAAAAACAACACACAAAAACACCACAACACACCCCACCACACAAAAAACACCCACCCAACCAAACCAAACCAAAAAACCCCAACCAAAAACCACCAAAACCACCAACACAAACACAACAACCCAACAACACAACCACACACCAACAAACAACCACCCCCACCAAACACCCCAACAACAACAAACACACAACCCCCCAAAACCAAACAACACAACCCAAAAAACCCCAACAAACAACCACCAACCCAACAACAACCAACACCACAAAAAACCCAAACAACCAACCCCCCACAACAACAACAAACAACCCCAAACCCAAAACCACAACCAACCACAAAACCCACCCAACCACACACCAACCAAAACAACAAAAACCCAAACAACAAACAAACCACCAA CAAAAACACCACAACCACCAAAACCCCACCAACAAAAAACCACAAACCACCACCCAAAACCCACCACAACCACAACCCACACCCCACCCACACCCACAAACAAAAAACCAAAACCCACACCCCAACAACCACCACCACCCACCACCCCACACCCCCACCAACCCCACCAACACAAACCCCACACCCCCCACCAACCCACCAACCACAAACCACAAACCCACCACCCCACACCAAAACAACAAACAACCCAAACAACCCCACCCCCCCCAAAAAACAAACCACAACACACAAACCCCCAACAACACAACAACACCACCCCAAAACCCAACACACAAAACCACACACCCACCACCAAACCCCCACACCACAAACACAAACACACACCCACACACCCAAAAACAAACCACCACCAACAAAACACCAAAACAACCCCAAAACCAAACCACCACACACCACCCCCACACCACCCCAACCCCAAACACCCACACCCACACCCCACCCCCCA AAA
 //Resposta: CACCCCAACCCCCACCC OU CCACCCCCACACCACCC
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -80,20 +78,26 @@ int verificaExistenciaSequencia(char bacteriasInfectadas[][COMPR_BACTERIAS], cha
     return 1;
 }
 
-char *encontraMenor(char listaBacterias[][COMPR_BACTERIAS], int *tamMBacteria, int numBacterias){
-    int i, tamBacteria;
+// Objetivo: dado a matriz que armazena todas as bacterias, encontra e retorna o endereço da menor bacteria
+// Parametros: matriz com as bacterias e numero de bacterias na lista
+// Retorno: posição inicial da menor bacteria na matriz de bacterias
+char *encontraMenor(char listaBacterias[][COMPR_BACTERIAS], int numBacterias){
+    int i, compBacteria, compMenorBacteria = COMPR_BACTERIAS;
     char *menor;
-
+    //Varre a lista de bacterias e atribui ao ponteiro o endereço de uma bacteria, se ela for menor que qualquer outra encontrada
     for(i = 0; i < numBacterias; i++){
-        tamBacteria = strlen(listaBacterias[i]);
-        if(tamBacteria < *tamMBacteria){
-            *tamMBacteria = tamBacteria;
+        compBacteria = strlen(listaBacterias[i]);
+        if(compBacteria < compMenorBacteria){
+            compMenorBacteria = compBacteria;
             menor = listaBacterias[i];
         }
     }
     return menor;
 }
 
+// Objetivo: encontra a maior sequencia genética que seja comum a todas as bacterias e armazena ela um vetor
+// Parametros: matriz com as bacterias infectadas, endereço da menor bacteria e seu tamanho, endereço do vetor onde será armazenado a maior sequencia e o numero de bacterias
+// Retorno: sem retorno
 void maiorSequenciaComum(char listaBacterias[][COMPR_BACTERIAS], char *menor, int tamMenor, char *maior, int numBacterias){
     char sequenciaComparacao[COMPR_BACTERIAS];
     int numCaracteresSequencia = 0, posInicioSequenciaComparacao = 0, tamMaiorsequencia = 0;
@@ -141,9 +145,6 @@ int main(int argc, char *argv[])
     char VIRUS[COMPR_VIRUS];
     char *menorBacteria, maiorSequencia[COMPR_BACTERIAS];
 
-    //Inicialização de variáveis
-    tamMenorBacteria = COMPR_BACTERIAS;
-
     nBacterias = atoi(argv[1]);
     printf(SAIDA_2, nBacterias);
 
@@ -163,16 +164,16 @@ int main(int argc, char *argv[])
     }
     
     // Encontra a menor bacteria após a infecção do vírus
-    menorBacteria = encontraMenor(BACTERIAS, &tamMenorBacteria, nBacterias);
-
+    menorBacteria = encontraMenor(BACTERIAS, nBacterias);
+    tamMenorBacteria = strlen(menorBacteria);
     //Mostra as bacterias infectadas
     for (i = 0; i < nBacterias; i++)
     {
         printf(SAIDA_5, BACTERIAS[i]);
     }
-    
+    //Busca a maior sequencia comum para todas as bacterias infectadas e armazena no vetor maiorSequencia  
     maiorSequenciaComum(BACTERIAS, menorBacteria, tamMenorBacteria, maiorSequencia, nBacterias);
-
+    //Mostra a bacteria modificada que será resistente ao vírus
     printf(SAIDA_6, maiorSequencia);
     return 0;
 }
