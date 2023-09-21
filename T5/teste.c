@@ -16,7 +16,7 @@ char *encontraIncioPalavra(char *comecoLinha, char *finalMaximoSuportado)
 
     while ((espaco < finalMaximoSuportado) && (espaco != NULL))
     {
-        quebra = strchr(espaco, 32) + 1;
+        quebra = espaco + 1;
         espaco = strchr(quebra, 32);
     }
     return quebra;
