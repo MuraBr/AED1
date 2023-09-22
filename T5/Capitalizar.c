@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "UpperLowerCase.c"
-#define COMP_LINHAS 80
 
 /*
     AAAAAAAAAAAAAAA. AAAAAAAAAAAAAAAAA. AAAAAAAAAAAAAAAAA.
