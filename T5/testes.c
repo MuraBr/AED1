@@ -1,3 +1,5 @@
+//Funções em desenvolvimento e testes para código
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
