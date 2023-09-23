@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char *maisculo(char texto[]){
+void *maisculo(char texto[]){
     int i = 0;
     for(i;i<strlen(texto);i++){
         char letra = texto[i];
@@ -9,10 +9,9 @@ char *maisculo(char texto[]){
             texto[i]=letra-32;
         }
     }
-    return(texto);
 }
 
-char *minusculo(char texto[]){
+void *minusculo(char texto[]){
     int i = 0;
     for(i;i<strlen(texto);i++){
         char letra = texto[i];
@@ -20,6 +19,5 @@ char *minusculo(char texto[]){
             texto[i]=letra+32;
         }
     }
-    return(texto);
 }
 
