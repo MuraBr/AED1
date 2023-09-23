@@ -5,7 +5,6 @@
 #include <math.h>
 #include "UpperLowerCase.c"
 
-
 /*
     AAAAAAAAAAAAAAA. AAAAAAAAAAAAAAAAA. AAAAAAAAAAAAAAAAA.
             ^                ^                  ^
@@ -19,13 +18,10 @@ int DefinePontos(char texto[], char *PontLinhas[]){
     PontLinhas[0] = texto;
 
     for (k = 1; strstr(PontLinhas[k - 1],". ") != NULL; k++){
-
         if(*(PontLinhas[0]+(abs(PontLinhas[0] - strstr(PontLinhas[k-1],". "))-2))==' '){
-
             PontLinhas[k] = strstr(strstr(PontLinhas[k-1],". ")+2,". ")+2;
         }
         else{
-
             PontLinhas[k] = strstr(PontLinhas[k-1],". ")+2;
         }
     }
@@ -37,15 +33,11 @@ void CapitalizarTexto(char text[], char *PontLinhas[]){
     int i = 0,k;
     minusculo(text);
     k=DefinePontos(text,PontLinhas);
-    for(i = 0; i<=k;i++){
-        
+    for(i = 0; i<=k;i++){ 
         if((*(PontLinhas[i])<=122)&&(*(PontLinhas[i])>=95)){
-            *(PontLinhas[i])=*(PontLinhas[i])-32;
-            
-        }
-        
+            *(PontLinhas[i])=*(PontLinhas[i])-32;     
+        }     
     }
-
 }
 
 
