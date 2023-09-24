@@ -83,8 +83,8 @@ void imprimeDireita(char *endLinhas[])
         // Calcula o tamahno da linha
         tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
         // Exibe exatamente o numéro calculado de caracteres da linha
-        if (tamLinha < 79)
-            printf("%*c", 79 - tamLinha, SPACE);
+        if (tamLinha < COMP_LINHAS - 1)
+            printf("%*c", COMP_LINHAS - 1 - tamLinha, SPACE);
         printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
     }
 }
@@ -149,7 +149,7 @@ void imprimeCentralizado(char *endLinhas[])
         // Calcula o tamahno da linha
         tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
         sobra = (COMP_LINHAS - tamLinha) / 2;
-        if (tamLinha < 79)
+        if (tamLinha < COMP_LINHAS - 1)
             printf("%*c", sobra, SPACE);
         // Exibe exatamente o numéro calculado de caracteres da linha
         printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
@@ -310,7 +310,7 @@ int main()
  Fonte: https://pt.wikipedia.org/wiki/Bill_Gates";
 
     int i;
-    char *linhas[50];
+    char *linhas[100];
     // Alguns testes
     removeEspacosExtras(text);
     substituirTodasOcorrencias(text, "Bill Gates", "Erwin Johannes Hattori VI");
