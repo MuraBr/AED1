@@ -57,7 +57,7 @@ void definePosQuebraDeLinha(char texto[], char *endLinhas[])
 // Obejtivo: Dado o texto e os endreços de cada uma de suas linhas exibe o texto formatado
 // Parametros: vetor com o texto e vetor de ponteiros com os endereços de cada linha
 // Retorno: nenhum
-void imprimeTextoFormatado(char *endLinhas[])
+void imprimeEsquerda(char *endLinhas[])
 {
     int i, tamLinha;
     // Enquanto a linha não apontar para o caracter terminal exibe cada linha
@@ -66,8 +66,101 @@ void imprimeTextoFormatado(char *endLinhas[])
         // Calcula o tamahno da linha
         tamLinha = abs(endLinhas[i] - endLinhas[i + 1]);
         // Exibe exatamente o numéro calculado de caracteres da linha
-        printf("%.*s\n", tamLinha, endLinhas[i]);
+        printf("%.*s\n", tamLinha - 1, endLinhas[i]);
     }
+}
+void imprimeDireita(char *endLinhas[])
+{
+    int i, tamLinha;
+    // Enquanto a linha não apontar para o caracter terminal exibe cada linha
+    tamLinha = abs(endLinhas[0] - (endLinhas[1] - 1));
+    if (tamLinha != 80)
+        printf("%*c", 80 - tamLinha, 32);
+    printf("%.*s\n", tamLinha, endLinhas[0]);
+    for (i = 1; *(endLinhas[i]) != '\0'; ++i)
+    {
+        // Calcula o tamahno da linha
+        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
+        // Exibe exatamente o numéro calculado de caracteres da linha
+        if (tamLinha < 79)
+            printf("%*c", 79 - tamLinha, 32);
+        printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
+    }
+}
+
+int calculaNumEspacosLinha(char *comecoLinha, char *finalLinha)
+{
+    int qtd;
+    char *espaco;
+    for (qtd = 0, espaco = strchr(comecoLinha, 32); (espaco != NULL) && (espaco < finalLinha); espaco = strchr(espaco + 1, 32), qtd++)
+        ;
+    return qtd;
+}
+void imprimeJustificado(char *endLinhas[])
+{
+    int i, tamLinha, sobra, numEspacos, distAteEspaco;
+    char *espaco;
+    // Enquanto a linha não apontar para o caracter terminal exibe cada linha
+    
+    for (i = 0; *(endLinhas[i]) != '\0'; i++)
+    {
+        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));               // 72
+        numEspacos = calculaNumEspacosLinha(endLinhas[i], endLinhas[i+1] - 1); // 12
+        espaco = strchr(endLinhas[i], 32);
+        distAteEspaco = abs(espaco - endLinhas[i]); // 7
+
+        if (tamLinha == 80)
+        {
+            printf("%.*s\n", tamLinha, endLinhas[i]);
+        }
+        else if ((espaco != NULL) && (distAteEspaco < 80))
+        {
+            printf("%.*s", distAteEspaco, endLinhas[i]);
+            for (sobra = (80 - tamLinha); (espaco != NULL) && (numEspacos > 0); sobra = sobra - sobra / numEspacos, numEspacos--)
+            {
+                if (sobra / numEspacos > 0)
+                    printf("%*c", sobra / numEspacos, 32);
+                distAteEspaco = abs(strchr(espaco + 1, 32) - (espaco));
+                printf("%.*s", distAteEspaco, espaco);
+                espaco = strchr(espaco + 1, 32);
+            }
+            printf("\n");
+        }
+        else
+        {
+            printf("%.*s\n", tamLinha, endLinhas[i]);
+        }
+    }
+}
+
+void imprimeCentralizado(char *endLinhas[])
+{
+    int i, tamLinha, sobra;
+
+    tamLinha = abs(endLinhas[0] - (endLinhas[1] - 1));
+    sobra = (80 - tamLinha) / 2;
+    if (tamLinha != 80)
+        printf("%*c", sobra, 32);
+    printf("%.*s\n", tamLinha, endLinhas[0]);
+
+    for (i = 1; *(endLinhas[i]) != '\0'; ++i)
+    {
+        // Calcula o tamahno da linha
+        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
+        sobra = (80 - tamLinha) / 2;
+        if (tamLinha < 79)
+            printf("%*c", sobra, 32);
+        // Exibe exatamente o numéro calculado de caracteres da linha
+        printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
+    }
+}
+
+void imprimeTextoFormatado(char *endLinhas[])
+{
+    imprimeDireita(endLinhas);
+    imprimeEsquerda(endLinhas);
+    imprimeCentralizado(endLinhas);
+    imprimeJustificado(endLinhas);
 }
 // Obejtivo: Dado o texto, verifica espaços extras e remove eles
 // Parametros: vetor com o texto
