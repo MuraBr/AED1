@@ -5,6 +5,7 @@
 #include <ctype.h>
 
 #define COMP_LINHAS 80
+#define SPACE 32
 
 // Obejtivo: Dado os limites de uma linha, encontrar onde quebrar uma linha sem que nenhuma palara seja cortada
 // Parametros: endereço do começo da linha e endereço final
@@ -13,7 +14,7 @@ char *encontraIncioPalavra(char *comecoLinha, char *finalMaximoSuportado)
 {
     char *quebra, *espaco;
     // Encontra a primeria ocorrência de um caracter espaço
-    espaco = strchr(comecoLinha, 32);
+    espaco = strchr(comecoLinha, SPACE);
     // Testa se existe espaço na linha
     if ((espaco > finalMaximoSuportado) || (espaco == NULL))
         return NULL;
@@ -21,9 +22,9 @@ char *encontraIncioPalavra(char *comecoLinha, char *finalMaximoSuportado)
     while ((espaco < finalMaximoSuportado) && (espaco != NULL))
     {
         // Define provisoriamente a quebra para ser o endereço de espaco mais 1
-        quebra = strchr(espaco, 32) + 1;
+        quebra = strchr(espaco, SPACE) + 1;
         // Procura um novo espaço
-        espaco = strchr(quebra, 32);
+        espaco = strchr(quebra, SPACE);
     }
     return quebra;
 }
@@ -40,7 +41,7 @@ void definePosQuebraDeLinha(char texto[], char *endLinhas[])
     for (k = 1; strlen(endLinhas[k - 1]) > COMP_LINHAS; k++)
     {
         // Se o último caracter permitido na linha for um espaço faz uma atribuição direta do próximo caracter para ser a quebra
-        if (*(endLinhas[k - 1] + COMP_LINHAS - 1) == 32)
+        if (*(endLinhas[k - 1] + COMP_LINHAS - 1) == SPACE)
         {
             endLinhas[k] = endLinhas[k - 1] + COMP_LINHAS;
         }
@@ -74,8 +75,8 @@ void imprimeDireita(char *endLinhas[])
     int i, tamLinha;
     // Enquanto a linha não apontar para o caracter terminal exibe cada linha
     tamLinha = abs(endLinhas[0] - (endLinhas[1] - 1));
-    if (tamLinha != 80)
-        printf("%*c", 80 - tamLinha, 32);
+    if (tamLinha != COMP_LINHAS)
+        printf("%*c", COMP_LINHAS - tamLinha, SPACE);
     printf("%.*s\n", tamLinha, endLinhas[0]);
     for (i = 1; *(endLinhas[i]) != '\0'; ++i)
     {
@@ -83,7 +84,7 @@ void imprimeDireita(char *endLinhas[])
         tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
         // Exibe exatamente o numéro calculado de caracteres da linha
         if (tamLinha < 79)
-            printf("%*c", 79 - tamLinha, 32);
+            printf("%*c", 79 - tamLinha, SPACE);
         printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
     }
 }
@@ -92,7 +93,7 @@ int calculaNumEspacosLinha(char *comecoLinha, char *finalLinha)
 {
     int qtd;
     char *espaco;
-    for (qtd = 0, espaco = strchr(comecoLinha, 32); (espaco != NULL) && (espaco < finalLinha); espaco = strchr(espaco + 1, 32), qtd++)
+    for (qtd = 0, espaco = strchr(comecoLinha, SPACE); (espaco != NULL) && (espaco < finalLinha); espaco = strchr(espaco + 1, SPACE), qtd++)
         ;
     return qtd;
 }
@@ -101,28 +102,28 @@ void imprimeJustificado(char *endLinhas[])
     int i, tamLinha, sobra, numEspacos, distAteEspaco;
     char *espaco;
     // Enquanto a linha não apontar para o caracter terminal exibe cada linha
-    
+
     for (i = 0; *(endLinhas[i]) != '\0'; i++)
     {
-        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));               // 72
-        numEspacos = calculaNumEspacosLinha(endLinhas[i], endLinhas[i+1] - 1); // 12
-        espaco = strchr(endLinhas[i], 32);
+        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));                   // 72
+        numEspacos = calculaNumEspacosLinha(endLinhas[i], endLinhas[i + 1] - 1); // 12
+        espaco = strchr(endLinhas[i], SPACE);
         distAteEspaco = abs(espaco - endLinhas[i]); // 7
 
-        if (tamLinha == 80)
+        if (tamLinha == COMP_LINHAS)
         {
             printf("%.*s\n", tamLinha, endLinhas[i]);
         }
-        else if ((espaco != NULL) && (distAteEspaco < 80))
+        else if ((espaco != NULL) && (distAteEspaco < COMP_LINHAS))
         {
             printf("%.*s", distAteEspaco, endLinhas[i]);
-            for (sobra = (80 - tamLinha); (espaco != NULL) && (numEspacos > 0); sobra = sobra - sobra / numEspacos, numEspacos--)
+            for (sobra = (COMP_LINHAS - tamLinha); (espaco != NULL) && (numEspacos > 0); sobra = sobra - sobra / numEspacos, numEspacos--)
             {
                 if (sobra / numEspacos > 0)
-                    printf("%*c", sobra / numEspacos, 32);
-                distAteEspaco = abs(strchr(espaco + 1, 32) - (espaco));
+                    printf("%*c", sobra / numEspacos, SPACE);
+                distAteEspaco = abs(strchr(espaco + 1, SPACE) - (espaco));
                 printf("%.*s", distAteEspaco, espaco);
-                espaco = strchr(espaco + 1, 32);
+                espaco = strchr(espaco + 1, SPACE);
             }
             printf("\n");
         }
@@ -138,18 +139,18 @@ void imprimeCentralizado(char *endLinhas[])
     int i, tamLinha, sobra;
 
     tamLinha = abs(endLinhas[0] - (endLinhas[1] - 1));
-    sobra = (80 - tamLinha) / 2;
-    if (tamLinha != 80)
-        printf("%*c", sobra, 32);
+    sobra = (COMP_LINHAS - tamLinha) / 2;
+    if (tamLinha != COMP_LINHAS)
+        printf("%*c", sobra, SPACE);
     printf("%.*s\n", tamLinha, endLinhas[0]);
 
     for (i = 1; *(endLinhas[i]) != '\0'; ++i)
     {
         // Calcula o tamahno da linha
         tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
-        sobra = (80 - tamLinha) / 2;
+        sobra = (COMP_LINHAS - tamLinha) / 2;
         if (tamLinha < 79)
-            printf("%*c", sobra, 32);
+            printf("%*c", sobra, SPACE);
         // Exibe exatamente o numéro calculado de caracteres da linha
         printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
     }
@@ -173,7 +174,7 @@ void removeEspacosExtras(char texto[])
     for (espacoExtra = strstr(texto, "  "); espacoExtra != NULL; espacoExtra = strstr(texto, "  "))
     {
         // Calcula quantos espaços estão dispostos numa sequencia específica
-        for (cont = 1; *(espacoExtra + cont) == 32; cont++)
+        for (cont = 1; *(espacoExtra + cont) == SPACE; cont++)
             ;
         // Copia para uma variavel auxiliar tudo após a sequencia de espaço
         strcpy(copia, espacoExtra + cont);
@@ -204,7 +205,7 @@ void minusculo(char texto[])
 
 int validaPonto(char *p)
 {
-    if (*(p - 2) == 32)
+    if (*(p - 2) == SPACE)
     {
         return 0;
     }
