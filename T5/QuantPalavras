@@ -1,3 +1,4 @@
+
 int QuantPalavra(char texto[], char palavra[], char *endLinhas[])
 {
     int tamPalavra = strlen(palavra);
@@ -7,9 +8,11 @@ int QuantPalavra(char texto[], char palavra[], char *endLinhas[])
     if (endPalavra != NULL){
         for(int i = 1; *(endLinhas[i]) != '\0'; i++){
             if(endLinhas[i] > endPalavra){
+                quant++;
+                printf("%dª ocorrencia:\n",quant);
                 printf("linha:%d", i);
                 printf("coluna:%d", abs(endPalavra-endLinhas[i]));
-                quant++;
+                
             }
         }
         endPalavra = encontraPalavra(endPalavra+1, palavra);
