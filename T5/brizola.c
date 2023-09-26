@@ -285,6 +285,25 @@ void substituirTodasOcorrencias(char texto[], char palavraSubstituir[], char pal
     }
 }
 
+
+int QuantPalavra(char texto[], char palavra[], int linhasOcorrencias[], int colunasOcorrencias[], char *endLinhas[])
+{
+    int tamPalavra = strlen(palavra);
+    char *endPalavra;
+    int quant, k, i;
+    endPalavra = encontraPalavra(texto, palavra);
+
+    for(k = 0, quant = 0, i = 0; (endPalavra != NULL) && (*(endLinhas[i]) != '\0'); endPalavra = encontraPalavra(endPalavra + 1, palavra), i = 0){
+        while((!((endLinhas[i] <= endPalavra) && (endPalavra <= endLinhas[i + 1]))) && (*(endLinhas[i]) != '\0')){
+            i++;
+        }
+        linhasOcorrencias[quant] = i + 1;
+        colunasOcorrencias[quant] = abs(endPalavra-endLinhas[i]) + 1;
+        quant++;
+    }
+    return quant;
+}
+
 void declararOpcoes()
 {
     printf("----------Menu------------\na)      Imprimir o texto formatado;\n\
@@ -361,8 +380,8 @@ int main()
  o programa e vendeu-o por US$ 8 milhoes, mantendo a licenca do produto. Este viria a ser o MS-DOS. \
  Fonte: https://pt.wikipedia.org/wiki/Bill_Gates";
 
-    int i, flag, tipo;
-    char *linhas[100], opcao, substituir[81], substituta[81];
+    int i, j, flag, tipo, qtd, posColunasPalavra[100], posLinhasPalavra[100];
+    char *linhas[100], opcao, substituir[81], substituta[81], palavraInfo[81];
     // Alguns testes
     system("cls");
     removeEspacosExtras(text);
@@ -380,7 +399,14 @@ int main()
             imprimeTextoFormatado(linhas, tipo);
             break;
         case 'b':
-            printf("Mathews\n");
+            printf("Escreva uma palavra do texto:\n");
+            gets(palavraInfo);
+            qtd = QuantPalavra(text, palavraInfo, posLinhasPalavra, posColunasPalavra, linhas);
+            printf("Ocorrencias da palavra: %d\n", qtd);
+            for(j = 0; j < qtd; j++){
+                printf("Ocorrencia #%d\n Linha: %d Coluna: %d\n", j + 1, posLinhasPalavra[j], posColunasPalavra[j]);
+            }
+            
             break;
         case 'c':
             do{
