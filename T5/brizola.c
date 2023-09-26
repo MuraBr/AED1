@@ -7,11 +7,6 @@
 #define COMP_LINHAS 80
 #define SPACE 32
 
-void pausa()
-{
-    printf("Aperte qualquer tecla para continuar...");
-    scanf("%*c");
-}
 // Obejtivo: Dado os limites de uma linha, encontrar onde quebrar uma linha sem que nenhuma palara seja cortada
 // Parametros: endereço do começo da linha e endereço final
 // Retorno: um ponteiro para o endereço do primeiro caracter da palavra que servirá de quebra
@@ -312,19 +307,19 @@ int validaOpcao(char opcaoEscolhida)
     if ((opcaoEscolhida >= 97) && (opcaoEscolhida <= 108))
         return 1;
     printf("Invalido!\n");
-    pausa();
+    system("pause");
     return 0;
 }
 
 int validaSubstituicao(char texto[], char palavraSubstituir[], char palavraSubstituta[]){
     if(encontraPalavra(texto, palavraSubstituir) == NULL){
-        printf("Palavra nao existe no texto!");
-        pausa();
+        printf("Palavra nao existe no texto!\n");
+        system("pause");
         return 0;
     }
     if(strlen(palavraSubstituta) > COMP_LINHAS){
-        printf("A palavra substituta é muito grande!");
-        pausa();
+        printf("A palavra substituta é muito grande!\n");
+        system("pause");
         return 0;
     }
     return 1;
@@ -367,7 +362,7 @@ int main()
  Fonte: https://pt.wikipedia.org/wiki/Bill_Gates";
 
     int i, flag, tipo;
-    char *linhas[100], opcao, substituir[80], substituta[80];
+    char *linhas[100], opcao, substituir[81], substituta[81];
     // Alguns testes
     system("cls");
     removeEspacosExtras(text);
@@ -390,9 +385,9 @@ int main()
         case 'c':
             do{
                 printf("Escreva a palavra que deve ser substituida:\n");
-                scanf("%s", substituir);
+                gets(substituir);
                 printf("Escreva a palavra que servira para substituir a anterior:\n");
-                scanf("%s", substituta);
+                gets(substituta);
             } while(!validaSubstituicao(text, substituir, substituta));
             substituirPalavra(text, substituir, substituta);
             definePosQuebraDeLinha(text, linhas);
@@ -400,18 +395,18 @@ int main()
         case 'd':
             do{
                 printf("Escreva a palavra que deve ser substituida:\n");
-                scanf("%s", substituir);
+                gets(substituir);
                 printf("Escreva a palavra que servira para substituir a anterior:\n");
-                scanf("%s", substituta);
+                gets(substituta);
             } while(!validaSubstituicao(text, substituir, substituta));
             substituirTodasOcorrencias(text, substituir, substituta);
             definePosQuebraDeLinha(text, linhas);
             break;
         case 'e':
-            minusculo(text);
+            maiusculo(text);
             break;
         case 'f':
-            maiusculo(text);
+            minusculo(text);
             break;
         case 'g':
             capitalizarTexto(text);
@@ -431,13 +426,13 @@ int main()
         case 'l':
             flag = 1;
             printf("Encerrando o programa...\n");
-            pausa();
+            system("pause");
             return 0;
             break;
         default:
             break;
         }
-        pausa();
+        system("pause");
         system("cls");
     }
 
