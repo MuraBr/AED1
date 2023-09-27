@@ -200,7 +200,9 @@ void maiusculo(char texto[])
     int i;
     for (i = 0; texto[i] != '\0'; i++)
     {
+        //procura em cada parte do texto letras minusculas
         if (islower(texto[i]))
+            //se tiver transforma em maiuscula
             texto[i] = toupper(texto[i]);
     }
 }
@@ -209,13 +211,16 @@ void minusculo(char texto[])
     int i;
     for (i = 0; texto[i] != '\0'; i++)
     {
+        //procura em cada parte do texto letras maiusculas
         if (isupper(texto[i]))
+            //se tiver transforma em minuscula
             texto[i] = tolower(texto[i]);
     }
 }
 
 int validaPonto(char *p)
 {
+    //Se so tiver uma letra antes do ponto, não é considerado uma nova frase, portanto não é aceito
     if (*(p - 2) == SPACE)
     {
         return 0;
@@ -231,6 +236,7 @@ void capitalizarTexto(char texto[])
 
     for (ponto = strstr(texto, ". "); ponto != NULL; ponto = strstr(ponto + 1, ". "))
     {
+        //capitaliza letras depois do ponto
         if (validaPonto(ponto))
             *(ponto + 2) = toupper(*(ponto + 2));
     }
