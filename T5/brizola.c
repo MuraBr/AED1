@@ -67,25 +67,21 @@ void imprimeEsquerda(char *endLinhas[])
         // Calcula o tamahno da linha
         tamLinha = abs(endLinhas[i] - endLinhas[i + 1]);
         // Exibe exatamente o numéro calculado de caracteres da linha
-        printf("%.*s\n", tamLinha - 1, endLinhas[i]);
+        printf("%.*s\n", tamLinha, endLinhas[i]);
     }
 }
 void imprimeDireita(char *endLinhas[])
 {
     int i, tamLinha;
     // Enquanto a linha não apontar para o caracter terminal exibe cada linha
-    tamLinha = abs(endLinhas[0] - (endLinhas[1] - 1));
-    if (tamLinha != COMP_LINHAS)
-        printf("%*c", COMP_LINHAS - tamLinha, SPACE);
-    printf("%.*s\n", tamLinha, endLinhas[0]);
-    for (i = 1; *(endLinhas[i]) != '\0'; ++i)
+    for (i = 0; *(endLinhas[i]) != '\0'; ++i)
     {
         // Calcula o tamahno da linha
-        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
+        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1]));
         // Exibe exatamente o numéro calculado de caracteres da linha
-        if (tamLinha < COMP_LINHAS - 1)
-            printf("%*c", COMP_LINHAS - 1 - tamLinha, SPACE);
-        printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
+        if (tamLinha < COMP_LINHAS)
+            printf("%*c", COMP_LINHAS - tamLinha, SPACE);
+        printf("%.*s\n", tamLinha, endLinhas[i]);
     }
 }
 
@@ -105,7 +101,7 @@ void imprimeJustificado(char *endLinhas[])
 
     for (i = 0; *(endLinhas[i]) != '\0'; i++)
     {
-        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));                   // 72
+        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1]));                   // 72
         numEspacos = calculaNumEspacosLinha(endLinhas[i], endLinhas[i + 1] - 1); // 12
         espaco = strchr(endLinhas[i], SPACE);
         distAteEspaco = abs(espaco - endLinhas[i]); // 7
@@ -138,21 +134,16 @@ void imprimeCentralizado(char *endLinhas[])
 {
     int i, tamLinha, sobra;
 
-    tamLinha = abs(endLinhas[0] - (endLinhas[1] - 1));
-    sobra = (COMP_LINHAS - tamLinha) / 2;
-    if (tamLinha != COMP_LINHAS)
-        printf("%*c", sobra, SPACE);
-    printf("%.*s\n", tamLinha, endLinhas[0]);
-
-    for (i = 1; *(endLinhas[i]) != '\0'; ++i)
+    // Enquanto a linha não apontar para o caracter terminal exibe cada linha
+    for (i = 0; *(endLinhas[i]) != '\0'; ++i)
     {
-        // Calcula o tamahno da linha
-        tamLinha = abs(endLinhas[i] - (endLinhas[i + 1] - 1));
+        // Calcula o tamanho da linha
+        tamLinha = abs(endLinhas[i] - endLinhas[i + 1]);
         sobra = (COMP_LINHAS - tamLinha) / 2;
-        if (tamLinha < COMP_LINHAS - 1)
-            printf("%*c", sobra, SPACE);
+            if(tamLinha < COMP_LINHAS)
+                printf("%*c", sobra, SPACE);
         // Exibe exatamente o numéro calculado de caracteres da linha
-        printf("%.*s\n", tamLinha + 1, endLinhas[i] - 1);
+        printf("%.*s\n", tamLinha, endLinhas[i]);
     }
 }
 
@@ -200,9 +191,7 @@ void maiusculo(char texto[])
     int i;
     for (i = 0; texto[i] != '\0'; i++)
     {
-        //procura em cada parte do texto letras minusculas
         if (islower(texto[i]))
-            //se tiver transforma em maiuscula
             texto[i] = toupper(texto[i]);
     }
 }
@@ -211,16 +200,13 @@ void minusculo(char texto[])
     int i;
     for (i = 0; texto[i] != '\0'; i++)
     {
-        //procura em cada parte do texto letras maiusculas
         if (isupper(texto[i]))
-            //se tiver transforma em minuscula
             texto[i] = tolower(texto[i]);
     }
 }
 
 int validaPonto(char *p)
 {
-    //Se so tiver uma letra antes do ponto, não é considerado uma nova frase, portanto não é aceito
     if (*(p - 2) == SPACE)
     {
         return 0;
@@ -236,7 +222,6 @@ void capitalizarTexto(char texto[])
 
     for (ponto = strstr(texto, ". "); ponto != NULL; ponto = strstr(ponto + 1, ". "))
     {
-        //capitaliza letras depois do ponto
         if (validaPonto(ponto))
             *(ponto + 2) = toupper(*(ponto + 2));
     }
@@ -291,7 +276,6 @@ void substituirTodasOcorrencias(char texto[], char palavraSubstituir[], char pal
     }
 }
 
-
 int QuantPalavra(char texto[], char palavra[], int linhasOcorrencias[], int colunasOcorrencias[], char *endLinhas[])
 {
     int tamPalavra = strlen(palavra);
@@ -299,12 +283,17 @@ int QuantPalavra(char texto[], char palavra[], int linhasOcorrencias[], int colu
     int quant, k, i;
     endPalavra = encontraPalavra(texto, palavra);
 
-    for(k = 0, quant = 0, i = 0; (endPalavra != NULL) && (*(endLinhas[i]) != '\0'); endPalavra = encontraPalavra(endPalavra + 1, palavra), i = 0){
-        while((!((endLinhas[i] <= endPalavra) && (endPalavra <= endLinhas[i + 1]))) && (*(endLinhas[i]) != '\0')){
+    for (k = 0, quant = 0, i = 0; (endPalavra != NULL) && (*(endLinhas[i]) != '\0'); endPalavra = encontraPalavra(endPalavra + 1, palavra), i = 0)
+    {
+        while ((!((endLinhas[i] <= endPalavra) && (endPalavra <= endLinhas[i + 1]))) && (*(endLinhas[i]) != '\0'))
+        {
+            i++;
+        }
+        if((endPalavra == endLinhas[i + 1]) && (*(endLinhas[i]) != '\0')){
             i++;
         }
         linhasOcorrencias[quant] = i + 1;
-        colunasOcorrencias[quant] = abs(endPalavra-endLinhas[i]) + 1;
+        colunasOcorrencias[quant] = abs(endPalavra - endLinhas[i]) + 1;
         quant++;
     }
     return quant;
@@ -336,18 +325,48 @@ int validaOpcao(char opcaoEscolhida)
     return 0;
 }
 
-int validaSubstituicao(char texto[], char palavraSubstituir[], char palavraSubstituta[]){
-    if(encontraPalavra(texto, palavraSubstituir) == NULL){
+int validaSubstituicao(char texto[], char palavraSubstituir[], char palavraSubstituta[])
+{
+    if (encontraPalavra(texto, palavraSubstituir) == NULL)
+    {
         printf("Palavra nao existe no texto!\n");
         system("pause");
         return 0;
     }
-    if(strlen(palavraSubstituta) > COMP_LINHAS){
+    if (strlen(palavraSubstituta) > COMP_LINHAS)
+    {
         printf("A palavra substituta é muito grande!\n");
         system("pause");
         return 0;
     }
     return 1;
+}
+
+void mostraOcorrencias(int linhasOcorrencias[], int colunasOcorrencias[], int qtd, char *endLinhas[], int tipo)
+{
+    int tamLinha, j, sobra, espacosSomados, numEspacos;
+    for (j = 0; j < qtd; j++)
+    {
+        switch (tipo)
+        {
+        case 1:
+            tamLinha = abs(endLinhas[linhasOcorrencias[j]] - endLinhas[linhasOcorrencias[j] - 1]);
+            printf("%d\n", tamLinha);
+            colunasOcorrencias[j] += COMP_LINHAS - tamLinha;
+            break;
+        case 2:
+       
+        
+        case 3:
+        tamLinha = abs(endLinhas[linhasOcorrencias[j]] - (endLinhas[linhasOcorrencias[j] - 1]));
+        sobra = (COMP_LINHAS - tamLinha) / 2;
+        colunasOcorrencias[j] += sobra;
+            break;
+        default:
+            break;
+        }
+        printf("Ocorrencia #%d\n Linha: %d Coluna: %d\n", j + 1, linhasOcorrencias[j], colunasOcorrencias[j]);
+    }
 }
 
 int main()
@@ -394,10 +413,11 @@ int main()
     definePosQuebraDeLinha(text, linhas);
     for (flag = 0, tipo = 0; flag != 1;)
     {
-        do{
+        do
+        {
             declararOpcoes();
             scanf("%c%*c", &opcao);
-        }while (validaOpcao(opcao) == 0);
+        } while (validaOpcao(opcao) == 0);
         system("cls");
         switch (opcao)
         {
@@ -409,28 +429,27 @@ int main()
             gets(palavraInfo);
             qtd = QuantPalavra(text, palavraInfo, posLinhasPalavra, posColunasPalavra, linhas);
             printf("Ocorrencias da palavra: %d\n", qtd);
-            for(j = 0; j < qtd; j++){
-                printf("Ocorrencia #%d\n Linha: %d Coluna: %d\n", j + 1, posLinhasPalavra[j], posColunasPalavra[j]);
-            }
-            
+            mostraOcorrencias(posLinhasPalavra, posColunasPalavra, qtd, linhas, tipo);
             break;
         case 'c':
-            do{
+            do
+            {
                 printf("Escreva a palavra que deve ser substituida:\n");
                 gets(substituir);
                 printf("Escreva a palavra que servira para substituir a anterior:\n");
                 gets(substituta);
-            } while(!validaSubstituicao(text, substituir, substituta));
+            } while (!validaSubstituicao(text, substituir, substituta));
             substituirPalavra(text, substituir, substituta);
             definePosQuebraDeLinha(text, linhas);
             break;
         case 'd':
-            do{
+            do
+            {
                 printf("Escreva a palavra que deve ser substituida:\n");
                 gets(substituir);
                 printf("Escreva a palavra que servira para substituir a anterior:\n");
                 gets(substituta);
-            } while(!validaSubstituicao(text, substituir, substituta));
+            } while (!validaSubstituicao(text, substituir, substituta));
             substituirTodasOcorrencias(text, substituir, substituta);
             definePosQuebraDeLinha(text, linhas);
             break;
@@ -467,12 +486,4 @@ int main()
         system("pause");
         system("cls");
     }
-
-    // O limite do vetor text é dado pelo número de caracteres dentro dele quando ele foi declarado, por isso, quando
-    // uma palavra é substituida por outra maior, alguns caracteres ficam fora do vetor text
-    // Para evitar que os caracteres de fora causem algum problema, somando-se ao fato de que a posição na memória de cada variável
-    // Fica no final da próxima variável que será declarada na função, se declararmos um vetor antes de text,
-    // Então todos os caracteres extras ocupam esse vetor de resto
-    printf("\nParte fora do vetor text: %s\n", resto - 12);
-    return 0;
 }
