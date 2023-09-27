@@ -41,9 +41,9 @@ void definePosQuebraDeLinha(char texto[], char *endLinhas[])
     for (k = 1; strlen(endLinhas[k - 1]) > COMP_LINHAS; k++)
     {
         // Se o último caracter permitido na linha for um espaço faz uma atribuição direta do próximo caracter para ser a quebra
-        if (*(endLinhas[k - 1] + COMP_LINHAS - 1) == SPACE)
+        if ((*(endLinhas[k - 1] + COMP_LINHAS - 1) == SPACE) || (*(endLinhas[k-1] + COMP_LINHAS) == SPACE))
         {
-            endLinhas[k] = endLinhas[k - 1] + COMP_LINHAS;
+            endLinhas[k] = endLinha[k - 1] + COMP_LINHAS;
         }
         else
         {
