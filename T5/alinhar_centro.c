@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
 // Objetivo: Alinhar o texto no centro
 // Parametros: vetor do texto
 // Retorno: nenhum
@@ -8,9 +12,16 @@ void alinhar_centro(char *texto) {
     while (contador < tamanho) {
 
         //loop que calcula o fim da linha, sem que haja quebra de uma palavra, e o espaço de ambas extremidades
-        while (isspace(texto[contador]) == 0) {
+        while ((isspace(texto[contador]) == 0) && (contador != contadorReserva)) {
             contador--;
             espacoTotal++;
+        }
+
+        //if condition para caso não haja espaço na linha
+        if (contador == contadorReserva)
+        {
+            contador = contador + 80;
+            espacoTotal = 0;
         }
 
         //calculo do espaço a esquerda
