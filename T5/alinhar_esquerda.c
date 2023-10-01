@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
 // Objetivo: Alinhar o texto à esquerda
 // Parametros: vetor do texto
 // Retorno: nenhum
@@ -6,10 +10,16 @@ void alinhar_esquerda(char *texto) {
 
     //loop de projeção das linhas, que se encerra ao concluir o texto
     while (contador < tamanho) {
-        
+
         //loop que calcula o fim da linha, sem que haja quebra de uma palavra
-        while (isspace(texto[contador]) == 0) {
+        while ((isspace(texto[contador]) == 0) && (contador != contadorReserva)) {
             contador--;
+        }
+
+        //if condition para caso não haja espaço na linha
+        if (contador == contadorReserva)
+        {
+            contador = contador + 80;
         }
 
         //loop que projeta a linha
