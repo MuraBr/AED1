@@ -40,6 +40,28 @@ int leNValido(void)
   return n;
 }
 
+//parte do codigo arthur
+int numAlgorismos(int num)
+{
+    int valor;
+    for(valor=0; num!=0; valor++)
+    {
+        num/=10;
+    }
+    return valor;
+}
+
+int numVetor(int vec[])
+{
+    int valor=0, i=0;
+    do{
+        valor++;
+        i++;
+    } while(vec[i]!='\0');
+    return valor;
+}
+//fim
+
 int main()
 {
   int opc, limite, num;
