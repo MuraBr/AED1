@@ -1,5 +1,10 @@
-#define TAM
-50 typedef struct
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
+#define TAM 50
+typedef struct
 {
     long int id_reg;
     char placa[9];
@@ -23,7 +28,6 @@ char opcionais[][TAM] = {
     {"banco.couro"},
     {"sensor.estacionamento"}};
 
-
 /*
 1. Informar quantos registros tem “carro.dbf”.
 2. Ordenar os registros de “carro.dbf” de forma crescente pelo campo “placa” e armazená-los
@@ -33,74 +37,81 @@ no arquivo “carro.ord”.
 5. Para cada tipo de opcional informar a quantidade de carros.
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-
-#define TAM 50 
-typedef struct
+int sistemaMenu()
 {
-    long int id_reg;
-    char placa[9];
-    char modelo[TAM];
-    char fabricante[TAM];
-    int ano_fabricacao;
-    int ano_modelo;
-    char combustivel[TAM];
-    char cor[TAM];
-    int opcional[8];
-    float preco_compra;
+    int opc;
+    printf("---Menu de opcoes---\n");
+    printf("1. Informar o numero de registros em carros.dbf\n2. Criar arquivo carro.ord\n3. Mostrar as informacoes dos carros em carros.ord\n4. Informar a quantidade de carros para cada combustivel\n5. Informar a quantidade de carros para cada opcional\n6. Encerrar\n");
+    printf("Insira a opcao que deseja executar:\n");
+    scanf("%d", &opc);
+    while ((opc < 1) || (opc > 6))
+    {
+        printf("Opcao invalida!\nDigite outra:\n");
+        scanf("%d", &opc);
+    }
+    return opc;
 }
-CARRO;
 
-char opcionais[][TAM] = {
-    {"4.portas"},
-    {"cambio.automatico"},
-    {"vidros.eletricos"},
-    {"abs"},
-    {"air.bag"},
-    {"ar.condicionado"},
-    {"banco.couro"},
-    {"sensor.estacionamento"}};
-
-/*
-1. Informar quantos registros tem “carro.dbf”.
-2. Ordenar os registros de “carro.dbf” de forma crescente pelo campo “placa” e armazená-los
-no arquivo “carro.ord”.
-3. Mostrar os registros de “carro.ord”.
-4. Para cada tipo de combustível informar a quantidade de carros.
-5. Para cada tipo de opcional informar a quantidade de carros.
-*/
-long int findSize(FILE *fp) 
-{ 
-    // checking if the file exist or not 
-    if (fp == NULL) { 
-        printf("File Not Found!\n"); 
-        return -1; 
-    } 
-  
-    fseek(fp, 0L, SEEK_END); 
-  
-    // calculating the size of the file 
-    long int res = ftell(fp); 
-  
-    // closing the file 
-  
-    return res; 
+FILE *abrirArquivo(const char *nome, const char *modo)
+{
+    FILE *arquivo;
+    if ((arquivo = fopen(nome, modo)) == NULL)
+    {
+        printf("Nao foi possivel arbir o arquivo %s\n", nome);
+        exit(100);
+    }
+    return arquivo;
 }
 
 int main()
 {
-    char fileName[] = "/home/AD/rgm48935/ProjetoC/TrabalhosProvas/T8_AED1/carro.dbf";
-    FILE *dataBase = fopen(fileName, "rb");
+    char fileName[] = "carro.dbf", str[] = "Abacate";
+    FILE *dataBase = NULL;
+    FILE *baseOrdenada = NULL;
+    int flag, i, data;
 
-    if(dataBase == NULL){
-        printf("\nErro ao abrir o arquivo!\n");
-        return 0;
-    }
-    
-    printf("%lu\n", sizeof(dataBase));
+    dataBase = abrirArquivo(fileName, "rb");
+
+    do
+    {
+        system("cls");
+        flag = sistemaMenu();
+        switch (flag)
+        {
+        case 1:
+
+            break;
+        case 2:
+            if (baseOrdenada == NULL)
+            {
+                baseOrdenada = abrirArquivo("carros.ord", "w+b");
+            }
+            rewind(baseOrdenada);
+            fwrite(str, 1, sizeof(str), baseOrdenada);
+            break;
+        case 3:
+            rewind(baseOrdenada);
+            while (!feof(baseOrdenada))
+            {
+                data = fgetc(baseOrdenada);
+                printf("%c", data);
+            }
+            printf("\n");
+            break;
+        case 4:
+
+            break;
+        case 5:
+
+            break;
+        case 6:
+            printf("Encerrando o programa...\n");
+            break;
+        }
+        system("pause");
+    } while (flag != 6);
+    fclose(baseOrdenada);
+    fclose(dataBase);
 
     return 0;
 }
