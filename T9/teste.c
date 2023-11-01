@@ -3,7 +3,20 @@
 
 void Armazena(FILE *arquivo){
     FILE *D_Palavras;
-    D_Palavras = fopen("D_Palavras.txt", "a");
+    int i=0,l=0,c=0;
+    float n=0; 
+    D_Palavras = fopen("D_Palavras.txt", "w");
+    do{
+        l=fgetc(arquivo);
+        if((l!='[')&&((l!=EOF))&&(l!=']')){
+            c*=10;
+            n+=l/c;
+            fprintf(D_Palavras,"%c",l);
+        }
+        else{
+            
+        }
+    }while(l!=EOF);
     
 }
 
@@ -16,6 +29,6 @@ int main()
         printf("\nERRO abrindo %s\n",filename);
         exit(100);
     }
-    
+    Armazena(Pfiletemp);
     
 }
