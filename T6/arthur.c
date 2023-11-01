@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "myList.h"
 
-int numAlgorismos(int num)
+long long int numAlgorismos(int num)
 {
     int valor;
     for(valor=0; num!=0; valor++)
@@ -15,13 +15,13 @@ int numAlgorismos(int num)
 
 int main()
 {   
-    int a, b=0, n, k, pot, arr[10];
-    long long int alg, len, num=0;
+    int arr[10], len;
+    long long int alg, a, b, num=0, n, k, pot;
 
     // printf("Digita a: ");
     // scanf("%d", &a);
     printf("Digita n: ");
-    scanf("%d", &n);
+    scanf("%lld", &n);
 
     for(int i=10; i<=n; i++)
     {
@@ -38,10 +38,11 @@ int main()
             pot/=10;
             k++;
         }
-        for(int i=0; i<=len; i++)
+        for(int i=0; i<=len-1; i++)
         {
             num+=pow(arr[i], len);
         }
+        if(num==b) insereOrdem(num);
     }
     return 0;
 }

@@ -65,6 +65,8 @@ int numVetor(int vec[])
 int main()
 {
   int opc, limite, num;
+  int arr[10], len;
+  long long int alg, a, b, num1=0, n, k, pot;
   inicializa();
   do
   {
@@ -75,6 +77,28 @@ int main()
     case 1:
       limite = leNValido();
       // Codigo Arthur
+      
+      for(int i=10; i<=limite; i++)
+      {
+        num1=0;
+        k=0;
+        a=i;
+        b=i;
+        len = numAlgorismos(a);
+        pot = pow(10, len-1);
+        for(int j=len; j>0; j--)
+        {
+          arr[k] = a/pot;
+          a%=pot;
+          pot/=10;
+          k++;
+        }
+        for(int i=0; i<=len-1; i++)
+        {
+          num1+=pow(arr[i], len);
+        }
+        if(num1==b) insereOrdem(num1);
+      }
       printf("Os numeros encontrados foram armazenados na lista!\n");
       break;
     case 2:
