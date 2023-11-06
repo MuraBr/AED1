@@ -87,6 +87,35 @@ void NumLinhas(FILE* arquivo, char* Dir){//arquivo: Arquivo descriptografado, Di
 
     }
     fclose(A_Linhas);
+    fclose(arquivo);
+}
+
+void InfoTexto(FILE* arquivo, char* dir, int esc){
+    int linhas=0, maiorLinha=0, quantchar=0, q_mLinha=0,tq_mLinha=0;
+    char l;
+    arquivo = fopen(dir, "r");
+    do{
+        l = fgetc(arquivo);
+        quantchar++;
+        if(l==10){
+            ++linhas;
+            quantchar=0;
+        }
+        
+        if(quantchar>q_mLinha){
+            maiorLinha = linhas;
+            q_mLinha = quantchar;
+        }
+    }while(l!=EOF);
+    switch (esc)
+    {
+        case 3:
+            printf("\nO arquivo %s tem (%d) linhas\n",dir, linhas+1);
+            break;
+        case 4:
+            printf("\nA linha [%d] e a maior com (%d)",maiorLinha+1,q_mLinha);
+    }
+    fclose(arquivo);
 }
 
 int main()
@@ -95,6 +124,7 @@ int main()
     FILE *A_Cripto, *A_Descripto, *A_linhas;
     char *D_dec = "readme.decifra.txt", *D_lin = "readme.nlines.txt";
     int esc,linhas;
+
     if ((A_Cripto = fopen("readme.code.txt", "r"))==NULL){
 
         printf("\nERRO abrindo %s\n","readme.code.txt");
@@ -119,9 +149,24 @@ int main()
                     break;
                 }
             case 3:
-
+                if((A_Descripto = fopen(D_dec,"r"))==NULL){
+                    printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
+                    break;
+                }
+                else{
+                    InfoTexto(A_Descripto, D_lin,esc);
+                    break;
+                }
                 break;
             case 4:
+                if((A_Descripto = fopen(D_dec,"r"))==NULL){
+                    printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
+                    break;
+                }
+                else{
+                    InfoTexto(A_Descripto, D_lin,esc);
+                    break;
+                }
                 break;
             case 5:
                 break;
