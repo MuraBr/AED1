@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define escolha "\n1-Decifra Arquivo\n\
 2-Grava numero linha em arquivo\n\
 3-Quantas Linhas o arquivo tem\n\
@@ -129,11 +130,29 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
     fclose(arquivo);
 }
 
+void ProcurarPalavra(FILE* arquivo, char* dir, char* palavra){
+    char l[70],letra;
+    int linha=1;
+    arquivo = fopen(dir,"r");
+    while(letra!=-1){
+        letra = fgetc(arquivo);
+        if(letra!=-1)fseek(arquivo,-1,SEEK_CUR);
+        fgets(l,70,arquivo);
+        if(strstr(l,palavra)!=NULL){
+            printf("Achei %d\n",linha);
+        }
+        ++linha;
+        
+        
+    }
+    fclose(arquivo);
+}
+
 int main()
 {
 
     FILE *A_Cripto, *A_Descripto, *A_linhas;
-    char *D_dec = "readme.decifra.txt", *D_lin = "readme.nlines.txt";
+    char *D_dec = "readme.decifra.txt", *D_lin = "readme.nlines.txt", palavra[46];
     int esc,linhas;
 
     if ((A_Cripto = fopen("readme.code.txt", "r"))==NULL){
@@ -165,21 +184,23 @@ int main()
                     break;
                 }
                 else{
-                    InfoTexto(A_Descripto, D_lin,esc);
+                    InfoTexto(A_Descripto, D_dec,esc);
                     break;
                 }
                 break;
             case 4:
-                if((A_Descripto = fopen(D_dec,"r"))==NULL){
+                if((A_Descripto = fopen(D_dec,"r"))==NULL)
                     printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
-                    break;
-                }
-                else{
-                    InfoTexto(A_Descripto, D_lin,esc);
-                    break;
-                }
+                else InfoTexto(A_Descripto, D_dec,esc);    
                 break;
             case 5:
+                if((A_Descripto = fopen(D_dec,"r"))==NULL)
+                    printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
+                else{
+                    scanf("%s",palavra);
+
+                    ProcurarPalavra(A_Descripto,D_dec,palavra);
+                }
                 break;
             case 0:
                 break;
