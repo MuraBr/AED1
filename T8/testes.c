@@ -280,3 +280,116 @@ int main()
 
     return 0;
 }
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM 50
+typedef struct
+{
+    long int id_reg;
+    char placa[9];
+    char modelo[TAM];
+    char fabricante[TAM];
+    int ano_fabricacao;
+    int ano_modelo;
+    char combustivel[TAM];
+    char cor[TAM];
+    int opcional[8];
+    float preco_compra;
+} CARRO;
+
+char opcionais[][TAM] = {
+    {"4.portas"},
+    {"cambio.automatico"},
+    {"vidros.eletricos"},
+    {"abs"},
+    {"air.bag"},
+    {"ar.condicionado"},
+    {"banco.couro"},
+    {"sensor.estacionamento"}};
+
+char tipoCombustivel[][TAM] = {
+    {"alcool"},
+    {"diesel"},
+    {"flex"},
+    {"gasolina"}};
+
+
+FILE *abrirArquivo(const char *nome, const char *modo)
+{
+    FILE *arquivo;
+    if ((arquivo = fopen(nome, modo)) == NULL)
+    {
+        printf("Nao foi possivel abrir o arquivo %s\n", nome);
+        exit(100);
+    }
+    printf("Arquivo %s aberto com sucesso\n", nome);
+    return arquivo;
+}
+
+void copiarArquivo(FILE *dest, FILE *src)
+{
+    CARRO c;
+    int cont = 0, tam = sizeof(CARRO);
+    while ((fread(&c, tam, 1, src)) && (cont < 3))
+    {
+        fwrite(&c, tam, 1, dest);
+        cont++;
+    }
+    rewind(dest);
+    rewind(src);
+}
+
+void mostrarArquivo(FILE *arquivo)
+{
+    CARRO buffer;
+    int tam = sizeof(CARRO);
+    while (fread(&buffer, tam, 1, arquivo))
+    {
+        printf("==========Carro==========\nID: %li\n", buffer.id_reg);
+        printf("Placa: %s\n", buffer.placa);
+        printf("Modelo: %s\n", buffer.modelo);
+        printf("Fabricante: %s\n", buffer.fabricante);
+        printf("Ano de Fabricacao: %d\n", buffer.ano_fabricacao);
+        printf("Ano do modelo: %d\n", buffer.ano_modelo);
+        printf("Tipo de combustivel: %s\n", buffer.combustivel);
+        printf("Cor: %s\n", buffer.cor);
+        printf("Preco: %.2f\n", buffer.preco_compra);
+    }
+    rewind(arquivo);
+}
+
+int main(){
+    FILE *nada = abrirArquivo("carro.dbf", "rb");
+    FILE *arquivo = abrirArquivo("testes.ord", "w+b");
+    CARRO excluir, aux;
+    int tam = sizeof(CARRO);
+    getchar();
+    mostrarArquivo(nada);
+    getchar();
+    copiarArquivo(arquivo, nada);
+    fclose(nada);
+
+    mostrarArquivo(arquivo);
+    
+    FILE *copia = abrirArquivo("copia.ord", "w+b");
+
+    fread(&excluir, tam, 1, arquivo);
+    rewind(arquivo);
+
+    getchar();
+
+    while(fread(&aux, tam, 1, arquivo)){
+        if(memcmp(&aux, &excluir, tam) != 0){
+            fwrite(&aux, tam, 1, copia);
+        }
+    }
+    fclose(arquivo);
+    fclose(copia);
+    remove("testes.ord");
+    rename("copia.ord", "carro.ord");
+
+    return 0;
+}
