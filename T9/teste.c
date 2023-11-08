@@ -90,30 +90,41 @@ void NumLinhas(FILE* arquivo, char* Dir){//arquivo: Arquivo descriptografado, Di
     fclose(arquivo);
 }
 
-void InfoTexto(FILE* arquivo, char* dir, int esc){
-    int linhas=0, maiorLinha=0, quantchar=0, q_mLinha=0,tq_mLinha=0;
+void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptografado, dir: diretorio, 
+                                                    esc: escolha do menu na main*/
+    //declaração de variaveis
+    int linhas=1, maiorLinha=0, quantchar=0, q_mLinha=0,tq_mLinha=0;
     char l;
     arquivo = fopen(dir, "r");
+
     do{
+        /*Este while vai rodar enquanto a letra não for um -1(final de texto), enquanto roda, letra vai rodar
+        por cada caracter do arquivo readme.decifra.txt*/
         l = fgetc(arquivo);
-        quantchar++;
         if(l==10){
             ++linhas;
             quantchar=0;
         }
-        
+        else if((l!=-1))quantchar++;//quantchar não ira contar o final do texto
+        /*quantchar serve para verificar quantos caracteres tem cada linha, assim cada nova linha o quantchar
+        retornará a 0 e será adicionado +1 a variavel linha, que verifica a quantidade de linha do texto*/
+
         if(quantchar>q_mLinha){
+            /*cada que o quantchar for maior que q_mLinha, maiorLinha vai ser igual a linha atual, isso significa
+            que o maiorLinha vai ser igual a maior linha do texto, e o q_mLinha vai guardar a quantidade de caracteres
+            da maior linha
+            */
             maiorLinha = linhas;
             q_mLinha = quantchar;
         }
     }while(l!=EOF);
-    switch (esc)
+    switch (esc)//switch pra escolha do menu
     {
-        case 3:
-            printf("\nO arquivo %s tem (%d) linhas\n",dir, linhas+1);
+        case 3://printa a quantidade de linhas
+            printf("\nO arquivo %s tem (%d) linhas\n",dir, linhas);
             break;
-        case 4:
-            printf("\nA linha [%d] e a maior com (%d)",maiorLinha+1,q_mLinha);
+        case 4://printa a quantidade de caracteres da maior linha e qual é a maior linha
+            printf("\nA linha [%d] e a maior com (%d) caracteres\n",maiorLinha,q_mLinha);
     }
     fclose(arquivo);
 }
