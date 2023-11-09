@@ -41,7 +41,6 @@ FILE *abrirArquivo(const char *nome, const char *modo)
         printf("Nao foi possivel abrir o arquivo %s\n", nome);
         exit(100);
     }
-    printf("Arquivo %s aberto com sucesso\n", nome);
     return arquivo;
 }
 
@@ -51,11 +50,10 @@ void copiarArquivo(const char *destName, const char *srcName)
     FILE *dest = abrirArquivo(destName, "wb");
     FILE *src = abrirArquivo(srcName, "rb");
 
-    int cont = 0, tam = sizeof(CARRO);
-    while ((fread(&c, tam, 1, src)) && (cont < 32))
+    int tam = sizeof(CARRO);
+    while (fread(&c, tam, 1, src))
     {
         fwrite(&c, tam, 1, dest);
-        cont++;
     }
     fclose(dest);
     fclose(src);
@@ -99,7 +97,7 @@ void excluirRegistro(const char *fileName, CARRO excluir)
     CARRO aux;
     int tam = sizeof(CARRO), flag = 0;
 
-    FILE *copia = abrirArquivo("copia.ord", "wb");
+    FILE *copia = abrirArquivo("excluir.ord", "wb");
 
     while (fread(&aux, tam, 1, arquivo))
     {
@@ -120,7 +118,7 @@ void excluirRegistro(const char *fileName, CARRO excluir)
     fclose(arquivo);
     fclose(copia);
     remove(fileName);
-    rename("copia.ord", "carro.ord");
+    rename("excluir.ord", fileName);
 }
 
 int bytesAteStruct(const char *fileName, CARRO busca)
@@ -170,6 +168,37 @@ void menorRegistroPlaca(const char *fileName, CARRO *endMenor)
     fclose(arquivo);
 }
 
+int existeRegistros(const char *fileName)
+{
+    int flag = 0, tam = sizeof(CARRO);
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    CARRO buffer;
+    if (fread(&buffer, tam, 1, arquivo))
+    {
+        flag = 1;
+    }
+    fclose(arquivo);
+    return flag;
+}
+
+void ordenaArquivoPlaca(const char *fileName)
+{
+    FILE *ordenar = abrirArquivo("ordenar.ord", "wb");
+    CARRO ordem;
+    int tam = sizeof(CARRO);
+    printf("Ordenando o arquivo! Espere alguns segundos...\n");
+    while (existeRegistros(fileName) == 1)
+    {
+        menorRegistroPlaca(fileName, &ordem);
+        fwrite(&ordem, tam, 1, ordenar);
+        excluirRegistro(fileName, ordem);
+    }
+    fclose(ordenar);
+    remove(fileName);
+    rename("ordenar.ord", fileName);
+    printf("Arquivo ordenado com sucesso!\n");
+}
+
 int main()
 {
     const char original[] = "carro.dbf";
@@ -179,18 +208,11 @@ int main()
     int tam = sizeof(CARRO);
     copiarArquivo(ordenado, original);
     mostrarArquivo(ordenado);
-
-    testes = abrirArquivo(ordenado, "rb");
-    fread(&aux, tam, 1, testes);
-    fread(&aux, tam, 1, testes);
-    printf("Carro a ser excluido %s\n", aux.placa);
-    fclose(testes);
     getchar();
-    menorRegistroPlaca("carro.ord", &m);
-    mostrarRegistro(m);
+    ordenaArquivoPlaca(ordenado);
     getchar();
-    excluirRegistro(ordenado, aux);
     mostrarArquivo(ordenado);
+    getchar();
 
     return 0;
 }
