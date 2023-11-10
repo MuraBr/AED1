@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define escolha "\n1-Decifra Arquivo\n\
 2-Grava numero linha em arquivo\n\
 3-Quantas Linhas o arquivo tem\n\
@@ -90,33 +91,79 @@ void NumLinhas(FILE* arquivo, char* Dir){//arquivo: Arquivo descriptografado, Di
     fclose(arquivo);
 }
 
-void InfoTexto(FILE* arquivo, char* dir, int esc){
-    int linhas=0, maiorLinha=0, quantchar=0, q_mLinha=0,tq_mLinha=0;
+void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptografado, dir: diretorio, 
+                                                    esc: escolha do menu na main*/
+    //declaração de variaveis
+    int linhas=1, maiorLinha=0, quantchar=0, q_mLinha=0,tq_mLinha=0;
     char l;
     arquivo = fopen(dir, "r");
+
     do{
+        /*Este while vai rodar enquanto a letra não for um -1(final de texto), enquanto roda, letra vai rodar
+        por cada caracter do arquivo readme.decifra.txt*/
         l = fgetc(arquivo);
-        quantchar++;
         if(l==10){
             ++linhas;
             quantchar=0;
         }
-        
+        else if((l!=-1))quantchar++;//quantchar não ira contar o final do texto
+        /*quantchar serve para verificar quantos caracteres tem cada linha, assim cada nova linha o quantchar
+        retornará a 0 e será adicionado +1 a variavel linha, que verifica a quantidade de linha do texto*/
+
         if(quantchar>q_mLinha){
+            /*cada que o quantchar for maior que q_mLinha, maiorLinha vai ser igual a linha atual, isso significa
+            que o maiorLinha vai ser igual a maior linha do texto, e o q_mLinha vai guardar a quantidade de caracteres
+            da maior linha
+            */
             maiorLinha = linhas;
             q_mLinha = quantchar;
         }
     }while(l!=EOF);
-    switch (esc)
+    switch (esc)//switch pra escolha do menu
     {
-        case 3:
-            printf("\nO arquivo %s tem (%d) linhas\n",dir, linhas+1);
+        case 3://printa a quantidade de linhas
+
+            printf("\nO arquivo %s tem (%d) linhas\n",dir, linhas);
             break;
-        case 4:
-            printf("\nA linha [%d] e a maior com (%d)",maiorLinha+1,q_mLinha);
+
+        case 4://printa a quantidade de caracteres da maior linha e qual é a maior linha
+
+            printf("\nA linha [%d] e a maior com (%d) caracteres\n",maiorLinha,q_mLinha);
+            break;
+        case 5://printa as ocorrencias de uma palavra especifica escolhida pelo usuario
+            char frase[maiorLinha],letra,palavra[46];
+            int linha=1,contOcorrencia=0;
+            
+            printf("\nQual palavra pesquisar: \n");
+            scanf("%s",palavra);
+            printf("As linhas que a palavra %s ocorre: \n",palavra);
+            rewind(arquivo);
+            /*faz a leitura do arquivo descriptografado novamente, porem dessa vez pegando cada linha e colocando na variável string frase
+            quando o programa identifica a palavra escolhida na variavel, o programa printa a linha que achou e a frase que a palavra esta*/
+            while(letra!=-1){
+
+                letra = fgetc(arquivo);
+                if(letra!=-1) fseek(arquivo,-1,SEEK_CUR);
+
+                fgets(frase, maiorLinha ,arquivo);
+                if(strstr(frase,palavra)!=NULL){
+
+                    printf("[Linha:%d] %s\n",linha,frase);
+                    contOcorrencia+=1;
+
+                }
+                ++linha;
+                
+                
+            }
+            /*Verifica quantas vezes ocorreu a palavra*/
+            if(contOcorrencia>0) printf("E tem %d ocorrencias\n",contOcorrencia);
+            else printf("Nao tem nenhuma ocorrencia da palavra %s no texto\n",palavra);
+
     }
     fclose(arquivo);
 }
+
 
 int main()
 {
@@ -124,8 +171,9 @@ int main()
     FILE *A_Cripto, *A_Descripto, *A_linhas;
     char *D_dec = "readme.decifra.txt", *D_lin = "readme.nlines.txt";
     int esc,linhas;
+    //declaracao de variaveis
 
-    if ((A_Cripto = fopen("readme.code.txt", "r"))==NULL){
+    if ((A_Cripto = fopen("readme.code.txt", "r"))==NULL){//verifica se o arquivo a ser descriptografado existe
 
         printf("\nERRO abrindo %s\n","readme.code.txt");
         exit(100);
@@ -133,6 +181,8 @@ int main()
     }
     
     do{
+        /*escolha do menu
+            todas as escolhas exigem que o arquivo descriptografado exista, menos a escolha 1, que e a que gera o arquivo descriptografado*/
         printf(escolha);
         scanf("%d",&esc);
         switch(esc){
@@ -149,31 +199,31 @@ int main()
                     break;
                 }
             case 3:
-                if((A_Descripto = fopen(D_dec,"r"))==NULL){
+                if((A_Descripto = fopen(D_dec,"r"))==NULL)
                     printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
-                    break;
-                }
-                else{
-                    InfoTexto(A_Descripto, D_lin,esc);
-                    break;
-                }
+
+                else InfoTexto(A_Descripto, D_dec,esc);
+
                 break;
             case 4:
-                if((A_Descripto = fopen(D_dec,"r"))==NULL){
+                if((A_Descripto = fopen(D_dec,"r"))==NULL)
                     printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
-                    break;
-                }
-                else{
-                    InfoTexto(A_Descripto, D_lin,esc);
-                    break;
-                }
+
+                else InfoTexto(A_Descripto, D_dec,esc);    
+
                 break;
             case 5:
+                if((A_Descripto = fopen(D_dec,"r"))==NULL)
+                    printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
+
+                else InfoTexto(A_Descripto, D_dec,esc);
+
                 break;
             case 0:
                 break;
-
+            default:
+                break;
 
         }
-    }while(esc!=0);
+    }while(esc!=0);//quando a escolha for 0 o while loop termina
 }
