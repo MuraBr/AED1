@@ -273,16 +273,40 @@ void contabilizaOpcionais(const char *fileName, int contOpcionais[8])
     fclose(arquivo);
 }
 
+int numRegistros(const char *fileName)
+{
+    int num = 0, tam = sizeof(CARRO);
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    CARRO aux;
+
+    while (fread(&aux, tam, 1, arquivo))
+    {
+        num++;
+    }
+    fclose(arquivo);
+
+    return num;
+}
+
+int existeArquivo(const char *fileName)
+{
+    int flag = 0;
+
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+
+    if (arquivo != NULL)
+    {
+        flag = 1;
+    }
+
+    return flag;
+}
+
 int main()
 {
-    char fileName[] = "carro.dbf";
-    FILE *dataBase = NULL;
-    FILE *baseOrdenada = NULL;
-    FILE *comparer = NULL;
-    CARRO aux, aux2;
-    int flag, i, data, qtdCarrosCombustivel[4], qtdCarrosOpcionais[8], cmp;
-
-    dataBase = abrirArquivo(fileName, "rb");
+    const char ordenado[] = "carro.ord";
+    const char original[] = "carro.dbf";
+    int flag, qtdCarrosCombustivel[4], qtdCarrosOpcionais[8], i;
 
     do
     {
@@ -291,125 +315,39 @@ int main()
         switch (flag)
         {
         case 1:
-            printf("%d\n", numRegistros(dataBase));
+            printf("O numero de registros em carro.dbf eh: %d\n", numRegistros(original));
             break;
         case 2:
-            if (baseOrdenada == NULL)
-            {
-                baseOrdenada = abrirArquivo("carros.ord", "w+b");
-            }
-            // Copiar arquivo
-            while (1)
-            {
-                fread(&aux, sizeof(CARRO), 1, dataBase);
-                fwrite(&aux, sizeof(CARRO), 1, baseOrdenada);
-                if (feof(dataBase))
-                {
-                    break;
-                }
-            }
-            rewind(dataBase);
-            rewind(baseOrdenada);
-            // Ordena
-            while (1)
-            {
-                printf("2\n");
-                fread(&aux, sizeof(CARRO), 1, baseOrdenada);
-                fread(&aux2, sizeof(CARRO), 1, comparer);
-                if (feof(baseOrdenada))
-                {
-                    break;
-                }
-                while (((cmp = memcmp(aux.placa, aux2.placa, 9 * sizeof(char))) <= 0) && (!feof(comparer)))
-                {
-                    fread(&aux2, sizeof(CARRO), 1, comparer);
-                }
-                if (cmp < 0)
-                {
-                    fwrite(&aux, sizeof(CARRO), 1, comparer);
-                    fwrite(&aux2, sizeof(CARRO), 1, baseOrdenada);
-                    fseek(comparer, -1, SEEK_CUR);
-                    fseek(baseOrdenada, -1, SEEK_CUR);
-                }
-            }
-            rewind(baseOrdenada);
+            // falta segurança
+            copiarArquivo(ordenado, original);
+            ordenaArquivoPlaca(ordenado);
             break;
         case 3:
-            FILE *texto = abrirArquivo("analise.txt", "w+");
-            while (1)
+            if (existeArquivo(ordenado))
             {
-                fread(&aux, sizeof(CARRO), 1, baseOrdenada);
-                if (feof(baseOrdenada))
-                {
-                    break;
-                }
-                fprintf(texto, "==========Carro==========\nID: %li\nPlaca: %s\nModelo: %s\nFabricante: %s\nAno de Fabricacao: %d\nAno do modelo: %d\nTipo de combustivel: %s\nCor: %s\nPreco: %.2f\n", aux.id_reg, aux.placa, aux.modelo, aux.fabricante, aux.ano_fabricacao, aux.ano_modelo, aux.combustivel, aux.cor, aux.preco_compra);
+                mostrarArquivo(ordenado);
             }
-            printf("\n");
-            rewind(baseOrdenada);
+            else
+            {
+                printf("O arquivo não existe ainda!\n");
+            }
             break;
         case 4:
-            qtdCarrosCombustivel[0] = 0;
-            qtdCarrosCombustivel[1] = 0;
-            qtdCarrosCombustivel[2] = 0;
-            qtdCarrosCombustivel[3] = 0;
-            while (1)
-            {
-                fread(&aux, sizeof(CARRO), 1, dataBase);
-                if (feof(dataBase))
-                {
-                    break;
-                }
-                switch (aux.combustivel[0])
-                {
-                case 'a':
-                    qtdCarrosCombustivel[0]++;
-                    break;
-                case 'd':
-                    qtdCarrosCombustivel[1]++;
-                    break;
-                case 'f':
-                    qtdCarrosCombustivel[2]++;
-                    break;
-                case 'g':
-                    qtdCarrosCombustivel[3]++;
-                    break;
-                }
-            }
+            contabilizaCombustivel(original, qtdCarrosCombustivel);
             printf("==========Numeros de Carros por Combustivel==========\n");
             for (i = 0; i < 4; i++)
             {
                 printf("%s: %d\n", tipoCombustivel[i], qtdCarrosCombustivel[i]);
             }
-            rewind(dataBase);
             break;
         case 5:
-            for (i = 0; i < 8; i++)
-            {
-                qtdCarrosOpcionais[i] = 0;
-            }
-            while (1)
-            {
-                fread(&aux, sizeof(CARRO), 1, dataBase);
-                if (feof(dataBase))
-                {
-                    break;
-                }
-
-                for (i = 0; i < 8; i++)
-                {
-                    if (aux.opcional[i] == 1)
-                    {
-                        qtdCarrosOpcionais[i]++;
-                    }
-                }
-            }
+            contabilizaOpcionais(original, qtdCarrosOpcionais);
             printf("==========Numeros de Carros por Opcionais==========\n");
             for (i = 0; i < 8; i++)
             {
                 printf("%s: %d\n", opcionais[i], qtdCarrosOpcionais[i]);
             }
-            rewind(dataBase);
+
             break;
         case 6:
             printf("Encerrando o programa...\n");
@@ -417,8 +355,6 @@ int main()
         }
         system("pause");
     } while (flag != 6);
-    fclose(baseOrdenada);
-    fclose(dataBase);
-
+    remove(ordenado);
     return 0;
 }
