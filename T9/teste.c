@@ -132,11 +132,12 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
             break;
         case 5://printa as ocorrencias de uma palavra especifica escolhida pelo usuario
             char frase[maiorLinha],letra,palavra[46];
-            int linha=1;
+            int linha=1,contOcorrencia=0;
             
-            printf("\nQual palavra pesquisar: ");
+            printf("\nQual palavra pesquisar: \n");
             scanf("%s",palavra);
-            printf("\nAs linhas que a palavra %s ocorre: \n",palavra);
+            printf("As linhas que a palavra %s ocorre: \n",palavra);
+            rewind(arquivo);
             /*faz a leitura do arquivo descriptografado novamente, porem dessa vez pegando cada linha e colocando na variável string frase
             quando o programa identifica a palavra escolhida na variavel, o programa printa a linha que achou e a frase que a palavra esta*/
             while(letra!=-1){
@@ -147,13 +148,18 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
                 fgets(frase, maiorLinha ,arquivo);
                 if(strstr(frase,palavra)!=NULL){
 
-                    printf("\n[Linha:%d] %s\n",linha,frase);
+                    printf("[Linha:%d] %s\n",linha,frase);
+                    contOcorrencia+=1;
 
                 }
                 ++linha;
                 
                 
             }
+            /*Verifica quantas vezes ocorreu a palavra*/
+            if(contOcorrencia>0) printf("E tem %d ocorrencias\n",contOcorrencia);
+            else printf("Nao tem nenhuma ocorrencia da palavra %s no texto\n",palavra);
+
     }
     fclose(arquivo);
 }
