@@ -51,7 +51,7 @@ void GerarPlaca(char placa[]){
 
     char PlacaCarro[9];
     memset(PlacaCarro, 0, strlen(PlacaCarro));
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 8; i++)
     {
         if (i<3){
             PlacaCarro[i]=geraAlfabeto();
@@ -68,6 +68,7 @@ void GerarPlaca(char placa[]){
 }
 
 void gerarFabricante(char fabricante[]){
+   memset(fabricante, 0, strlen(fabricante));
     int i=0;
     i=rand()%4;
     if (i==0){
@@ -84,10 +85,13 @@ void gerarFabricante(char fabricante[]){
     }
     printf("Fabricante: %s\n",fabricante);
 }
+
 void gerarModelo(char fabricante[],char modelo[], float preco_compra){
     int j=0;
-    char fabricanteteste[20];
+    char fabricanteteste[TAM];
     preco_compra=0;
+    memset(modelo, 0, strlen(modelo));
+    memset(fabricanteteste, 0, strlen(fabricanteteste));
     strcpy(fabricanteteste, fabricante);
     int teste =strcmp(fabricanteteste,"chevrolet");
     if (teste==0){
@@ -119,7 +123,6 @@ void gerarModelo(char fabricante[],char modelo[], float preco_compra){
       }
       if (j==2){
          strcpy(modelo, "Hilux");
-         preco_compra=120000;
       }
     }
 
@@ -156,7 +159,9 @@ void gerarModelo(char fabricante[],char modelo[], float preco_compra){
       }
     }
     printf("Modelo: %s\n",modelo);
+
 }
+
 int gerarAnoFabricacao(int ano_fabricacao, float preco_compra){
     int i=0;
     i=rand()%35;
@@ -178,6 +183,7 @@ void gerarAnoModelo(int ano_fabricacao, int ano_modelo){
 void gerarGasolina(char combustivel[]){
     int i=0;
     i=rand()%4;
+    memset(combustivel, 0, strlen(combustivel));
     if (i==0){
        strcpy(combustivel, "gasolina");
     }
@@ -195,6 +201,7 @@ void gerarGasolina(char combustivel[]){
 
 void gerarCor(char cor[]){
     int i=0;
+    memset(cor, 0, strlen(cor));
     i=rand()%3;
     if (i==0){
        strcpy(cor, "branca");
@@ -220,7 +227,7 @@ void gerarOpcional(int opcional[]){
       {
         if (opcional[i]==1)
         {
-          printf("%s",opcionais[i]);
+          printf("%s\n",opcionais[i]);
         }
       }
       
@@ -232,20 +239,49 @@ void gerarOpcional(int opcional[]){
     }
 }
 
-void inserirCarro(RCARRO *c){
-   GerarPlaca(c->placa);
-   gerarFabricante(c->fabricante);
-   gerarAnoFabricacao(c->ano_fabricacao, c->preco_compra);
-   gerarModelo(c->fabricante,c->modelo, c->preco_compra);
-   gerarAnoModelo(c->ano_fabricacao,c->ano_modelo);
-   gerarGasolina(c->combustivel);
-   gerarCor(c->cor);
-   gerarOpcional(c->opcional);
+void inserirCarro(){
+   RCARRO c;
+   int escolha=0;
+   int ano_fabricacao1=0;
+   FILE *fp;
+   do{
+      printf("------------------------------------------------------------------------------\n");
+      GerarPlaca(c.placa);
+      gerarFabricante(c.fabricante);
+      ano_fabricacao1=gerarAnoFabricacao(c.ano_fabricacao, c.preco_compra);
+      gerarModelo(c.fabricante,c.modelo, c.preco_compra);
+      gerarAnoModelo(ano_fabricacao1,c.ano_modelo);
+      gerarGasolina(c.combustivel);
+      gerarCor(c.cor);
+      gerarOpcional(c.opcional);
+      printf("------------------------------------------------------------------------------\n");
+      printf("Placa: %s oi\n",c.placa);
+      printf("fabricante: %s\n",c.fabricante);
+      printf("Modelo: %s\n",c.modelo);
+      printf("Deseja inserir o carro? Digite 1 para Sim e 0 para\n");
+      scanf("%d",&escolha);
+   }while (escolha==0);
+
+   fp =fopen("CARROS.dat","ab");
+   if (fp==NULL)
+   {
+      printf("\n Erro na abertura do arquivo!");
+      exit(100);
+   }
+   fflush(stdin);
+   fwrite(&c,sizeof(RCARRO),1,fp);
+   
+   
+   
+
+
+
 }
 
+/*
 void GerarCarro(){
   RCARRO car;
-  /* 
+  
   char placa[9];
   char modelo[TAM];
   char fabricante[TAM];
@@ -255,10 +291,11 @@ void GerarCarro(){
   char cor[TAM];
   int opcional[8];
   float preco_compra =0;
-  */
+  
  int escolha=0;
    printf("------------------------------------------------------------------------------\n");
    GerarPlaca(car.placa);
+   printf("placa:\n",car.placa);
    gerarFabricante(car.fabricante);
    gerarModelo(car.fabricante,car.modelo, car.preco_compra);
    car.ano_fabricacao=gerarAnoFabricacao(car.ano_fabricacao, car.preco_compra);
@@ -268,15 +305,17 @@ void GerarCarro(){
    gerarOpcional(car.opcional);
    printf("\nPreco de Compra: %f\n",car.preco_compra);
    printf("------------------------------------------------------------------------------\n");
+   printf("placa:\n",car.placa);
+   
    printf("Deseja inserir o carro? Digite 1 para Sim e 2 para\n");
    printf("Digite 1 para Sim e 0 para Não\n");
    scanf("%d",escolha);
    inserirCarro(&car);
-}
+}*/
 
 int main()
 {
-   RCARRO car[100];
+   RCARRO car;
   int opc=0;
   
   do
@@ -286,7 +325,7 @@ int main()
     switch (opc)
     {
     case 1: //inserir carro
-      GerarCarro(&car);
+      inserirCarro(&car);
       
         
       break;
