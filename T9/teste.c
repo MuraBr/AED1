@@ -122,40 +122,52 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
     switch (esc)//switch pra escolha do menu
     {
         case 3://printa a quantidade de linhas
+
             printf("\nO arquivo %s tem (%d) linhas\n",dir, linhas);
             break;
+
         case 4://printa a quantidade de caracteres da maior linha e qual é a maior linha
+
             printf("\nA linha [%d] e a maior com (%d) caracteres\n",maiorLinha,q_mLinha);
+            break;
+        case 5://printa as ocorrencias de uma palavra especifica escolhida pelo usuario
+            char frase[maiorLinha],letra,palavra[46];
+            int linha=1;
+            
+            printf("\nQual palavra pesquisar: ");
+            scanf("%s",palavra);
+            printf("\nAs linhas que a palavra %s ocorre: \n",palavra);
+            /*faz a leitura do arquivo descriptografado novamente, porem dessa vez pegando cada linha e colocando na variável string frase
+            quando o programa identifica a palavra escolhida na variavel, o programa printa a linha que achou e a frase que a palavra esta*/
+            while(letra!=-1){
+
+                letra = fgetc(arquivo);
+                if(letra!=-1) fseek(arquivo,-1,SEEK_CUR);
+
+                fgets(frase, maiorLinha ,arquivo);
+                if(strstr(frase,palavra)!=NULL){
+
+                    printf("\n[Linha:%d] %s\n",linha,frase);
+
+                }
+                ++linha;
+                
+                
+            }
     }
     fclose(arquivo);
 }
 
-void ProcurarPalavra(FILE* arquivo, char* dir, char* palavra){
-    char l[70],letra;
-    int linha=1;
-    arquivo = fopen(dir,"r");
-    while(letra!=-1){
-        letra = fgetc(arquivo);
-        if(letra!=-1)fseek(arquivo,-1,SEEK_CUR);
-        fgets(l,70,arquivo);
-        if(strstr(l,palavra)!=NULL){
-            printf("Achei %d\n",linha);
-        }
-        ++linha;
-        
-        
-    }
-    fclose(arquivo);
-}
 
 int main()
 {
 
     FILE *A_Cripto, *A_Descripto, *A_linhas;
-    char *D_dec = "readme.decifra.txt", *D_lin = "readme.nlines.txt", palavra[46];
+    char *D_dec = "readme.decifra.txt", *D_lin = "readme.nlines.txt";
     int esc,linhas;
+    //declaracao de variaveis
 
-    if ((A_Cripto = fopen("readme.code.txt", "r"))==NULL){
+    if ((A_Cripto = fopen("readme.code.txt", "r"))==NULL){//verifica se o arquivo a ser descriptografado existe
 
         printf("\nERRO abrindo %s\n","readme.code.txt");
         exit(100);
@@ -163,6 +175,8 @@ int main()
     }
     
     do{
+        /*escolha do menu
+            todas as escolhas exigem que o arquivo descriptografado exista, menos a escolha 1, que e a que gera o arquivo descriptografado*/
         printf(escolha);
         scanf("%d",&esc);
         switch(esc){
@@ -179,33 +193,31 @@ int main()
                     break;
                 }
             case 3:
-                if((A_Descripto = fopen(D_dec,"r"))==NULL){
+                if((A_Descripto = fopen(D_dec,"r"))==NULL)
                     printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
-                    break;
-                }
-                else{
-                    InfoTexto(A_Descripto, D_dec,esc);
-                    break;
-                }
+
+                else InfoTexto(A_Descripto, D_dec,esc);
+
                 break;
             case 4:
                 if((A_Descripto = fopen(D_dec,"r"))==NULL)
                     printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
+
                 else InfoTexto(A_Descripto, D_dec,esc);    
+
                 break;
             case 5:
                 if((A_Descripto = fopen(D_dec,"r"))==NULL)
                     printf("\nERRO abrindo %s, tente gerar o arquivo primeiro\n",D_dec);
-                else{
-                    scanf("%s",palavra);
 
-                    ProcurarPalavra(A_Descripto,D_dec,palavra);
-                }
+                else InfoTexto(A_Descripto, D_dec,esc);
+
                 break;
             case 0:
                 break;
-
+            default:
+                break;
 
         }
-    }while(esc!=0);
+    }while(esc!=0);//quando a escolha for 0 o while loop termina
 }
