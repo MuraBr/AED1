@@ -233,19 +233,27 @@ void gerarOpcional(int opcional[]){
       
       if (opcional[i]==1)
       {
-        printf("%s",opcionais[i]);
-        printf(", ",opcionais[i]);
+        printf("%s, ",opcionais[i]);
       }
     }
 }
+FILE *abrirArquivo(const char *nome, const char *modo)
+{
+    FILE *arquivo;
+    if ((arquivo = fopen(nome, modo)) == NULL)
+    {
+        printf("Nao foi possivel abrir o arquivo %s\n", nome);
+        exit(100);
+    }
+    return arquivo;
+}
 
-void inserirCarro(){
+void inserirCarro(const char *fileName){
    RCARRO c;
    int escolha=0;
    int ano_fabricacao1=0;
-   FILE *fp;
    do{
-      printf("------------------------------------------------------------------------------\n");
+      printf("\n------------------------------------------------------------------------------\n");
       GerarPlaca(c.placa);
       gerarFabricante(c.fabricante);
       ano_fabricacao1=gerarAnoFabricacao(c.ano_fabricacao, c.preco_compra);
@@ -255,67 +263,41 @@ void inserirCarro(){
       gerarCor(c.cor);
       gerarOpcional(c.opcional);
       printf("------------------------------------------------------------------------------\n");
-      printf("Placa: %s oi\n",c.placa);
-      printf("fabricante: %s\n",c.fabricante);
-      printf("Modelo: %s\n",c.modelo);
       printf("Deseja inserir o carro? Digite 1 para Sim e 0 para\n");
-      scanf("%d",&escolha);
+      scanf("%d",&escolha); 
    }while (escolha==0);
-
-   fp =fopen("CARROS.dat","ab");
-   if (fp==NULL)
-   {
-      printf("\n Erro na abertura do arquivo!");
-      exit(100);
-   }
+   FILE *arquivo = abrirArquivo(fileName, "ab");
    fflush(stdin);
-   fwrite(&c,sizeof(RCARRO),1,fp);
-   
-   
-   
-
+   fwrite(&c,sizeof(RCARRO),1,arquivo);
 
 
 }
 
-/*
-void GerarCarro(){
-  RCARRO car;
-  
-  char placa[9];
-  char modelo[TAM];
-  char fabricante[TAM];
-  int ano_fabricacao;
-  int ano_modelo;
-  char combustivel[TAM];
-  char cor[TAM];
-  int opcional[8];
-  float preco_compra =0;
-  
- int escolha=0;
-   printf("------------------------------------------------------------------------------\n");
-   GerarPlaca(car.placa);
-   printf("placa:\n",car.placa);
-   gerarFabricante(car.fabricante);
-   gerarModelo(car.fabricante,car.modelo, car.preco_compra);
-   car.ano_fabricacao=gerarAnoFabricacao(car.ano_fabricacao, car.preco_compra);
-   gerarAnoModelo(car.ano_fabricacao,car.ano_modelo);
-   gerarGasolina(car.combustivel);
-   gerarCor(car.cor);
-   gerarOpcional(car.opcional);
-   printf("\nPreco de Compra: %f\n",car.preco_compra);
-   printf("------------------------------------------------------------------------------\n");
-   printf("placa:\n",car.placa);
-   
-   printf("Deseja inserir o carro? Digite 1 para Sim e 2 para\n");
-   printf("Digite 1 para Sim e 0 para Não\n");
-   scanf("%d",escolha);
-   inserirCarro(&car);
-}*/
+void mostrarArquivo(const char *fileName)
+{
+    RCARRO buffer;
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    int tam = sizeof(RCARRO);
+    while (fread(&buffer, tam, 1, arquivo))
+    {
+        printf("==========Carro==========\n");
+        printf("Placa: %s\n", buffer.placa);
+        printf("Modelo: %s\n", buffer.modelo);
+        printf("Fabricante: %s\n", buffer.fabricante);
+        printf("Ano de Fabricacao: %d\n", buffer.ano_fabricacao);
+        printf("Ano do modelo: %d\n", buffer.ano_modelo);
+        printf("Tipo de combustivel: %s\n", buffer.combustivel);
+        printf("Cor: %s\n", buffer.cor);
+        printf("Preco: %.2f\n", buffer.preco_compra);
+    }
+    fclose(arquivo);
+}
 
 int main()
 {
-   RCARRO car;
+   //const char original[] = "carro.dbf";
+   //const char ordenado[] = "carro.ord";
+   //RCARRO car;
   int opc=0;
   
   do
@@ -325,12 +307,13 @@ int main()
     switch (opc)
     {
     case 1: //inserir carro
-      inserirCarro(&car);
+      inserirCarro("CARROS.dat");
       
         
       break;
     case 2: //
-
+      mostrarArquivo("CARROS.dat");
+      getchar();
       break;
     case 3:
 
