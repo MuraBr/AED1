@@ -39,57 +39,85 @@ FILE *abrirArquivo(const char *nome, const char *modo)
     }
     return arquivo;
 }
+void geraRua(char rua[TAM])
+{
+    int i, j, k;
+    char nomes[][TAM] = {{"Ipanema"}, {"Leblon"}, {"Terra"}, {"Jardim"}, {"Pires"}, {"Marculino"}, {"Hayel"}};
+    i = rand()%7;
+    j = rand()%7;
+    char ruafinal[3];
+    strcpy(ruafinal, "Rua ");
+    strcat(ruafinal, nomes[i]);
+    strcat(ruafinal, " ");
+    strcat(ruafinal, nomes[j]);
+    strcpy(rua, ruafinal);
+    printf("Rua: %s\n", ruafinal);
+}
 
 // objetivo:escolhe dentre os numeros ('0'..'9') uma numero aleatoriamente
 // parametros: nenhum
 // retorno:o numero
 char geraNumero()
 {
-    int i;
-    char numeros[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-    i = rand() % 9;
-    return (numeros[i]);
+    char i;
+    i = (rand() % 10) + 48;
+    return i;
 }
-void geraNome(char nome[])
+void geraNome(char nome[TAM])
 {
-    int i;
-    char nomes[][TAM] = {{"Joao"}, {"Maria"}, {"Camila"}, {"Roberto"}};
-    i = rand()%4;
-    //strcpy(, );
-    printf("Nome: %s\n", nomes);
+    int i, j, k;
+    char nomes[][TAM] = {{"Joao"}, {"Maria"}, {"Camila"}, {"Roberto"}, {"Arthur"}, {"Mathews"}, {"Guilherme"}};
+    i = rand()%7;
+    j = rand()%7;
+    k = rand()%7;
+    char nomefull[3];
+    strcpy(nomefull, nomes[i]);
+    strcat(nomefull, " ");
+    strcat(nomefull, nomes[j]);
+    strcat(nomefull, " ");
+    strcat(nomefull, nomes[k]);
+    strcpy(nome, nomefull);
+    printf("Nome: %s\n", nomefull);
 }
 void geraCpf(char cpf[])
 {
 
 }
-void geraEndereco(char rua[], int *numero, char bairro[], char cidade[], char estado[], char cep[])
+int geraENum()
 {
-
+    int num = rand()%1000;
+    printf("Numero da casa: %d\n", num);
+    return num;
 }
-void geraRenda(float renda_mensal)
+void geraEndereco(char rua[TAM], int *numero, char bairro[TAM], char cidade[TAM], char estado[TAM], char cep[11])
+{
+    geraRua(rua);
+    *numero = geraENum();
+}
+void geraRenda(float *renda_mensal)
 {
     float max = 50000, renda;
     while(renda < 2000)
     {
         renda = ((float)rand()/(float)(RAND_MAX)) * max;
     }
-    renda_mensal = renda;
-    printf("Renda: %2.f\n", renda_mensal);
+    *renda_mensal = renda;
+    printf("Renda: %2.f\n", *renda_mensal);
 }
-void geraTelefone(char telefone[])
+void geraTelefone(char telefone[14])
 {
     char teleteste[14];
-    for(int i=0; i<=14; i++)
+    for(int i=0; i<13; i++)
     {
         teleteste[i] = geraNumero();
     }
     teleteste[2] = ' ';
-    teleteste[10] = '-';
+    teleteste[8] = '-';
+    teleteste[14] = '\0';
     strcpy(telefone, teleteste);
     printf("Numero: %s\n", telefone);
 }
-void geraCep(char cep[])
+void geraCep(char cep[11])
 {
     char cepteste[11];
     for(int i=0; i<=11; i++)
@@ -133,7 +161,7 @@ void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[])
 // objetivo: calcula o primeiro digito verificador de um cpf no formato 999999999
 // parametros: cpf o cpf sem os digitos verificadores
 // retorno: o calculo do primeiro digito verificador
-int obtem_primeiro_digito_verificador(char cpf[])
+int obtem_primeiro_digito_verificador(char cpf[15])
 {
     int digito = 0, intcpf, cont = 10, calccpf; // declaracao de variaveis
     for (int i = 0; i < 9; i++)
@@ -156,7 +184,7 @@ int obtem_primeiro_digito_verificador(char cpf[])
 // objetivo: calcula o segundo digito verificador de um cpf no formato 999999999
 // parametros: cpf sem os digitos verificadores
 // retorno: o calculo do segundo digito verificador
-int obtem_segundo_digito_verificador(char cpf[])
+int obtem_segundo_digito_verificador(char cpf[15])
 {
     int digito = 0, intcpf, cont = 11, calccpf, i; // declaracao de variaveis
     for (int i = 0; i < 10; i++)
@@ -186,7 +214,7 @@ int obtem_segundo_digito_verificador(char cpf[])
 // objetivo: verifica se um cpf no formato 999.999.999-99 e valido
 // parametros: cpf a ser verificado
 // retorno: 1 se cpf e valido ou 0 se cpf nao e valido
-int verifica_cpf_valido(char cpf[])
+int verifica_cpf_valido(char cpf[15])
 {
     int d1cpf = cpf[12] - '0', d2cpf = cpf[13] - '0', valido = 1, count = 0, d1, d2, c = 0; // declaracao de variaveis
     char cpf2[12];
@@ -240,7 +268,7 @@ int existeCPF(char cpfAnalise[15], char cpfClientes[50][15])
 // objetivo: gera aleatoriamente um cpf valido no formato 999.999.999-99
 // parametros: o cpf onde sera armazenado o cpf valido
 // retorno: nenhum
-void gera_cpf_valido(char cpf[])
+void gera_cpf_valido(char cpf[15])
 {
     int i;
     char cpf_processo[11];
@@ -317,30 +345,32 @@ void mostrarArquivo(const char *fileName)
     }
     fclose(arquivo);
 }
-void inserirCliente(const char *fileName){
-    RCLIENTE bpessoa;
+void inserirCliente(const char *fileName)
+{
+    struct CLIENTE bpessoa;
     int escolha=0;
-    int ano_fabricacao1=0;
-    while(escolha == 0){
+    while(escolha == 0)
+    {
         printf("\n------------------------------------------------------------------------------\n");
         geraNome(bpessoa.nome);//char nome[TAM];
         geraCpf(bpessoa.cpf);//char cpf[15]; //999.999.999-99
         geraEndereco(bpessoa.endereco.rua, &bpessoa.endereco.numero, bpessoa.endereco.bairro, bpessoa.endereco.cidade, bpessoa.endereco.estado, bpessoa.endereco.cep);//struct ENDERECO endereco;
-        geraTelefoneRes(bpessoa.residencial.telefone);//struct TELEFONE residencial;
-        geraTelefoneCel(bpessoa.celular->telefone);//struct TELEFONE celular[5];
-        geraRenda(bpessoa.renda_mensal);//float renda_mensal;
+        geraTelefone(bpessoa.celular->telefone);
+        geraRenda(&bpessoa.renda_mensal);//float renda_mensal;
         printf("------------------------------------------------------------------------------\n");
         printf("Deseja inserir o cliente? Digite 1 para Sim e 0 para nao\n");
         scanf("%d",&escolha); 
     }
     FILE *arquivo = abrirArquivo(fileName, "ab");
     fflush(stdin);
-    fwrite(&bpessoa, sizeof(RCLIENTE), 1, arquivo);
+    fwrite(&bpessoa, sizeof(struct CLIENTE), 1, arquivo);
+    fclose(arquivo);
 }
 
 
 int main()
 {
+    //srand(time(NULL));
     int pg = 0;
     while(pg == 0)
     {
