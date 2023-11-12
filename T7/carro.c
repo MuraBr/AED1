@@ -9,7 +9,7 @@ int opcoesMenu(void)
     int opc;
     printf("----------Menu------------\n\
     1)      Inserir um carro no cadastro;\n\
-    2)      Excluir um carro do cadastro;\n\
+    2)      (Mostra carro ta aqui) Excluir um carro do cadastro;\n\
     3)      Listar os carros disponiveis para a venda ordenados crescentemente por fabricante e modelo;\n\
     4)      Listar os carros disponiveis para a venda por selecao de um ou mais opcionais;\n\
     5)      Listar os carros disponiveis para a venda por selecao da faixa de ano de fabricacao;\n\
