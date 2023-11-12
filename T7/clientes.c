@@ -89,7 +89,7 @@ int geraENum()
     printf("Numero da casa: %d\n", num);
     return num;
 }
-void geraEndereco(char rua[TAM], int *numero, char bairro[TAM], char cidade[TAM], char estado[TAM], char cep[11])
+void geraEndereco(char rua[TAM], int *numero, char bairro[TAM], char cidade[TAM], char estado[3], char cep[11])
 {
     geraRua(rua);
     *numero = geraENum();
@@ -131,7 +131,7 @@ void geraCep(char cep[11])
 }
 
 // objetivo: insere pontuacoes '.' e '- ' em um cpf
-// parametros: cpf_origem o cpf recebido no format 99999999999
+// parametros: cpf_origem o cpf recebido no formato 99999999999
 //             cpf_destino o cpf com as pontuacoes inseridas no formato 999.999.999-99
 // retorno: nenhum
 void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[])
@@ -161,7 +161,7 @@ void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[])
 // objetivo: calcula o primeiro digito verificador de um cpf no formato 999999999
 // parametros: cpf o cpf sem os digitos verificadores
 // retorno: o calculo do primeiro digito verificador
-int obtem_primeiro_digito_verificador(char cpf[15])
+int obtem_primeiro_digito_verificador(char cpf[])
 {
     int digito = 0, intcpf, cont = 10, calccpf; // declaracao de variaveis
     for (int i = 0; i < 9; i++)
@@ -184,7 +184,7 @@ int obtem_primeiro_digito_verificador(char cpf[15])
 // objetivo: calcula o segundo digito verificador de um cpf no formato 999999999
 // parametros: cpf sem os digitos verificadores
 // retorno: o calculo do segundo digito verificador
-int obtem_segundo_digito_verificador(char cpf[15])
+int obtem_segundo_digito_verificador(char cpf[])
 {
     int digito = 0, intcpf, cont = 11, calccpf, i; // declaracao de variaveis
     for (int i = 0; i < 10; i++)
@@ -214,7 +214,7 @@ int obtem_segundo_digito_verificador(char cpf[15])
 // objetivo: verifica se um cpf no formato 999.999.999-99 e valido
 // parametros: cpf a ser verificado
 // retorno: 1 se cpf e valido ou 0 se cpf nao e valido
-int verifica_cpf_valido(char cpf[15])
+int verifica_cpf_valido(char cpf[])
 {
     int d1cpf = cpf[12] - '0', d2cpf = cpf[13] - '0', valido = 1, count = 0, d1, d2, c = 0; // declaracao de variaveis
     char cpf2[12];
@@ -268,7 +268,7 @@ int existeCPF(char cpfAnalise[15], char cpfClientes[50][15])
 // objetivo: gera aleatoriamente um cpf valido no formato 999.999.999-99
 // parametros: o cpf onde sera armazenado o cpf valido
 // retorno: nenhum
-void gera_cpf_valido(char cpf[15])
+void gera_cpf_valido(char cpf[])
 {
     int i;
     char cpf_processo[11];
