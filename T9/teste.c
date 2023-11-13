@@ -131,7 +131,7 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
             printf("\nA linha [%d] e a maior com (%d) caracteres\n",maiorLinha,q_mLinha);
             break;
         case 5://printa as ocorrencias de uma palavra especifica escolhida pelo usuario
-            char *frase = malloc(maiorLinha * sizeof(*frase));
+            char *frase = malloc(q_mLinha * sizeof(*frase));
             char letra,palavra[46];
             int linha=1,contOcorrencia=0;
             
