@@ -131,7 +131,8 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
             printf("\nA linha [%d] e a maior com (%d) caracteres\n",maiorLinha,q_mLinha);
             break;
         case 5://printa as ocorrencias de uma palavra especifica escolhida pelo usuario
-            char frase[maiorLinha],letra,palavra[46];
+            char *frase = malloc(maiorLinha * sizeof(*frase));
+            char letra,palavra[46];
             int linha=1,contOcorrencia=0;
             
             printf("\nQual palavra pesquisar: \n");
@@ -156,12 +157,20 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
                 
                 
             }
+            
             /*Verifica quantas vezes ocorreu a palavra*/
             if(contOcorrencia>0) printf("E tem %d ocorrencias\n",contOcorrencia);
             else printf("Nao tem nenhuma ocorrencia da palavra %s no texto\n",palavra);
+            free(frase);
+            printf("Tecle enter para continuar!\n");
+            while(getchar()!='\n');
+            getchar();
+
+            break;
 
     }
     fclose(arquivo);
+    
 }
 
 
