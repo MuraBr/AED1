@@ -19,7 +19,7 @@ int opcoesMenu(void)
     return opc;
 }
 char opcionais[][TAM] = {{"4.portas"}, {"cambio.automatico"}, {"vidros.eletricos"}, {"abs"}, {"air.bag"}, {"ar.condicionado"}, {"banco.couro"}, {"sensor.estacionamento"}};
-typedef struct CARRO
+struct CARRO
 {
     char placa[9];
     char modelo[TAM];
@@ -30,7 +30,9 @@ typedef struct CARRO
     char cor[TAM];
     int opcional[8];
     float preco_compra;
-}RCARRO;
+};
+
+typedef struct CARRO RCARRO;
 
 char geraAlfabeto() {
     int i=0;
@@ -299,6 +301,81 @@ void inserirCarro(const char *fileName){
 
 }
 
+void excluirRegistro(const char *fileName, RCARRO excluir)
+{
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    RCARRO aux;
+    int tam = sizeof(RCARRO), flag = 0;
+
+    FILE *copia = abrirArquivo("excluir.ord", "wb");
+
+    while (fread(&aux, tam, 1, arquivo))
+    {
+        if (memcmp(&aux, &excluir, tam) != 0)
+        {
+            fwrite(&aux, tam, 1, copia);
+        }
+        else
+        {
+            flag = 1;
+        }
+    }
+    if (flag == 0)
+    {
+        printf("O registro nao existe no arquivo %s\n", fileName);
+    }
+
+    fclose(arquivo);
+    fclose(copia);
+    remove(fileName);
+    rename("excluir.ord", fileName);
+}
+
+void lerPlaca(char placa[])
+{
+    char placaux[9];
+    int flag = 0;
+    do
+    {
+        if (flag == 1)
+        {
+            printf("Placa inserida nao eh invalido! ");
+        }
+        printf("Digite uma placa valida para a exclusao(AAA-1234): \n");
+        fflush(stdin);
+        gets(placaux);
+        flag = 1;
+    } while (!verifica_cpf_valido(placaux));
+    strcpy(placa, placaux);
+}
+
+void excluiCarro(const char *filename)
+{
+    FILE *arquivo = abrirArquivo(filename, "rb");
+    RCARRO buffer;
+    int flag = 0;
+    char placa[9];
+
+    lerPlaca(placa);
+    while ((flag == 0) && (fread(&buffer, sizeof(RCARRO), 1, arquivo)))
+    {
+        if (memcmp(placa, buffer.placa, strlen(buffer.placa)) == 0)
+        {
+            fclose(arquivo);
+            excluirRegistro(filename, buffer);
+            flag = 1;
+        }
+    }
+    if (flag == 0)
+    {
+        printf("Este carro nao existe no banco de dados!\n");
+    }
+    if (arquivo != NULL)
+    {
+        fclose(arquivo);
+    }
+}
+
 void mostrarArquivo(const char *fileName)
 {
     RCARRO buffer;
@@ -363,6 +440,8 @@ int main()
             }
             break;
     case 3:
+
+            excluiCarro("CARROS.dat");
 
       break;
     case 4:
