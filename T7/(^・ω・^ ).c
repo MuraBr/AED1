@@ -46,13 +46,12 @@ void geraNome(char nome[])
 {
     int i;
     char nomes[][TAM] = {{"Joao"}, {"Camila"}, {"Felipe"}, {"Vinicius"}, {"Roberto"}, {"Arthur"}, {"Maria"}, {"Bianca"}, {"Flavia"}, {"Guilherme"}, {"Tais"}, {"Melissa"}, {"Priscila"}};
-    char sobrenomes[][TAM] = {{"Silva"}, {"Ribas"}, {"Medeiros"}, {"Marques"}};
+    char sobrenomes[][TAM] = {{"Silva"}, {"Ribas"}, {"Medeiros"}, {"Marques"}, {"Fernandes"}, {"Antunes"}, {"Costa"}, {"Alves"}};
     i = rand() % 13;
     strcpy(nome, nomes[i]);
     strcat(nome, " ");
-    i = rand() % 4;
+    i = rand() % 8;
     strcat(nome, sobrenomes[i]);
-    printf("Nome: %s\n", nome);
 }
 
 char geraNumero()
@@ -67,37 +66,32 @@ void geraRua(char rua[])
     char ruas[][TAM] = {{"Ipanema"}, {"Rio de Janeiro"}};
     int i = rand() % 2;
     strcpy(rua, ruas[i]);
-    printf("Rua: %s\n", rua);
 }
 
 void geraNumeroCasa(int *numCasa)
 {
-    *numCasa = rand() % 100;
-    printf("Numero da casa: %d\n", *numCasa);
+    *numCasa = (rand() % 100) + 1;
 }
 
 void geraBairro(char bairro[])
 {
-    char bairros[][TAM] = {{"Porto Belo"}, {"Jardim Agua Boa"}};
-    int i = rand() % 2;
+    char bairros[][TAM] = {{"Porto Belo"}, {"Jardim Agua Boa"}, {"Vila Industrial"}, {"Altos do Indaia"}, {"Parque Alvorada"}, {"Monte Verde"}, {"Ouro Verde"}};
+    int i = rand() % 7;
     strcpy(bairro, bairros[i]);
-    printf("Bairro: %s\n", bairro);
 }
 
 void geraCidade(char cidade[])
 {
-    char cidades[][TAM] = {{"Meia Praia"}, {"Curitiba"}};
-    int i = rand() % 2;
+    char cidades[][TAM] = {{"Meia Praia"}, {"Curitiba"}, {"Dourados"}, {"Maracaju"}, {"Montese"}, {"Sao Paulo"}, {"Osasco"}, {"Campo Grande"}, {"Bonito"}, {"Vicentina"}, {"Rio Brilhante"}};
+    int i = rand() % 11;
     strcpy(cidade, cidades[i]);
-    printf("Cidade: %s\n", cidades);
 }
 
 void geraEstado(char estado[])
 {
-    char estados[][3] = {{"MS"}, {"RJ"}};
-    int i = rand() % 2;
+    char estados[][3] = {{"AC"}, {"AL"}, {"AP"}, {"AM"}, {"BA"}, {"CE"}, {"ES"}, {"GO"}, {"MA"}, {"MT"}, {"MS"}, {"MG"}, {"PA"}, {"PB"}, {"PR"}, {"PE"}, {"PI"}, {"RJ"}, {"RN"}, {"RS"}, {"RO"}, {"RR"}, {"SC"}, {"SP"}, {"SE"}, {"TO"}, {"DF"}};
+    int i = rand() % 27;
     strcpy(estado, estados[i]);
-    printf("Estado: %s\n", estado);
 }
 
 void geraCEP(char cep[])
@@ -110,7 +104,6 @@ void geraCEP(char cep[])
     cep[2] = '.';
     cep[6] = '-';
     cep[10] = '\0';
-    printf("Cep: %s\n", cep);
 }
 // objetivo:insere pontuacoes '.' e '- ' em um cpf
 // parametros: cpf_origem o cpf recebido no format 99999999999
@@ -236,6 +229,7 @@ void geraCpf(char cpf[])
     int i;
     char cpf_processo[11];
     // Elimina possiveis residuos no vetor de cpf_proccesso
+    memset(cpf, 0, 15);
     memset(cpf_processo, 0, strlen(cpf_processo));
     do
     {
@@ -275,11 +269,42 @@ void geraTelefone(struct TELEFONE *tel)
     numeroT[8] = '-';
     numeroT[13] = '\0';
     strcpy(tel->telefone, numeroT);
-    printf("Telefone: %s\n", numeroT);
 }
 
-void geraRenda(float *renda){
-    *(renda) = (rand() % 50000) * 1.5; 
+void geraRenda(float *renda)
+{
+    *(renda) = (rand() % 20000) * 1.5;
+}
+
+void mostrarCliente(struct CLIENTE bcliente)
+{
+    int i;
+    printf("==========CLIENTE==========\n");
+    printf("Nome: %s\n", bcliente.nome);
+    printf("CPF: %s\n", bcliente.cpf);
+    printf("Renda Mensal: %.2f\n", bcliente.renda_mensal);
+    printf("---Endereco---\n");
+    printf("Rua: %s\nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nCEP: %s\n",
+           bcliente.endereco.rua, bcliente.endereco.numero, bcliente.endereco.bairro, bcliente.endereco.cidade,
+           bcliente.endereco.estado, bcliente.endereco.cep);
+    printf("---Contato---\n");
+    printf("Telefone residencial: %s\n", bcliente.residencial.telefone);
+    for (i = 0; i < 5; i++)
+    {
+        printf("Celular (%d): %s\n", i + 1, bcliente.celular[i].telefone);
+    }
+}
+
+void mostrarArquivoClientes(const char *fileName)
+{
+    struct CLIENTE bcliente;
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    int tam = sizeof(struct CLIENTE), i;
+    while (fread(&bcliente, tam, 1, arquivo))
+    {
+        mostrarCliente(bcliente);
+    }
+    fclose(arquivo);
 }
 
 void inserirCliente(const char *fileName)
@@ -291,13 +316,14 @@ void inserirCliente(const char *fileName)
         printf("\n------------------------------------------------------------------------------\n");
         geraNome(bpessoa.nome); // char nome[TAM];
         geraCpf(bpessoa.cpf);   // char cpf[15]; //999.999.999-99
+        geraRenda(&bpessoa.renda_mensal);
         geraEndereco(&(bpessoa.endereco));
         geraTelefone(&(bpessoa.residencial));
         for (i = 0; i < 5; i++)
         {
             geraTelefone(&(bpessoa.celular[i]));
         }
-        geraRenda(&bpessoa.renda_mensal);
+        mostrarCliente(bpessoa);
         printf("------------------------------------------------------------------------------\n");
         printf("Deseja inserir o cliente? Digite 1 para Sim e 0 para nao\n");
         scanf("%d", &escolha);
@@ -308,39 +334,178 @@ void inserirCliente(const char *fileName)
     fclose(arquivo);
 }
 
-
-void mostrarArquivo(const char *fileName)
+void excluirRegistro(const char *fileName, struct CLIENTE excluir)
 {
-    struct CLIENTE bcliente;
     FILE *arquivo = abrirArquivo(fileName, "rb");
-    int tam = sizeof(struct CLIENTE), i;
-    while (fread(&bcliente, tam, 1, arquivo))
+    struct CLIENTE aux;
+    int tam = sizeof(struct CLIENTE), flag = 0;
+
+    FILE *copia = abrirArquivo("excluir.ord", "wb");
+
+    while (fread(&aux, tam, 1, arquivo))
     {
-        printf("==========CLIENTE==========\n");
-        printf("Nome: %s\n", bcliente.nome);
-        printf("Renda Mensal: %.2f\n", bcliente.renda_mensal);
-        printf("---Endereco---\n");
-        printf("Rua: %s\nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nCEP: %s\n",\
-        bcliente.endereco.rua, bcliente.endereco.numero, bcliente.endereco.bairro, bcliente.endereco.cidade,\
-        bcliente.endereco.estado, bcliente.endereco.cep);
-        printf("---Contato---\n");
-        printf("Telefone residencial: %s\n", bcliente.residencial.telefone);
-        for (i = 0; i < 5; i++)
+        if (memcmp(&aux, &excluir, tam) != 0)
         {
-            printf("Celular: %s\n", bcliente.celular[i].telefone);
+            fwrite(&aux, tam, 1, copia);
+        }
+        else
+        {
+            flag = 1;
+        }
+    }
+    if (flag == 0)
+    {
+        printf("O registro nao existe no arquivo %s\n", fileName);
+    }
+    fclose(arquivo);
+    fclose(copia);
+    remove(fileName);
+    rename("excluir.ord", fileName);
+}
+void lerCPF(char cpf[])
+{
+    char cpfaux[15];
+    int flag = 0;
+    do
+    {
+        if (flag == 1)
+        {
+            printf("CPF inserido nao eh invalido! ");
+        }
+        printf("Digite um cpf valido para a exclusao: \n");
+        fflush(stdin);
+        gets(cpfaux);
+        flag = 1;
+    } while (!verifica_cpf_valido(cpfaux));
+    strcpy(cpf, cpfaux);
+}
+
+void excluiCliente(const char *filename)
+{
+    FILE *arquivo = abrirArquivo(filename, "rb");
+    struct CLIENTE buffer;
+    int flag = 0;
+    char cpfC[15];
+
+    lerCPF(cpfC);
+    while ((flag == 0) && (fread(&buffer, sizeof(struct CLIENTE), 1, arquivo)))
+    {
+        if (memcmp(cpfC, buffer.cpf, strlen(buffer.cpf)) == 0)
+        {
+            fclose(arquivo);
+            excluirRegistro(filename, buffer);
+            flag = 1;
+        }
+    }
+    if (flag == 0)
+    {
+        printf("Este cliente nao existe no banco de dados!\n");
+    }
+    if (arquivo != NULL)
+    {
+        fclose(arquivo);
+    }
+}
+void alternarClientes(struct CLIENTE *cl1, struct CLIENTE *cl2)
+{
+    struct CLIENTE aux;
+
+    aux = *cl1;
+    *cl1 = *cl2;
+    *cl2 = aux;
+}
+void mostrarOrdemNome(const char *fileName)
+{
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    int i = 0, j, k, tam = sizeof(struct CLIENTE);
+    struct CLIENTE ordem[50];
+    while (fread(&ordem[i], tam, 1, arquivo))
+    {
+        i++;
+    }
+    fclose(arquivo);
+    for (j = 0; j < i; j++)
+    {
+        for (k = j + 1; k < i; k++)
+        {
+            if (strcmp(ordem[j].nome, ordem[k].nome) > 0)
+            {
+                alternarClientes(&ordem[j], &ordem[k]);
+            }
+        }
+    }
+    for (j = 0; j < i; j++)
+    {
+        mostrarCliente(ordem[j]);
+    }
+}
+
+void mostrarOrdemFaixaRenda(const char *fileName)
+{
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    int i = 0, j, k, tam = sizeof(struct CLIENTE);
+    float faixaUp, faixaDown;
+    struct CLIENTE ordem[50], buffer;
+
+    printf("Informe o intervalo de renda para mostrar:\n");
+    printf("Maximo:\n");
+    scanf("%f", &faixaUp);
+    printf("Minimo:\n");
+    scanf("%f", &faixaDown);
+
+    while (fread(&buffer, tam, 1, arquivo))
+    {
+        if ((buffer.renda_mensal > faixaDown) && (buffer.renda_mensal < faixaUp))
+        {
+            ordem[i] = buffer;
+            i++;
         }
     }
     fclose(arquivo);
+    if (i != 0)
+    {
+        for (j = 0; j < i; j++)
+        {
+            for (k = j + 1; k < i; k++)
+            {
+                if (strcmp(ordem[j].nome, ordem[k].nome) > 0)
+                {
+                    alternarClientes(&ordem[j], &ordem[k]);
+                }
+            }
+        }
+        for (j = 0; j < i; j++)
+        {
+            mostrarCliente(ordem[j]);
+        }
+    }
+    else
+    {
+        printf("Nao ha nenhum cliente com essa faixa de renda!\n");
+    }
 }
 
 int main()
 {
     char clientesFile[] = "clientes.dat";
-    char nome[TAM], rua[TAM], bairro[TAM], estado[3], cep[11], cidade[TAM];
+    int i;
     srand(time(NULL));
-    
-    inserirCliente(clientesFile);
-    mostrarArquivo(clientesFile);
 
+    for (i = 0; i < 15; i++)
+    {
+        inserirCliente(clientesFile);
+    }
+
+    mostrarArquivoClientes(clientesFile);
+    getchar();
+    getchar();
+    excluiCliente(clientesFile);
+    mostrarArquivoClientes(clientesFile);
+    getchar();
+    printf("----------------------------------------------------Ordenado-------------------------------------------\n");
+    mostrarOrdemNome(clientesFile);
+    printf("-------------------------Faixa de renda--------------------------\n");
+    mostrarOrdemFaixaRenda(clientesFile);
+    remove(clientesFile);
     return 0;
 }
