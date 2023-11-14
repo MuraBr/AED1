@@ -329,24 +329,16 @@ void excluirRegistro(const char *fileName, RCARRO excluir)
     fclose(copia);
     remove(fileName);
     rename("excluir.ord", fileName);
+    
 }
 
 void lerPlaca(char placa[])
 {
-    char placaux[9];
-    int flag = 0;
-    do
-    {
-        if (flag == 1)
-        {
-            printf("Placa inserida nao eh invalido! ");
-        }
-        printf("Digite uma placa valida para a exclusao(AAA-1234): \n");
-        fflush(stdin);
-        gets(placaux);
-        flag = 1;
-    } while (!verifica_cpf_valido(placaux));
-    strcpy(placa, placaux);
+   char placaux[9];
+   printf("Digite uma placa valida para a exclusao(AAA-1234): \n");
+   fflush(stdin);
+   gets(placaux);
+   strcpy(placa, placaux);
 }
 
 void excluiCarro(const char *filename)
@@ -364,6 +356,7 @@ void excluiCarro(const char *filename)
             fclose(arquivo);
             excluirRegistro(filename, buffer);
             flag = 1;
+            printf("%s",placa);
         }
     }
     if (flag == 0)
@@ -410,12 +403,28 @@ void mostrarArquivo(const char *fileName)
     fclose(arquivo);
 }
 
+void copiarArquivo(const char *destName, const char *srcName)
+{
+    RCARRO c;
+    FILE *dest = abrirArquivo(destName, "wb");
+    FILE *src = abrirArquivo(srcName, "rb");
+
+    int tam = sizeof(RCARRO);
+    while (fread(&c, tam, 1, src))
+    {
+        fwrite(&c, tam, 1, dest);
+    }
+    fclose(dest);
+    fclose(src);
+}
+
 int main()
 {
-   //const char original[] = "carro.dbf";
-   //const char ordenado[] = "carro.ord";
+   const char original[] = "carro.dbf";
+   const char ordenado[] = "carro.ord";
    //RCARRO car;
   int opc=0;
+  
   
   do
   {
@@ -424,15 +433,15 @@ int main()
     switch (opc)
     {
     case 1: //inserir carro
-      inserirCarro("CARROS.dat");
+      inserirCarro(ordenado);
       
         
       break;
     case 2: // mostrar os registros do carro
             //Verifica se o arquivo existe e possui algum registro, se sim mostra ele
-            if (existeArquivo("CARROS.dat"))
+            if (existeArquivo(ordenado))
             {
-                mostrarArquivo("CARROS.dat");
+                mostrarArquivo(ordenado);
             }
             else
             {
@@ -441,7 +450,7 @@ int main()
             break;
     case 3:
 
-            excluiCarro("CARROS.dat");
+            excluiCarro(ordenado);
 
       break;
     case 4:
