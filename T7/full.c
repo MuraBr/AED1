@@ -46,12 +46,16 @@ void geraNome(char nome[])
 {
     int i;
     char nomes[][TAM] = {{"Joao"}, {"Camila"}, {"Felipe"}, {"Vinicius"}, {"Roberto"}, {"Arthur"}, {"Maria"}, {"Bianca"}, {"Flavia"}, {"Guilherme"}, {"Tais"}, {"Melissa"}, {"Priscila"}};
-    char sobrenomes[][TAM] = {{"Silva"}, {"Ribas"}, {"Medeiros"}, {"Marques"}, {"Murakami"}, {"Antunes"}, {"Costa"}, {"Alves"}};
+    char sobrenomes[][TAM] = {{"Silva"}, {"Ribas"}, {"Medeiros"}, {"Marques"}, {"Fernandes"}, {"Antunes"}, {"Costa"}, {"Alves"}};
+    char maisSobrenomes[][TAM] = {{"de Paula"}, {"Nishiyama"}, {"Carvalho"}, {"Freitas"}, {"Murakami"}, {"Lima"}, {"Andrade"}};
     i = rand() % 13;
     strcpy(nome, nomes[i]);
     strcat(nome, " ");
     i = rand() % 8;
-    strcat(nome, sobrenomes[5]);
+    strcat(nome, sobrenomes[i]);
+    strcat(nome, " ");
+    i = rand() % 7;
+    strcat(nome, maisSobrenomes[i]);
     printf("Nome: %s\n", nome);
 }
 
@@ -64,9 +68,9 @@ char geraNumero()
 
 void geraRua(char rua[])
 {
-    char ruas[][TAM] = {{"Ipanema"}, {"Leblon"}, {"Terra"}, {"Jardim"}, {"Pires"}, {"Marculino"}, {"Hayel"}, {"Guaicurus"}, {"Monte Alegre"}, {"Toshinobu Katayama"}};
+    char rua1[][TAM] = {{"Ipanema"}, {"Leblon"}, {"Terra"}, {"Jardim"}, {"Pires"}, {"Marculino"}, {"Hayel"}, {"Guaicurus"}, {"Monte Alegre"}, {"Toshinobu Katayama"}};
     int i = rand() % 10;
-    strcpy(rua, ruas[i]);
+    strcpy(rua, rua1[i]);
     printf("Rua: %s\n", rua);
 }
 
@@ -89,7 +93,7 @@ void geraCidade(char cidade[])
     char cidades[][TAM] = {{"Meia Praia"}, {"Curitiba"}, {"Dourados"}, {"Maracaju"}, {"Montese"}, {"Sao Paulo"}, {"Osasco"}, {"Campo Grande"}, {"Bonito"}, {"Vicentina"}, {"Rio Brilhante"}};
     int i = rand() % 11;
     strcpy(cidade, cidades[i]);
-    printf("Cidade: %s\n", cidades);
+    printf("Cidade: %s\n", cidade);
 }
 
 void geraEstado(char estado[])
@@ -138,6 +142,7 @@ void insere_pontuacao_cpf(char cpf_origem[], char cpf_destino[])
             cont++;
         }
     }
+    cpf_destino[14] = '\0';
 }
 // objetivo:calcula o primeiro digito verificador de um cpf no formato 999999999
 // parametros: cpf o cpf sem os digitos verificadores
@@ -251,6 +256,7 @@ void geraCpf(char cpf[])
         insere_pontuacao_cpf(cpf_processo, cpf);
         // Sai do loop apenas se o cpf produzido for válido
     } while (verifica_cpf_valido(cpf) != 1);
+    printf("CPF: %s\n", cpf);
 }
 
 void geraEndereco(struct ENDERECO *end)
@@ -282,110 +288,151 @@ void geraRenda(float *renda){
     *(renda) = (rand() % 50000) * 1.5; 
 }
 
-void inserirCliente(const char *fileName)
+void inserirCliente(const char *fileName, struct CLIENTE cliente)
 {
-    struct CLIENTE bpessoa;
+    FILE *arquivoa = abrirArquivo(fileName, "rb");
     int escolha, i;
     do
     {
         printf("\n------------------------------------------------------------------------------\n");
-        geraNome(bpessoa.nome); // char nome[TAM];
-        geraCpf(bpessoa.cpf);   // char cpf[15]; //999.999.999-99
-        geraEndereco(&(bpessoa.endereco));
-        geraTelefone(&(bpessoa.residencial));
+        geraNome(cliente.nome);
+        geraCpf(cliente.cpf);
+        geraEndereco(&(cliente.endereco));
+        geraTelefone(&(cliente.residencial));
         for (i = 0; i < 5; i++)
         {
-            geraTelefone(&(bpessoa.celular[i]));
+            geraTelefone(&(cliente.celular[i]));
         }
-        geraRenda(&bpessoa.renda_mensal);
+        geraRenda(&cliente.renda_mensal);
         printf("------------------------------------------------------------------------------\n");
         printf("Deseja inserir o cliente? Digite 1 para Sim e 0 para nao\n");
         scanf("%d", &escolha);
         system("cls");
     } while (escolha == 0);
+    fclose(arquivoa);
     FILE *arquivo = abrirArquivo(fileName, "ab");
-    fwrite(&bpessoa, sizeof(struct CLIENTE), 1, arquivo);
+    fwrite(&cliente, sizeof(struct CLIENTE), 1, arquivo);
     fclose(arquivo);
 }
 
-void mostrarArquivo(const char *fileName)
+void mostrarArquivo(const char *fileName, struct CLIENTE cliente)
 {
-    struct CLIENTE bcliente;
+    //struct CLIENTE cliente;
     FILE *arquivo = abrirArquivo(fileName, "rb");
     int tam = sizeof(struct CLIENTE), i;
-    while (fread(&bcliente, tam, 1, arquivo))
+    while (fread(&cliente, tam, 1, arquivo))
     {
         printf("==========CLIENTE==========\n");
-        printf("Nome: %s\n", bcliente.nome);
-        printf("Renda Mensal: %.2f\n", bcliente.renda_mensal);
+        printf("Nome: %s\n", cliente.nome);
+        printf("CPF: %s\n", cliente.cpf);
+        printf("Renda Mensal: %.2f\n", cliente.renda_mensal);
         printf("---Endereco---\n");
         printf("Rua: %s\nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nCEP: %s\n",\
-        bcliente.endereco.rua, bcliente.endereco.numero, bcliente.endereco.bairro, bcliente.endereco.cidade,\
-        bcliente.endereco.estado, bcliente.endereco.cep);
+        cliente.endereco.rua, cliente.endereco.numero, cliente.endereco.bairro, cliente.endereco.cidade,\
+        cliente.endereco.estado, cliente.endereco.cep);
         printf("---Contato---\n");
-        printf("Telefone residencial: %s\n", bcliente.residencial.telefone);
+        printf("Telefone residencial: %s\n", cliente.residencial.telefone);
         for (i = 0; i < 5; i++)
         {
-            printf("Celular %d: %s\n", i+1, bcliente.celular[i].telefone);
+            printf("Celular %d: %s\n", i+1, cliente.celular[i].telefone);
         }
     }
     fclose(arquivo);
 }
 
-void excluirRegistro(const char *fileName, struct CLIENTE excluir)
+void excluirRegistro(const char *fileName, struct CLIENTE cliente, char cpf[])
 {
     FILE *arquivo = abrirArquivo(fileName, "rb");
-    struct CLIENTE aux;
-    int tam = sizeof(struct CLIENTE), flag = 0;
-
-    FILE *copia = abrirArquivo("excluir.ord", "wb");
-
-    while (fread(&aux, tam, 1, arquivo))
+    int i=0, j=0, flag=0;
+    struct CLIENTE clientescopy[TAM];
+    while(fread(&cliente, sizeof(struct CLIENTE), 1, arquivo))
     {
-        if (memcmp(&aux, &excluir, tam) != 0)
+        if(strcmp(cliente.cpf, cpf) == 0)
         {
-            fwrite(&aux, tam, 1, copia);
-        }
-        else
-        {
-            flag = 1;
-        }
-    }
-    if (flag == 0)
-    {
-        printf("O registro nao existe no arquivo %s\n", fileName);
-    }
-
-    fclose(arquivo);
-    fclose(copia);
-    remove(fileName);
-    rename("excluir.ord", fileName);
-}
-void leNome(char nome[])
-{
-    char nomeaux[TAM];
-    printf("Digite o nome para a exclusao: \n");
-    scanf("%s", nomeaux);
-    strcpy(nome, nomeaux);
-}
-void excluiCliente(const char *filename)
-{
-    FILE *arquivo = abrirArquivo(filename, "rb");
-    struct CLIENTE buffer;
-    int flag = 0;
-    char nome[TAM];
-    leNome(nome);
-    while((fread(&buffer, sizeof(struct CLIENTE), 1, arquivo)) && (flag == 0))
-    {
-        if(memcmp(nome, buffer.nome, strlen(nome))==0)
-        {
-            excluirRegistro(filename, buffer);
             flag++;
+            printf("Excluindo usuario...\n");
+
+            rewind(arquivo);
+
+            while(fread(&cliente, sizeof(struct CLIENTE), 1, arquivo))
+            {
+                if(strcmp(cliente.cpf, cpf) != 0) {
+                    clientescopy[i] = cliente;
+                    i++;
+                }
+            }
+            fclose(arquivo);
+            remove(fileName); 
+            arquivo = abrirArquivo(fileName, "ab");
+
+            while(j < i)
+            { 
+                fwrite(&clientescopy[j], sizeof(struct CLIENTE), 1, arquivo);
+                j++;
+            }
+            fclose(arquivo);
         }
     }
+}
+
+// void excluirRegistro(const char *fileName, struct CLIENTE excluir)
+// {
+//     FILE *arquivo = abrirArquivo(fileName, "rb");
+//     struct CLIENTE aux;
+//     int tam = sizeof(struct CLIENTE), flag = 0;
+//     //Cria um arquivo copia que permitirá excluir registros do arquivo
+//     FILE *copia = abrirArquivo("excluir.ord", "wb");
+//     //Copia para o arquivo excluir.ord todos os registros exceto o registro que deverá ser excluído
+//     while (fread(&aux, tam, 1, arquivo))
+//     {
+//         if (memcmp(&aux, &excluir, tam) != 0)
+//         {
+//             fwrite(&aux, tam, 1, copia);
+//         }
+//         else
+//         {
+//             flag = 1;
+//         }
+//     }
+//     //Caso o registro nunca foi encontrado exibe no terminal esse erro
+//     if (flag == 0)
+//     {
+//         printf("O registro nao existe no arquivo %s\n", fileName);
+//     }
+//     //Remove o arquivo original e renomeia excluir.ord com o nome do original
+//     fclose(arquivo);
+//     fclose(copia);
+//     remove(fileName);
+//     rename("excluir.ord", fileName);
+// }
+
+void excluiCliente(const char *fileName, struct CLIENTE cliente)
+{
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    int flag = 0;
+    char cpf[15];
+    printf("Digite o cpf do usuario que deseja excluir: \n");
+    scanf("%s", cpf);
+    while((fread(&cliente, sizeof(struct CLIENTE), 1, arquivo)) && (flag == 0))
+    {
+        if(memcmp(cpf, cliente.cpf, strlen(cpf))==0)
+        {
+            flag++;
+            excluirRegistro(fileName, cliente, cpf/*, cpf*/);
+        }
+    }
+
     if(flag == 0) printf("Este cliente nao existe no banco de dados!\n");
     fclose(arquivo);
 }
+// void ordemAlfabetica(const char *fileName, struct CLIENTE cliente)
+// {
+
+// }
+// void ordemAlfabeticaRenda(const char *fileName, struct CLIENTE cliente)
+// {
+
+// }
 
 int main()
 {
@@ -393,7 +440,7 @@ int main()
     struct CLIENTE cliente;
     int pg = 0;
     char clientesFile[] = "CLIENTES.dat";
-    char nome[TAM], rua[TAM], bairro[TAM], estado[3], cep[11], cidade[TAM];
+    char nome[TAM], rua[TAM], bairro[TAM], estado[3], cep[11], cidade[TAM], a[2];
     srand(time(NULL));
     
     while(pg == 0)
@@ -413,29 +460,30 @@ int main()
                 while(pg==2)
                 {
                     system("cls");
-                    printf("Cliente\n1- Inserir cliente\n2- Exluir cliente\n3- Listar clientes por ordem alfabetica\n4- Listar clientes por ordem alfabetica e faixa de renda\n5 - Voltar ao menu principal\nEscolha um opcao:\n");
+                    printf("Cliente\n1- Inserir cliente\n2- Exluir cliente\n3- Listar clientes por ordem alfabetica\n4- Listar clientes por ordem alfabetica e faixa de renda\n5- Voltar ao menu principal\nEscolha um opcao:\n");
                     scanf("%d", &pg);
                     switch(pg)
                     {
                         //INCUIR CLIENTE
                         case 1:
                             system("cls");
-                            inserirCliente(clientesFile);
+                            inserirCliente(clientesFile, cliente);
                             system("pause");
                             pg = 2;
                             break;
                         //EXCLUIR CLIENTE
                         case 2:
                             system("cls");
-                            excluiCliente(clientesFile);
+                            excluiCliente(clientesFile, cliente);
                             system("pause");
                             pg = 2;
                             break;
                         //LISTAR EM ORDEM ALFABETICA
                         case 3:
                             system("cls");
-                            mostrarArquivo(clientesFile);
-                            system("pause");
+                            mostrarArquivo(clientesFile, cliente);
+                            fgets(a, 2, stdin);
+                            system("PAUSE");
                             pg = 2;
                             break;
                         //LISTAR EM ORDEM ALFABETICA E POR RENDA
