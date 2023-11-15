@@ -131,12 +131,31 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
             printf("\nA linha [%d] e a maior com (%d) caracteres\n",maiorLinha,q_mLinha);
             break;
         case 5://printa as ocorrencias de uma palavra especifica escolhida pelo usuario
-            char frase[maiorLinha],letra,palavra[46];
-            int linha=1,contOcorrencia=0;
+            char *frase = malloc(q_mLinha * sizeof(*frase)),*frasereserva = malloc(q_mLinha * sizeof(*frasereserva));
+            char letra,palavra[48]=" ",palavra2[46],palavra3[47]=" ",espaço[]=" ",quebralin[]="\n";
+            int linha=1,contOcorrencia=0,PalavraRep=0;
             
             printf("\nQual palavra pesquisar: \n");
-            scanf("%s",palavra);
-            printf("As linhas que a palavra %s ocorre: \n",palavra);
+            scanf("%s",palavra2);
+
+            printf("As linhas que a palavra %s ocorre: \n",palavra2);
+            
+            /*caso o final for uma quebra de linha*/
+            strcpy(palavra3+1,palavra2);
+            strcpy(palavra3+strlen(palavra3),quebralin);
+
+            /*Adiciona espaço no final e no inicio da palavra*/
+            strcpy(palavra2+strlen(palavra2),espaço);
+            strcpy(palavra+1,palavra2);
+
+
+            /*palavra = palavra com um espaço no inicio e final
+              palavra2 = palavra original
+              palavra3 = palavra com quebra de linha no final*/
+
+            
+            
+
             rewind(arquivo);
             /*faz a leitura do arquivo descriptografado novamente, porem dessa vez pegando cada linha e colocando na variável string frase
             quando o programa identifica a palavra escolhida na variavel, o programa printa a linha que achou e a frase que a palavra esta*/
@@ -146,21 +165,32 @@ void InfoTexto(FILE* arquivo, char* dir, int esc){/*arquivo: arquivo descriptogr
                 if(letra!=-1) fseek(arquivo,-1,SEEK_CUR);
 
                 fgets(frase, maiorLinha ,arquivo);
-                if(strstr(frase,palavra)!=NULL){
 
-                    printf("[Linha:%d] %s\n",linha,frase);
+                strcpy(frasereserva,espaço);
+                strcpy(frasereserva+1,frase);
+                
+                while((strstr(frasereserva,palavra)!=NULL)||(strstr(frasereserva,palavra3)!=NULL)){
+                    
+                    /*Checa todos os casos de onde pode encontrar a palavra*/
+                    if((strstr(frasereserva,palavra)!=NULL)) strcpy(frasereserva,strstr(frasereserva,palavra)+(strlen(palavra)-2));
+                    else if(strstr(frasereserva,palavra3)!=NULL) strcpy(frasereserva,strstr(frasereserva,palavra3)+(strlen(palavra3)-2));
+
                     contOcorrencia+=1;
+                    PalavraRep+=1;
+                    if(PalavraRep>1)printf("e novamente na [linha:%d] %s\n",linha,frase);
+                    else printf("[Linha:%d] %s\n",linha,frase);
 
                 }
+                PalavraRep=0;
                 ++linha;
                 
-                
             }
+            
             /*Verifica quantas vezes ocorreu a palavra*/
             if(contOcorrencia>0) printf("E tem %d ocorrencias\n",contOcorrencia);
             else printf("Nao tem nenhuma ocorrencia da palavra %s no texto\n",palavra);
-
-            printf("Tecle algo para continuar!\n");
+            free(frase),free(frasereserva);
+            printf("Tecle enter para continuar!\n");
             while(getchar()!='\n');
             getchar();
 
