@@ -210,6 +210,7 @@ void listar_fabricante() {
     char modelo_selecionado[TAM];
 
     printf("Digite qual modelo deseja visualizar: ");
+    fflush(stdin);
     scanf("%49s", modelo_selecionado);
 
     while (!feof(arquivo)) {
@@ -246,6 +247,7 @@ void listar_modelo() {
     int maior = 0;
 
     printf("Digite qual modelo deseja visualizar: ");
+    fflush(stdin);
     scanf("%49s", modelo_selecionado);
 
     while (!feof(arquivo)) {
