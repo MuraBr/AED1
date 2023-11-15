@@ -2,20 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-
-/*------------------Objetivos-------------------
-1. Inserir um cliente no cadastro
-2. Excluir um cliente do cadastro
-3. Listar os clientes do cadastro ordenados crescentemente pelo nome
-4. Listar os clientes do cadastro ordenados crescentemente pelo nome por seleção de faixa de renda salarial mensal
-
-obs:
-1. Para inserir um cliente, gere automaticamente as informações do cliente, e o usuário decide se o cliente será inserido.
-2. Na exclusão de um cliente o usuário fornece o cpf do cliente que deseja que seja excluído. Só poderá ser excluído um
-cliente caso não há nenhuma venda registrada para ele.
-3. O cpf do cliente deve ser valido
-*/
-
 //-------------------Estruturas------------------
 #define TAM 50
 struct ENDERECO
@@ -505,12 +491,15 @@ float getPrecoVenda(const char *fileName, char placaC[9])
     }
     fclose(arquivo);
 }
-void getNomeClienteFromCPF(const char *fileName, char cpfC[15], char nomeC[TAM]){
+void getNomeClienteFromCPF(const char *fileName, char cpfC[15], char nomeC[TAM])
+{
     FILE *arquivo = abrirArquivo(fileName, "rb");
     struct CLIENTE aux;
     int flag = 0;
-    while((flag == 0) && (fread(&aux, sizeof(struct CLIENTE), 1, arquivo))){
-        if(memcmp(cpfC, aux.cpf, 15) == 0){
+    while ((flag == 0) && (fread(&aux, sizeof(struct CLIENTE), 1, arquivo)))
+    {
+        if (memcmp(cpfC, aux.cpf, 15) == 0)
+        {
             strcpy(nomeC, aux.nome);
             flag = 1;
         }
@@ -518,12 +507,15 @@ void getNomeClienteFromCPF(const char *fileName, char cpfC[15], char nomeC[TAM])
     fclose(arquivo);
 }
 
-void getCarroFromPlaca(const char *fileName, char placaC[9], char fabricanteC[TAM], char modeloC[TAM], int *anoFab){
+void getCarroFromPlaca(const char *fileName, char placaC[9], char fabricanteC[TAM], char modeloC[TAM], int *anoFab)
+{
     FILE *arquivo = abrirArquivo(fileName, "rb");
     struct CARRO aux;
     int flag = 0;
-    while((flag == 0) && (fread(&aux, sizeof(struct CARRO), 1, arquivo))){
-        if(memcmp(placaC, aux.placa, 9) == 0){
+    while ((flag == 0) && (fread(&aux, sizeof(struct CARRO), 1, arquivo)))
+    {
+        if (memcmp(placaC, aux.placa, 9) == 0)
+        {
             strcpy(fabricanteC, aux.fabricante);
             strcpy(modeloC, aux.modelo);
             flag = 1;
@@ -1172,36 +1164,110 @@ void mostrarNumTotalVendas(const char *fileName)
     }
 }
 
-void mostrarVendasFabricante(const char *fileName, char fabricante[TAM]){
+void mostrarVendasFabricante(const char *fileName, char fabricante[TAM])
+{
     FILE *arquivo = abrirArquivo(fileName, "rb");
     int i = 0, j, k, tam = sizeof(struct VENDA_CARRO);
     struct VENDA_CARRO buffer;
-    struct CARRO ordem[50];
+    struct EXIBIR
+    {
+        char nomeAux[TAM], modeloAux[TAM], fabricanteAux[TAM], placaAux[9];
+        int anoFabricacao;
+    };
+    struct EXIBIR ordem[50], aux;
     while (fread(&buffer, tam, 1, arquivo))
     {
-        
+        getCarroFromPlaca("carros.dat", buffer.placa_car, aux.fabricanteAux, aux.modeloAux, &aux.anoFabricacao);
+        if (memcmp(fabricante, aux.fabricanteAux, TAM) == 0)
+        {
+            getNomeClienteFromCPF("clientes.dat", buffer.cpf_cli, aux.nomeAux);
+            strcpy(aux.placaAux, buffer.placa_car);
+            ordem[i] = aux;
+            i++;
+        }
     }
     fclose(arquivo);
-    for (j = 0; j < i; j++)
+
+    if (i != 0)
     {
-        for (k = j + 1; k < i; k++)
+        for (j = 0; j < i; j++)
         {
-            if (strcmp(ordem[j].fabricante, ordem[k].fabricante) > 0)
+            for (k = j + 1; k < i; k++)
             {
-                alternarCarros(&ordem[j], &ordem[k]);
-            }
-            if (strcmp(ordem[j].fabricante, ordem[k].fabricante) == 0)
-            {
-                if (strcmp(ordem[j].modelo, ordem[k].modelo) > 0)
+                if (strcmp(ordem[j].modeloAux, ordem[k].modeloAux) > 0)
                 {
-                    alternarCarros(&ordem[j], &ordem[k]);
+                    aux = ordem[j];
+                    ordem[j] = ordem[k];
+                    ordem[k] = aux;
                 }
             }
         }
+        printf("Carros vendidos da %s\n", fabricante);
+        for (j = 0; j < i; j++)
+        {
+            printf("------------------------------------------------------------------------------\n");
+            printf("Nome do Cliente: %s\n", ordem[j].nomeAux);
+            printf("Placa do Carro: %s\n", ordem[j].placaAux);
+            printf("Nome do Cliente: %s\n", ordem[j].modeloAux);
+            printf("Nome do Cliente: %d\n", ordem[j].anoFabricacao);
+        }
     }
-    for (j = 0; j < i; j++)
+    else
     {
-        mostrarCarro(ordem[j]);
+        printf("Nenhum carro desta fabricante foi vendido!\n");
+    }
+}
+
+void mostrarVendasModelo(const char *fileName, char modelo[TAM])
+{
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    int i = 0, j, k, tam = sizeof(struct VENDA_CARRO);
+    struct VENDA_CARRO buffer;
+    struct EXIBIR
+    {
+        char nomeAux[TAM], modeloAux[TAM], placaAux[9];
+        int anoFabricacao;
+    };
+    struct EXIBIR ordem[50], aux;
+    char fabricante[TAM];
+    while (fread(&buffer, tam, 1, arquivo))
+    {
+        getCarroFromPlaca("carros.dat", buffer.placa_car, fabricante, aux.modeloAux, &aux.anoFabricacao);
+        if (memcmp(modelo, aux.modeloAux, TAM) == 0)
+        {
+            getNomeClienteFromCPF("clientes.dat", buffer.cpf_cli, aux.nomeAux);
+            strcpy(aux.placaAux, buffer.placa_car);
+            ordem[i] = aux;
+            i++;
+        }
+    }
+    fclose(arquivo);
+    if (i != 0)
+    {
+        for (j = 0; j < i; j++)
+        {
+            for (k = j + 1; k < i; k++)
+            {
+                if (ordem[j].anoFabricacao > ordem[k].anoFabricacao)
+                {
+                    aux = ordem[j];
+                    ordem[j] = ordem[k];
+                    ordem[k] = aux;
+                }
+            }
+        }
+        printf("Carros vendidos do modelo %s\n", modelo);
+        for (j = 0; j < i; j++)
+        {
+            printf("------------------------------------------------------------------------------\n");
+            printf("Nome do Cliente: %s\n", ordem[j].nomeAux);
+            printf("Placa do Carro: %s\n", ordem[j].placaAux);
+            printf("Nome do Cliente: %d\n", ordem[j].anoFabricacao);
+        }
+    }
+    else
+    {
+        printf("Nenhum carro deste modelo foi vendido!\n");
     }
 }
 //-------------------Incluir----------------------------------------------------------------------------------------
@@ -1357,7 +1423,7 @@ int main()
     char carrosFile[] = "carros.dat";
     char clientesFile[] = "clientes.dat";
     char vendasFile[] = "vendas.dat";
-    char cpfAux[15], placaAux[9];
+    char cpfAux[15], placaAux[9], modeloAux[TAM], fabricanteAux[TAM];
     float precoAux;
     srand(time(NULL));
 
@@ -1559,7 +1625,10 @@ int main()
                 case 3:
                     if (existeDadosVendas(vendasFile))
                     {
-                        // mostrarFabricanteOrdemModelo(vendasFile);
+                        printf("Informe as vendas de qual fabricante voce deseja visualizar:\n");
+                        fflush(stdin);
+                        scanf("%s", fabricanteAux);
+                        mostrarVendasFabricante(vendasFile, fabricanteAux);
                     }
                     else
                     {
@@ -1569,7 +1638,10 @@ int main()
                 case 4:
                     if (existeDadosVendas(vendasFile))
                     {
-                        // mostrarModeloOrdemFabricacao(vendasFile);
+                        printf("Informe as vendas de qual modelo voce deseja visualizar:\n");
+                        fflush(stdin);
+                        scanf("%s", modeloAux);
+                        mostrarVendasModelo(vendasFile, modeloAux);
                     }
                     else
                     {
