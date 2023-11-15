@@ -327,8 +327,10 @@ void excluirRegistro(const char *fileName, RCARRO excluir)
 
     fclose(arquivo);
     fclose(copia);
+    printf("teste");
     remove(fileName);
     rename("excluir.ord", fileName);
+    printf("teste2");
     
 }
 
@@ -356,9 +358,9 @@ void excluiCarro(const char *filename)
             fclose(arquivo);
             excluirRegistro(filename, buffer);
             flag = 1;
-            printf("%s",placa);
         }
     }
+    fclose(arquivo);
     if (flag == 0)
     {
         printf("Este carro nao existe no banco de dados!\n");
@@ -435,6 +437,7 @@ int main()
     case 1: //inserir carro
       inserirCarro(ordenado);
       
+      
         
       break;
     case 2: // mostrar os registros do carro
@@ -451,6 +454,7 @@ int main()
     case 3:
 
             excluiCarro(ordenado);
+            mostrarArquivo("excluir.ord");
 
       break;
     case 4:
