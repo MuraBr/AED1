@@ -360,7 +360,6 @@ void excluiCarro(const char *filename)
             flag = 1;
         }
     }
-    fclose(arquivo);
     if (flag == 0)
     {
         printf("Este carro nao existe no banco de dados!\n");
