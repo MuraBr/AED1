@@ -180,6 +180,15 @@ FILE *abrirArquivo(const char *nome, const char *modo)
     }
     return arquivo;
 }
+void fechar_arquivo(FILE *arquivo)
+{
+    // testar se o arquivo foi aberto corretamente
+    if (arquivo != NULL)
+    {
+        // fechar arquivo
+        fclose(arquivo);
+    }
+}
 int existeDadosClientes(const char *fileName)
 {
     int flag = 0;
@@ -260,8 +269,7 @@ int existeCpfCliente(const char *fileName, char cpfC[15])
                 flag = 1;
             }
         }
-    fclose(arquivo);
-
+        fclose(arquivo);
     }
     return flag;
 }
@@ -1027,7 +1035,7 @@ void mostrarCarroOrdemFabricante(const char *fileName, const char *fileVendas)
     struct CARRO ordem[50], buffer;
     while (fread(&buffer, tam, 1, arquivo))
     {
-        if (!existeVendaPlaca(fileVendas, ordem[i].placa))
+        if (!existeVendaPlaca(fileVendas, buffer.placa))
         {
             ordem[i] = buffer;
             i++;
@@ -1059,7 +1067,7 @@ void mostrarCarroOrdemFabricante(const char *fileName, const char *fileVendas)
 void mostrarCarroFaixaAnoFabricacao(const char *fileName, const char *fileVendas)
 {
     FILE *arquivo = abrirArquivo(fileName, "rb");
-    int i = 0, j, k, tam = sizeof(struct CARRO), faixaUp, faixaDown;
+    int i = 0, j, tam = sizeof(struct CARRO), faixaUp, faixaDown;
     struct CARRO lista[50], buffer;
 
     printf("Informe o intervalo de ano de fabricacao para mostrar:\n");
@@ -1068,10 +1076,11 @@ void mostrarCarroFaixaAnoFabricacao(const char *fileName, const char *fileVendas
     printf("Minimo:\n");
     scanf("%d", &faixaDown);
 
-    while (fread(&buffer, tam, 1, arquivo))
+    while (fread(&buffer, sizeof(struct CARRO), 1, arquivo))
     {
-        if ((buffer.ano_fabricacao > faixaDown) && (buffer.ano_fabricacao < faixaUp))
+        if ((buffer.ano_fabricacao < faixaUp) && (buffer.ano_fabricacao > faixaDown))
         {
+
             if (!existeVendaPlaca(fileVendas, buffer.placa))
             {
                 lista[i] = buffer;
@@ -1095,9 +1104,7 @@ void mostrarCarroFaixaAnoFabricacao(const char *fileName, const char *fileVendas
 
 void mostrarCarroFaixaOpcionais(const char *fileName, const char *fileVendas)
 {
-    int opcionaisEscolhidos[8], i, flag = 0, stop, tam = sizeof(struct CARRO);
-    FILE *arquivo;
-    struct CARRO buffer;
+    int opcionaisEscolhidos[8], i, j, k = 0, flag = 0, stop, tam = sizeof(struct CARRO);
     for (i = 0; i < 8; i++)
     {
         opcionaisEscolhidos[i] = 0;
@@ -1105,8 +1112,9 @@ void mostrarCarroFaixaOpcionais(const char *fileName, const char *fileVendas)
 
     lerOpcionais(opcionaisEscolhidos);
 
-    arquivo = abrirArquivo(fileName, "rb");
-    while (fread(&buffer, tam, 1, arquivo))
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    struct CARRO v[50], buffer;
+    while (fread(&buffer, sizeof(struct CARRO), 1, arquivo))
     {
         stop = 0;
         for (i = 0; (i < 8) && (stop == 0); i++)
@@ -1115,7 +1123,8 @@ void mostrarCarroFaixaOpcionais(const char *fileName, const char *fileVendas)
             {
                 if (!existeVendaPlaca(fileVendas, buffer.placa))
                 {
-                    mostrarCarro(buffer);
+                    v[k] = buffer;
+                    k++;
                     stop = 1;
                     flag = 1;
                 }
@@ -1127,7 +1136,35 @@ void mostrarCarroFaixaOpcionais(const char *fileName, const char *fileVendas)
     {
         printf("Nenhum carro possui algum dos opcionais inseridos!\n");
     }
+    else
+    {
+        for (j = 0; j < k; j++)
+        {
+            mostrarCarro(v[j]);
+        }
+    }
 }
+
+void mostrarCarrosDisponiveis(const char *fileName, const char *vendasFile)
+{
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    struct CARRO v[50], buffer;
+    int i = 0, j;
+    while (fread(&buffer, sizeof(struct CARRO), 1, arquivo))
+    {
+        if (!existeVendaPlaca(vendasFile, buffer.placa))
+        {
+            v[i] = buffer;
+            i++;
+        }
+    }
+    fclose(arquivo);
+    for (j = 0; j < i; j++)
+    {
+        mostrarCarro(v[j]);
+    }
+}
+
 void mostrarVenda(struct VENDA_CARRO vendaC)
 {
     printf("------------------------------------------------------------------------------\n");
@@ -1344,14 +1381,14 @@ void inserirCarro(const char *fileName)
     fwrite(&car, tam, 1, arquivo);
     fclose(arquivo);
 }
-void inserirVenda(const char *fileName, char cpfC[15], char placaC[9], float precoVenda)
+void inserirVenda(const char *fileName, char cpfC[15], char placaC[9], float precoCompra)
 {
     struct VENDA_CARRO vendaC;
     int tam = sizeof(struct VENDA_CARRO);
     FILE *arquivo;
     strcpy(vendaC.cpf_cli, cpfC);
     strcpy(vendaC.placa_car, placaC);
-    vendaC.preco_venda = precoVenda;
+    vendaC.preco_venda = precoCompra * 1.5;
     vendaC.data_venda.dia = 1 + (rand() % 28);
     vendaC.data_venda.mes = 1 + (rand() % 12);
     vendaC.data_venda.ano = 2010 + (rand() % 14);
@@ -1410,9 +1447,10 @@ void excluirCarro(const char *filename, char placaC[9])
 }
 void excluirVenda(const char *fileName, char placaC[9])
 {
-    struct VENDA_CARRO buffer, v[TAM];
+    FILE *arquivo = abrirArquivo(fileName, "rb");
+    struct VENDA_CARRO v[TAM], buffer;
     int tam = sizeof(struct VENDA_CARRO), i = 0, j;
-    FILE *arquivo;
+
     while (fread(&buffer, tam, 1, arquivo))
     {
         if (memcmp(buffer.placa_car, placaC, 9) != 0)
@@ -1429,6 +1467,195 @@ void excluirVenda(const char *fileName, char placaC[9])
         fwrite(&v[j], tam, 1, arquivo);
     }
     fclose(arquivo);
+}
+void listar_fabricante()
+{
+    FILE *arquivo = abrirArquivo("vendas.dat", "rb");
+    FILE *arquivo_secundario = abrirArquivo("carros.dat", "rb");
+    FILE *arquivo_terciario = abrirArquivo("clientes.dat", "rb");
+    struct VENDA_CARRO venda_carro;
+    struct CARRO carro;
+    struct CLIENTE cliente;
+    char modelo_selecionado[TAM];
+
+    printf("Digite qual modelo deseja visualizar: ");
+    fflush(stdin);
+    scanf("%49s", modelo_selecionado);
+
+    while (!feof(arquivo))
+    {
+        if (fread(&venda_carro, sizeof(struct VENDA_CARRO), 1, arquivo))
+        {
+            while (!feof(arquivo_secundario))
+            {
+                if (fread(&carro, sizeof(struct CARRO), 1, arquivo_secundario))
+                {
+                    while (!feof(arquivo_terciario))
+                    {
+                        if (fread(&cliente, sizeof(struct CLIENTE), 1, arquivo_terciario))
+                        {
+                            if (strcmp(carro.modelo, modelo_selecionado) == 0)
+                            {
+                                if (strcmp(venda_carro.cpf_cli, cliente.cpf) == 0)
+                                {
+                                    if (strcmp(carro.placa, venda_carro.placa_car) == 0)
+                                    {
+                                        printf("\nModelo do carro: %s\nAno de fabricacao: %d\nPlaca: %s\nNome do cliente: %s\n\n", carro.modelo, carro.ano_fabricacao, carro.placa, cliente.cpf);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fechar_arquivo(arquivo);
+}
+
+void listar_modelo()
+{
+    FILE *arquivo = abrirArquivo("vendas.dat", "rb");
+    FILE *arquivo_secundario = abrirArquivo("carros.dat", "rb");
+    FILE *arquivo_terciario = abrirArquivo("clientes.dat", "rb");
+    struct VENDA_CARRO venda_carro;
+    struct CARRO carro;
+    struct CLIENTE cliente;
+    char modelo_selecionado[TAM];
+    int maior = 0;
+
+    printf("Digite qual modelo deseja visualizar: ");
+    fflush(stdin);
+    scanf("%49s", modelo_selecionado);
+
+    while (!feof(arquivo))
+    {
+        if (fread(&venda_carro, sizeof(struct VENDA_CARRO), 1, arquivo))
+        {
+            if (strcmp(carro.modelo, modelo_selecionado) == 0)
+            {
+                if (carro.ano_fabricacao > maior)
+                {
+                    while (!feof(arquivo))
+                    {
+                        if (fread(&carro, sizeof(struct CARRO), 1, arquivo_secundario))
+                        {
+                            if (strcmp(carro.placa, venda_carro.placa_car) == 0)
+                            {
+                                maior = carro.ano_fabricacao;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    while (!feof(arquivo))
+    {
+        if (fread(&venda_carro, sizeof(struct VENDA_CARRO), 1, arquivo))
+        {
+            if (strcmp(carro.modelo, modelo_selecionado) == 0)
+            {
+                if (carro.ano_fabricacao == maior)
+                {
+                    while (!feof(arquivo_secundario))
+                    {
+                        if (fread(&carro, sizeof(struct CARRO), 1, arquivo_secundario))
+                        {
+                            if (strcmp(carro.placa, venda_carro.placa_car) == 0)
+                            {
+                                while (!feof(arquivo_terciario))
+                                {
+                                    if (fread(&cliente, sizeof(struct CLIENTE), 1, arquivo_terciario))
+                                    {
+                                        if (strcmp(venda_carro.cpf_cli, cliente.cpf) == 0)
+                                        {
+                                            printf("\nAno de fabricacao: %d\nPlaca: %s\nNome do cliente: %s\n\n", carro.ano_fabricacao, carro.placa, cliente.cpf);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fechar_arquivo(arquivo);
+    fechar_arquivo(arquivo_secundario);
+    fechar_arquivo(arquivo_terciario);
+}
+
+void informar_quantidade()
+{
+    FILE *arquivo = abrirArquivo("vendas.dat", "rb");
+    struct VENDA_CARRO venda_carro;
+    int quantidade = 0;
+
+    while (!feof(arquivo))
+    {
+        if (fread(&venda_carro, sizeof(struct VENDA_CARRO), 1, arquivo))
+        {
+            quantidade++;
+        }
+    }
+
+    printf("\nO total de carros vendidos e: %d.", quantidade);
+
+    fechar_arquivo(arquivo);
+}
+
+void informar_preco_total()
+{
+    FILE *arquivo = abrirArquivo("vendas.dat", "rb");
+    struct VENDA_CARRO venda_carro;
+    float preco_total;
+
+    while (!feof(arquivo))
+    {
+        if (fread(&venda_carro, sizeof(struct VENDA_CARRO), 1, arquivo))
+        {
+            preco_total += venda_carro.preco_venda;
+        }
+    }
+
+    printf("\nO preco total das vendas e: %.2f\n.", preco_total);
+
+    fechar_arquivo(arquivo);
+}
+
+void informar_lucro_total()
+{
+    FILE *arquivo = abrirArquivo("vendas.dat", "rb");
+    FILE *arquivo_secundario = abrirArquivo("carros.dat", "rb");
+    struct VENDA_CARRO venda_carro;
+    struct CARRO carro;
+    float lucro_total;
+
+    while (!feof(arquivo))
+    {
+        if (fread(&venda_carro, sizeof(struct VENDA_CARRO), 1, arquivo))
+        {
+            while (!feof(arquivo_secundario))
+            {
+                if (fread(&carro, sizeof(struct CARRO), 1, arquivo_secundario))
+                {
+                    if (venda_carro.placa_car == carro.placa)
+                    {
+                        lucro_total += venda_carro.preco_venda - carro.preco_compra;
+                    }
+                }
+            }
+        }
+    }
+
+    printf("O lucro total das vendas e : %.2f\n", lucro_total);
+
+    fechar_arquivo(arquivo);
+    fechar_arquivo(arquivo_secundario);
 }
 //------------------------------Main--------------------------------------------
 int main()
@@ -1464,11 +1691,11 @@ int main()
                             if (!existeVendaPlaca(vendasFile, placaAux))
                             {
                                 excluirCarro(carrosFile, placaAux);
-                                printf("Cliente excluido!\n");
+                                printf("Carro excluido!\n");
                             }
                             else
                             {
-                                printf("Nao e possivel excluir o cliente!\n");
+                                printf("Nao e possivel excluir o carro!\n");
                             }
                         }
                         else
@@ -1504,7 +1731,7 @@ int main()
                 case 5:
                     if (existeDadosCarros(carrosFile))
                     {
-                        mostrarCarroFaixaAnoFabricacao(carrosFile, vendasFile);
+                        mostrarCarrosDisponiveis(carrosFile, vendasFile);
                     }
                     else
                     {
@@ -1638,10 +1865,7 @@ int main()
                 case 3:
                     if (existeDadosVendas(vendasFile))
                     {
-                        printf("Informe as vendas de qual fabricante voce deseja visualizar:\n");
-                        fflush(stdin);
-                        scanf("%s", fabricanteAux);
-                        mostrarVendasFabricante(vendasFile, fabricanteAux);
+                        listar_fabricante();
                     }
                     else
                     {
@@ -1651,10 +1875,7 @@ int main()
                 case 4:
                     if (existeDadosVendas(vendasFile))
                     {
-                        printf("Informe as vendas de qual modelo voce deseja visualizar:\n");
-                        fflush(stdin);
-                        scanf("%s", modeloAux);
-                        mostrarVendasModelo(vendasFile, modeloAux);
+                        listar_modelo();
                     }
                     else
                     {
@@ -1664,7 +1885,7 @@ int main()
                 case 5:
                     if (existeDadosVendas(vendasFile))
                     {
-                        mostrarNumTotalVendas(vendasFile);
+                        informar_preco_total();
                     }
                     else
                     {
@@ -1674,7 +1895,7 @@ int main()
                 case 6:
                     if (existeDadosVendas(vendasFile))
                     {
-                        printf("O lucro total das vendas foi de: %2.f\n", calculaLucroTotal(vendasFile));
+                        informar_lucro_total();
                     }
                     else
                     {
@@ -1684,7 +1905,6 @@ int main()
                 }
                 system("pause");
             }
-
             break;
         }
     }
