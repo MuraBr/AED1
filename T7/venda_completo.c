@@ -130,7 +130,7 @@ void inserir_venda() {
         scanf("%8s", venda_carro.placa_car);
 
         //testar se o carro existe
-        while (existe_carro(venda_carro.placa_car) == 1) {
+        while (existe_carro(venda_carro.placa_car) != 1) {
             printf("\nCarro nao cadastrado. Digite novamente: ");
             fflush(stdin);
             scanf("%8s", venda_carro.placa_car);
@@ -140,7 +140,7 @@ void inserir_venda() {
         printf("\nDigite o CPF: ");
         fflush(stdin);
         scanf("%14s", venda_carro.cpf_cli);
-        while (existe_cpf(venda_carro.cpf_cli) == 1) {
+        while (existe_cpf(venda_carro.cpf_cli) != 1) {
             printf("\nCliente nao cadastrado. Digite novamente: ");
             fflush(stdin);
             scanf("%8s", venda_carro.cpf_cli);
