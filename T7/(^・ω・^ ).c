@@ -2,6 +2,20 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
+/*------------------Objetivos-------------------
+1. Inserir um cliente no cadastro
+2. Excluir um cliente do cadastro
+3. Listar os clientes do cadastro ordenados crescentemente pelo nome
+4. Listar os clientes do cadastro ordenados crescentemente pelo nome por seleção de faixa de renda salarial mensal
+
+obs:
+1. Para inserir um cliente, gere automaticamente as informações do cliente, e o usuário decide se o cliente será inserido.
+2. Na exclusão de um cliente o usuário fornece o cpf do cliente que deseja que seja excluído. Só poderá ser excluído um
+cliente caso não há nenhuma venda registrada para ele.
+3. O cpf do cliente deve ser valido
+*/
+
 //-------------------Estruturas------------------
 #define TAM 50
 struct ENDERECO
@@ -177,8 +191,8 @@ int existeDadosClientes(const char *fileName)
         {
             flag = 1;
         }
+        fclose(arquivo);
     }
-    fclose(arquivo);
     return flag;
 }
 int existeDadosCarros(const char *fileName)
@@ -192,8 +206,8 @@ int existeDadosCarros(const char *fileName)
         {
             flag = 1;
         }
+        fclose(arquivo);
     }
-    fclose(arquivo);
     return flag;
 }
 
@@ -208,17 +222,18 @@ int existeDadosVendas(const char *fileName)
         {
             flag = 1;
         }
+        fclose(arquivo);
     }
-    fclose(arquivo);
     return flag;
 }
 int existePlacaCarro(const char *fileName, char placaCar[9])
 {
-    FILE *arquivo = fopen(fileName, "rb");
     struct CARRO buffer;
     int flag = 0;
-    if (arquivo != NULL)
+    if (existeDadosCarros(fileName))
     {
+        FILE *arquivo = abrirArquivo(fileName, "rb");
+
         while ((flag == 0) && (fread(&buffer, sizeof(struct CARRO), 1, arquivo)))
         {
             if (memcmp(buffer.placa, placaCar, 9) == 0)
@@ -226,18 +241,18 @@ int existePlacaCarro(const char *fileName, char placaCar[9])
                 flag = 1;
             }
         }
+        fclose(arquivo);
     }
-    fclose(arquivo);
     return flag;
 }
 
 int existeCpfCliente(const char *fileName, char cpfC[15])
 {
-    FILE *arquivo = fopen(fileName, "rb");
     struct CLIENTE buffer;
     int flag = 0;
-    if (arquivo != NULL)
+    if (existeDadosClientes(fileName))
     {
+        FILE *arquivo = fopen(fileName, "rb");
         while ((fread(&buffer, sizeof(struct CLIENTE), 1, arquivo)) && (flag == 0))
         {
             if (memcmp(buffer.cpf, cpfC, 15) == 0)
@@ -245,18 +260,19 @@ int existeCpfCliente(const char *fileName, char cpfC[15])
                 flag = 1;
             }
         }
-    }
     fclose(arquivo);
+
+    }
     return flag;
 }
 
 int existeNomeCliente(const char *fileName, char nomeC[TAM])
 {
-    FILE *arquivo = fopen(fileName, "rb");
     struct CLIENTE buffer;
     int flag = 0;
-    if (arquivo != NULL)
+    if (existeDadosClientes(fileName))
     {
+        FILE *arquivo = fopen(fileName, "rb");
         while ((fread(&buffer, sizeof(struct CLIENTE), 1, arquivo)) && (flag == 0))
         {
             if (memcmp(buffer.nome, nomeC, TAM) == 0)
@@ -264,8 +280,8 @@ int existeNomeCliente(const char *fileName, char nomeC[TAM])
                 flag = 1;
             }
         }
+        fclose(arquivo);
     }
-    fclose(arquivo);
     return flag;
 }
 
@@ -288,17 +304,16 @@ int existeCompraCpf(const char *fileName, char cpfC[15])
     return flag;
 }
 
-int carroFoiVendido(const char *fileName, char placaC[9])
+int existeVendaPlaca(const char *fileName, char placaC[9])
 {
     int flag = 0, tam = sizeof(struct VENDA_CARRO);
     struct VENDA_CARRO buffer;
-
     if (existeDadosVendas(fileName))
     {
         FILE *arquivo = abrirArquivo(fileName, "rb");
         while ((flag == 0) && (fread(&buffer, tam, 1, arquivo)))
         {
-            if (memcmp(buffer.placa_car, placaC, 9))
+            if (memcmp(buffer.placa_car, placaC, 9) == 0)
             {
                 flag = 1;
             }
@@ -307,7 +322,6 @@ int carroFoiVendido(const char *fileName, char placaC[9])
     }
     return flag;
 }
-
 // objetivo:insere pontuacoes '.' e '- ' em um cpf
 // parametros: cpf_origem o cpf recebido no format 99999999999
 //             cpf_destino o cpf com as pontuacoes inseridas no formato 999.999.999-99
@@ -1013,7 +1027,7 @@ void mostrarCarroOrdemFabricante(const char *fileName, const char *fileVendas)
     struct CARRO ordem[50], buffer;
     while (fread(&buffer, tam, 1, arquivo))
     {
-        if (!carroFoiVendido(fileVendas, ordem[i].placa))
+        if (!existeVendaPlaca(fileVendas, ordem[i].placa))
         {
             ordem[i] = buffer;
             i++;
@@ -1058,7 +1072,7 @@ void mostrarCarroFaixaAnoFabricacao(const char *fileName, const char *fileVendas
     {
         if ((buffer.ano_fabricacao > faixaDown) && (buffer.ano_fabricacao < faixaUp))
         {
-            if (!carroFoiVendido(fileVendas, buffer.placa))
+            if (!existeVendaPlaca(fileVendas, buffer.placa))
             {
                 lista[i] = buffer;
                 i++;
@@ -1099,7 +1113,7 @@ void mostrarCarroFaixaOpcionais(const char *fileName, const char *fileVendas)
         {
             if ((opcionaisEscolhidos[i] == 1) && (buffer.opcional[i] == 1))
             {
-                if (!carroFoiVendido(fileVendas, buffer.placa))
+                if (!existeVendaPlaca(fileVendas, buffer.placa))
                 {
                     mostrarCarro(buffer);
                     stop = 1;
@@ -1447,15 +1461,14 @@ int main()
                         scanf("%s", placaAux);
                         if (existePlacaCarro(carrosFile, placaAux))
                         {
-                            if (!carroFoiVendido(vendasFile, placaAux))
+                            if (!existeVendaPlaca(vendasFile, placaAux))
                             {
-                                printf("sem vendas\n");
-                                excluirCarro(clientesFile, placaAux);
-                                printf("Carro excluido!\n");
+                                excluirCarro(carrosFile, placaAux);
+                                printf("Cliente excluido!\n");
                             }
                             else
                             {
-                                printf("Nao e possivel excluir o carro!\n");
+                                printf("Nao e possivel excluir o cliente!\n");
                             }
                         }
                         else
@@ -1607,7 +1620,7 @@ int main()
                         printf("Informe a placa do carro da venda que deve ser excluida:\n");
                         fflush(stdin);
                         scanf("%s", placaAux);
-                        if (carroFoiVendido(vendasFile, placaAux))
+                        if (existeVendaPlaca(vendasFile, placaAux))
                         {
                             excluirVenda(vendasFile, placaAux);
                             printf("Venda excluida!\n");
@@ -1655,17 +1668,17 @@ int main()
                     }
                     else
                     {
-                        printf("Nao existem carros no cadastro para serem mostrados!\n");
+                        printf("Nao existem vendas no cadastro para serem mostradas!\n");
                     }
                     break;
                 case 6:
                     if (existeDadosVendas(vendasFile))
                     {
-                        printf("O lucro total das vendas foi de: %2.f", calculaLucroTotal(vendasFile));
+                        printf("O lucro total das vendas foi de: %2.f\n", calculaLucroTotal(vendasFile));
                     }
                     else
                     {
-                        printf("Nao existem carros no cadastro para serem mostrados!\n");
+                        printf("Nao existem vendas no cadastro para serem mostradas!\n");
                     }
                     break;
                 }
