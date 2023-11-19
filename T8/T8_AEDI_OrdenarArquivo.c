@@ -212,8 +212,19 @@ void ordenaArquivoPlaca(const char *fileName)
 {
     FILE *ordenar = abrirArquivo("ordenar.ord", "wb");
     CARRO ordem;
-    int tam = sizeof(CARRO);
-    printf("Ordenando o arquivo! Espere alguns segundos...\n");
+    int tam = sizeof(CARRO), i;
+    
+    printf("Ordenando o arquivo! Espere alguns segundos\n\nProgresso...\n");
+    //Para criar uma barra de carregamento, printamos alguns caracteres que serviram como a vazio
+    printf("[");
+    for(i = 0; i < 30; i++){
+        printf("_");
+    }
+    printf("]");
+    //Depois printamos '\r' para voltarmos ao inicio da linha
+    i = 0;
+    printf("\r");
+    printf("[");
     // Enquanto existirem registros no arquivo
     while (existeRegistros(fileName) == 1)
     {
@@ -224,7 +235,14 @@ void ordenaArquivoPlaca(const char *fileName)
         // Depois exclui esse registro do arquivo original para que ele não seja escrito mais de uma vez
         // E para podermos avançar para o segundo menor registro no arquivo
         excluirRegistro(fileName, ordem);
+        i++;
+        //Atualizamos um caracter sempre que atirngirmos um multiplo de 76 pois é o que obtemos 
+        //dividindo o numero de iterações do algortimo (2282) pelo número de caracteres da barra (30) 
+        if(i % 76 == 0){
+            printf("#");
+        }
     }
+    printf("\n\n");
     fclose(ordenar);
     // Depois renome o arquivo original e renomeia o novo arquivo criado com o nome do original
     remove(fileName);
@@ -338,6 +356,7 @@ int main()
             if (!existe)
             {
                 copiarArquivo(ordenado, original);
+                system("cls");
                 ordenaArquivoPlaca(ordenado);
                 existe = 1;
             }
